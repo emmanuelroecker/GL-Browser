@@ -1,0 +1,14 @@
+{
+    "name": "GL-Browser",
+    "version": "0.0.1",
+    "description": "A personnal browser",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron main.js"
+    },
+    "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
+    "license": "MIT",
+    "devDependencies": {
+        "electron-prebuilt": "^0.36.0"
+    }
+}
