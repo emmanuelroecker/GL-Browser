@@ -33,6 +33,9 @@
 <script>
     'use strict';
 
+    let fs = require('fs');
+    let injectCSS = "";
+    let injectJS = "";
     let webview = document.getElementById("main");
     function refresh() {
         webview.reload();
@@ -48,7 +51,22 @@
 
     function searchKeyPress(e) {
         if (e.keyCode == 13) {
-            webview.src = document.getElementById("urltext").value;
+            let url = document.getElementById("urltext").value;
+            fs.readFile( __dirname + '/inject.css', function (err, data) {
+                if (err) {
+                    throw err;
+                }
+                injectCSS = data.toString();
+            });
+
+            fs.readFile( __dirname + '/inject.js', function (err, data) {
+                if (err) {
+                    throw err;
+                }
+                injectJS = data.toString();
+            });
+
+            webview.src = url;
             return false;
         }
         return true;
@@ -68,9 +86,14 @@
         let loadstop = function () {
             indicator.innerText = "";
         };
+        var loadfinish = function () {
+            webview.insertCSS(injectCSS);
+            webview.executeJavaScript(injectJS);
+        };
 
         webview.addEventListener("did-start-loading", loadstart);
         webview.addEventListener("did-stop-loading", loadstop);
+        webview.addEventListener("did-finish-load", loadfinish);
 
         autoresize();
     };
