@@ -1,7 +1,7 @@
 {
     "name": "GL-Browser",
     "version": "0.0.1",
-    "description": "A personnal browser",
+    "description": "A custom browser",
     "main": "main.js",
     "scripts": {
         "start": "electron main.js"
