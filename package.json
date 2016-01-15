@@ -9,6 +9,8 @@
     "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
     "license": "MIT",
     "devDependencies": {
-        "electron-prebuilt": "^0.36.0"
+        "electron-prebuilt": "^0.36.0",
+        "js-yaml": "^3.5.0",
+        "match-pattern":"^0.0.1"
     }
 }

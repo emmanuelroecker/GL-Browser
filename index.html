@@ -1,105 +1,134 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>GL-Browser</title>
+  <meta charset="UTF-8">
+  <title>GL-Browser</title>
 
-    <style>
-        html, body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
 
-        #main {
-            display: block;
-            border: none;
-        }
-    </style>
+    #main {
+      display: block;
+      border: none;
+    }
+  </style>
 </head>
+
 <body>
-    <div id="header">
-        <button id="goback" onclick="goBack()">Back</button>
-        Url: <input id="urltext" type="text" onkeypress="return searchKeyPress(event);">
-        <button id="refresh" onclick="refresh()">Refresh</button>
-        <button id="dev" onclick="devTools()">Dev</button>
-        <span id="indicator"></span>
-    </div>
-    <webview id="main">
-    </webview>
+  <div id="header">
+    <button id="goback" onclick="goBack()">Back</button>
+    Url:
+    <input id="urltext" type="text" onkeypress="return searchKeyPress(event);">
+    <button id="refresh" onclick="refresh()">Refresh</button>
+    <button id="dev" onclick="devTools()">Dev</button>
+    <span id="indicator"></span>
+  </div>
+  <webview id="main">
+  </webview>
 </body>
 
 <script>
-    'use strict';
+  'use strict';
 
-    let fs = require('fs');
-    let injectCSS = "";
-    let injectJS = "";
-    let webview = document.getElementById("main");
-    function refresh() {
-        webview.reload();
-    }
+  let fs = require('fs');
+  let yaml = require('js-yaml');
+  let matchPattern = require('match-pattern');
+  let directoryCfg = 'cfg';
+  let fileCfg = 'config.yml';
+  let cfg;
 
-    function devTools() {
-        webview.openDevTools();
-    }
+  try {
+    cfg = yaml.safeLoad(fs.readFileSync(fileCfg, 'utf8'));
+    cfg = cfg.map(function(elem) {
+      let name = elem['name'];
+      elem['css'] = fs.readFileSync(directoryCfg + "/" + name + ".css", 'utf-8');
+      elem['js'] = fs.readFileSync(directoryCfg + "/" + name + ".js", 'utf-8');
 
-    function goBack() {
-        webview.goBack();
-    }
-
-    function searchKeyPress(e) {
-        if (e.keyCode == 13) {
-            let url = document.getElementById("urltext").value;
-            fs.readFile( __dirname + '/inject.css', function (err, data) {
-                if (err) {
-                    throw err;
-                }
-                injectCSS = data.toString();
-            });
-
-            fs.readFile( __dirname + '/inject.js', function (err, data) {
-                if (err) {
-                    throw err;
-                }
-                injectJS = data.toString();
-            });
-
-            webview.src = url;
-            return false;
+      let patterns = elem['patterns'];
+      elem['patterns'] = patterns.map(function(pattern) {
+        pattern = matchPattern.parse(pattern);
+        if (pattern === null) {
+          console.log("Bad pattern : " + pattern + " in " + name);
         }
-        return true;
-    }
+        return pattern;
+      });
+      return elem;
+    });
+  } catch (e) {
+    console.log(e);
+  }
 
-    function autoresize() {
-        let header = document.getElementById("header");
-        let webviewsize = window.innerHeight - header.offsetHeight;
-        webview.style.height = webviewsize + "px";
-    }
+  let injectCSS = "";
+  let injectJS = "";
+  let webview = document.getElementById("main");
 
-    window.onload = function() {
-        let indicator = document.getElementById("indicator");
-        let loadstart = function () {
-            indicator.innerText = "loading...";
-        };
-        let loadstop = function () {
-            indicator.innerText = "";
-        };
-        var loadfinish = function () {
-            webview.insertCSS(injectCSS);
-            webview.executeJavaScript(injectJS);
-        };
+  function refresh() {
+    webview.reload();
+  }
 
-        webview.addEventListener("did-start-loading", loadstart);
-        webview.addEventListener("did-stop-loading", loadstop);
-        webview.addEventListener("did-finish-load", loadfinish);
+  function devTools() {
+    webview.openDevTools();
+  }
 
-        autoresize();
+  function goBack() {
+    webview.goBack();
+  }
+
+  function searchKeyPress(e) {
+    if (e.keyCode != 13)
+      return true;
+
+    let url = document.getElementById("urltext").value;
+    for (let elem of cfg) {
+      let patterns = elem['patterns']
+      for (let pattern of patterns) {
+        if (pattern.test(url)) {
+          injectCSS = elem['css'];
+          injectJS = elem['js'];
+          break;
+        }
+      };
+    };
+    webview.src = url;
+    return false;
+  }
+
+  function autoresize() {
+    let header = document.getElementById("header");
+    let webviewsize = window.innerHeight - header.offsetHeight;
+    webview.style.height = webviewsize + "px";
+  }
+
+  window.onload = function() {
+    let indicator = document.getElementById("indicator");
+    let loadstart = function() {
+      indicator.innerText = "loading...";
+    };
+    let loadstop = function() {
+      indicator.innerText = "";
+    };
+    var loadfinish = function() {
+      webview.insertCSS(injectCSS);
+      webview.executeJavaScript(injectJS);
     };
 
-    window.onresize = function(event) {
-        autoresize();
-    };
+    webview.addEventListener("did-start-loading", loadstart);
+    webview.addEventListener("did-stop-loading", loadstop);
+    webview.addEventListener("did-finish-load", loadfinish);
+
+    autoresize();
+  };
+
+  window.onresize = function(event) {
+    autoresize();
+  };
 </script>
+
 </html>

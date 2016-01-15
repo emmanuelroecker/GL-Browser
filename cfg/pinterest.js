@@ -1,15 +1,13 @@
 'use strict';
 
 function modify() {
-    let cnso = document.getElementById("cnso");
-    if (cnso) {
-        cnso.remove();
-    }
-    let cnsh = document.getElementById("cnsh");
-    if (cnsh) {
-        cnsh.remove();
-    }
+  let signeup = document.getElementsByClassName('InlineSignup')
+  if (signeup && signeup[0]) {
+    signeup[0].remove();
+  }
 }
+
+modify();
 
 let MutationObserver = window.MutationObserver;
 if (MutationObserver) {
@@ -21,4 +19,3 @@ if (MutationObserver) {
         subtree: true
     });
 }
-
