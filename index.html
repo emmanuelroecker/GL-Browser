@@ -81,21 +81,25 @@
     webview.goBack();
   }
 
-  function searchKeyPress(e) {
-    if (e.keyCode != 13)
-      return true;
-
-    let url = document.getElementById("urltext").value;
+  function getToInject(url) {
     for (let elem of cfg) {
       let patterns = elem['patterns']
       for (let pattern of patterns) {
         if (pattern.test(url)) {
           injectCSS = elem['css'];
           injectJS = elem['js'];
-          break;
+          return;
         }
       };
     };
+  }
+
+  function searchKeyPress(e) {
+    if (e.keyCode != 13)
+      return true;
+
+    let url = document.getElementById("urltext").value;
+    getToInject(url);
     webview.src = url;
     return false;
   }
