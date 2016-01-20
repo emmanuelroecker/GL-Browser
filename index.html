@@ -118,7 +118,7 @@
     let loadstop = function() {
       indicator.innerText = "";
     };
-    var loadfinish = function() {
+    let loadfinish = function() {
       webview.insertCSS(injectCSS);
       webview.executeJavaScript(injectJS);
     };

@@ -1,5 +1,7 @@
 'use strict';
 const electron = require('electron');
+const yaml = require('js-yaml');
+const fs = require('fs');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
@@ -12,8 +14,16 @@ app.on('window-all-closed', function() {
 });
 
 app.on('ready', function() {
+  console.log("Electron Version : " + process.versions.electron);
+
   mainWindow = new BrowserWindow({width: 800, height: 600});
   mainWindow.loadURL('file://' + __dirname + '/index.html');
+
+  let filter = yaml.safeLoad(fs.readFileSync('filter.yml', 'utf8'));
+  let ses = mainWindow.webContents.session;
+  ses.webRequest.onBeforeRequest({urls: filter}, function(details, callback) {
+      callback({cancel : true});
+  });
 
   mainWindow.on('closed', function() {
     mainWindow = null;
