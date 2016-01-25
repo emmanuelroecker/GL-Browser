@@ -9,13 +9,16 @@
 </head>
 
 <body>
-  <div id="header">
-    <button id="goback">Back</button>
-    Url:
-    <input id="urltext" type="text">
-    <button id="refresh">Refresh</button>
-    <button id="dev">Dev</button>
-    <span id="indicator"></span>
+  <div id="header" class="input-group">
+    <div class="input-group-btn">
+      <button id="goback" class="btn btn-default"><span class="glyphicon glyphicon-arrow-left"></span></button>
+    </div>
+    <input id="urltext" class="form-control" type="text" placeholder="URL">
+    <span id="indicator" class="input-group-addon"></span>
+    <div class="input-group-btn">
+      <button id="refresh" class="btn btn-default"><span class="glyphicon glyphicon-repeat"></span></button>
+      <button id="dev" class="btn btn-default"><span class="glyphicon glyphicon-wrench"></span></button>
+    </div>
   </div>
   <webview id="main">
   </webview>

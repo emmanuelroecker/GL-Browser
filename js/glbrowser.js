@@ -84,10 +84,10 @@ window.onresize = function () {
 window.onload = function () {
 	let indicator = $('#indicator');
 	webview.on('did-start-loading', () => {
-		indicator.text('loading...');
+		indicator.toggleClass('glyphicon glyphicon-refresh');
 	});
 	webview.on('did-stop-loading', () => {
-		indicator.text('');
+		indicator.toggleClass('glyphicon glyphicon-refresh');
 	});
 	webview.on('did-finish-load', () => {
 		webview.get(0).insertCSS(injectCSS);

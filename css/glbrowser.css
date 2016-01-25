@@ -4,6 +4,12 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+#indicator {
+    top: 0px;
+    width: 40px;
+}
+
 #main {
   display: block;
   border: none;
