@@ -15,7 +15,7 @@ app.on('window-all-closed', function () {
 });
 
 app.on('ready', function () {
-	console.log('Electron Version : ' + process.versions.electron);
+	console.log(`Electron Version : ${process.versions.electron}`);
 
 	mainWindow = new BrowserWindow({
 		width: 800,
@@ -23,7 +23,7 @@ app.on('ready', function () {
 	});
 	mainWindow.loadURL(path.join('file://', __dirname, '/index.html'));
 
-	let filter = yaml.safeLoad(fs.readFileSync('filter.yml', 'utf8'));
+	let filter = yaml.safeLoad(fs.readFileSync('filter.yml', 'utf-8'));
 	let ses = mainWindow.webContents.session;
 	ses.webRequest.onBeforeRequest({
 		urls: filter

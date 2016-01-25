@@ -11,6 +11,8 @@
     "devDependencies": {
         "electron-prebuilt": "^0.36.0",
         "js-yaml": "^3.5.0",
-        "match-pattern":"^0.0.1"
+        "match-pattern":"^0.0.1",
+        "bootstrap": "^3.3.0",
+        "jquery":"^1.9.1"
     }
 }

@@ -1,11 +1,10 @@
 - name : pinterest
   patterns:
-           - https://*.pinterest.com/*
-           - http://*.pinterest.com/*
+           - "*://*.pinterest.com/*"
 - name: twitter
   patterns:
-           - https://*.twitter.com/*
+           - "*://*.twitter.com/*"
 - name: google
   patterns:
-           - https://www.google.com/*
-           - https://www.google.fr/*
+           - "*://www.google.fr/*"
+           - "*://www.google.com/*"
