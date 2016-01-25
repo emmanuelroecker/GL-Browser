@@ -7,6 +7,7 @@ const yaml = require('js-yaml');
 const matchPattern = require('match-pattern');
 const path = require('path');
 window.$ = window.jQuery = require('jquery');
+require('bootstrap');
 
 const directoryCfg = 'cfg';
 const fileCfg = 'config.yml';
