@@ -9,19 +9,29 @@
 </head>
 
 <body>
-  <div id="header" class="input-group">
-    <div class="input-group-btn">
-      <button id="goback" class="btn btn-default"><span class="glyphicon glyphicon-arrow-left"></span></button>
-    </div>
-    <input id="urltext" class="form-control" type="text" placeholder="URL">
-    <span id="indicator" class="input-group-addon"></span>
-    <div class="input-group-btn">
-      <button id="refresh" class="btn btn-default"><span class="glyphicon glyphicon-repeat"></span></button>
-      <button id="dev" class="btn btn-default"><span class="glyphicon glyphicon-wrench"></span></button>
+  <div>
+    <ul class="nav nav-tabs">
+      <li class="active"><a role="button" href="#url1" data-toggle="tab">Url 1</a><span>x</span></li>
+      <li><a role="button" class="add-url" data-toggle="tab">+</a></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane fade in active" id="url1">
+        <div class="gl-header input-group">
+          <div class="input-group-btn">
+            <a class="gl-goback btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
+          </div>
+          <input class="gl-urltext form-control" type="text" placeholder="URL">
+          <span class="gl-indicator input-group-addon"></span>
+          <div class="input-group-btn">
+            <a class="gl-refresh btn btn-default" role="button"><span class="glyphicon glyphicon-repeat"></span></a>
+            <a class="gl-dev btn btn-default" role="button"><span class="glyphicon glyphicon-wrench"></span></a>
+          </div>
+        </div>
+        <webview class="gl-webview">
+        </webview>
+      </div>
     </div>
   </div>
-  <webview id="main">
-  </webview>
 </body>
 
 <script src="./js/glbrowser.js" type="text/javascript"></script>
