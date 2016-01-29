@@ -1,6 +1,6 @@
 # GLICER Browser
 
-![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article5/doc/tabs.gif)
+![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/tabs.gif)
 
 ## Features
 
