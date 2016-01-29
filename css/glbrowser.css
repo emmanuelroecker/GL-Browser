@@ -28,8 +28,7 @@ html, body {
     cursor:pointer;
     position:absolute;
     right: 6px;
-    top: 8px;
-    color: red;
+    top: 11px;
 }
 
 .nav-tabs > li:hover > span {
@@ -43,4 +42,4 @@ html, body {
 }
 .tab-content > .active {
     height: auto;
-} 
+}

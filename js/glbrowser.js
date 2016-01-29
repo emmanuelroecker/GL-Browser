@@ -12,19 +12,7 @@ require('bootstrap');
 const directoryCfg = 'cfg';
 const fileCfg = 'config.yml';
 const encoding = 'utf-8';
-const webComponent = '<div class="gl-header input-group"> \
-	<div class="input-group-btn"> \
-		<a class="gl-goback btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span></a> \
-	</div> \
-	<input class="gl-urltext form-control" type="text" placeholder="URL"> \
-	<span class="gl-indicator input-group-addon"></span> \
-	<div class="input-group-btn"> \
-		<a class="gl-refresh btn btn-default" role="button"><span class="glyphicon glyphicon-repeat"></span></a> \
-		<a class="gl-dev btn btn-default" role="button"><span class="glyphicon glyphicon-wrench"></span></a> \
-	</div> \
-</div> \
-<webview class="gl-webview"> \
-</webview>';
+const webComponent = fs.readFileSync('page.html', encoding);
 
 let cfg;
 
@@ -65,8 +53,10 @@ function getToInject(url) {
 function refreshWebComponentSize() {
 	let header = $('.tab-pane.active .gl-header');
 	let webview = $('.tab-pane.active .gl-webview');
-	let webviewsize = $(window).height() - header.offset().top - header.height();
-	webview.height(webviewsize);
+	if (header.length && webview.length) {
+		let webviewsize = $(window).height() - header.offset().top - header.height();
+		webview.height(webviewsize);
+	}
 }
 
 function refreshWebComponentEvents() {
@@ -113,7 +103,7 @@ function refreshWebComponentEvents() {
 }
 
 $('.nav-tabs').on('click', 'span', function () {
-	var anchor = $(this).siblings('a');
+	let anchor = $(this).siblings('a');
 	$(anchor.attr('href')).remove();
 	$(this).parent().remove();
 	$('.nav-tabs li').children('a').first().click();
@@ -121,14 +111,14 @@ $('.nav-tabs').on('click', 'span', function () {
 
 $('.add-url').click(function (e) {
 	e.stopPropagation();
-	let id = $('.nav-tabs').children().length;
-	$(this).closest('li').before('<li><a href="#url' + id + '" data-toggle="tab">New Url</a><span>x</span></li>');
-	$('.tab-content').append('<div class="tab-pane fade" id="url' + id + '">' + webComponent + '</div>');
+	let elemid = 'url' + $('.nav-tabs').children().length;
+	$(this).closest('li').before(`<li><a href="#${elemid}" data-toggle="tab">${elemid}</a><span class="close">&times;</span></li>`);
+	$('.tab-content').append(`<div class="tab-pane fade" id="${elemid}">${webComponent}</div>`);
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function () {
 		refreshWebComponentEvents();
 		refreshWebComponentSize();
 	});
-	$('a[href="#url' + id + '"]').tab('show');
+	$(`a[href="#${elemid}"]`).tab('show');
 });
 
 window.onresize = function () {
@@ -138,4 +128,5 @@ window.onresize = function () {
 window.onload = function () {
 	refreshWebComponentEvents();
 	refreshWebComponentSize();
+	$('.add-url').click();
 };
