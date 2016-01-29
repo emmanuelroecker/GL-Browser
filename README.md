@@ -1,5 +1,7 @@
 # GLICER Browser
 
+![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article5/doc/tabs.gif)
+
 ## Features
 
 ### Requests blocker
