@@ -12,7 +12,6 @@ require('bootstrap');
 const directoryCfg = 'cfg';
 const fileCfg = 'config.yml';
 const encoding = 'utf-8';
-const webComponent = fs.readFileSync('page.html', encoding);
 
 let cfg;
 
@@ -36,7 +35,7 @@ try {
 	console.log(e);
 }
 
-function getToInject(url) {
+function glGetToInject(url) {
 	for (let elem of cfg) {
 		let patterns = elem.patterns;
 		for (let pattern of patterns) {
@@ -50,7 +49,7 @@ function getToInject(url) {
 	}
 }
 
-function refreshWebComponentSize() {
+function glRefreshWebComponentSize() {
 	let header = $('.tab-pane.active .gl-header');
 	let webview = $('.tab-pane.active .gl-webview');
 	if (header.length && webview.length) {
@@ -59,74 +58,10 @@ function refreshWebComponentSize() {
 	}
 }
 
-function refreshWebComponentEvents() {
-	let webview = $('.tab-pane.active .gl-webview');
-	let indicator = $('.tab-pane.active .gl-indicator');
-
-	$('.tab-pane.active .gl-refresh').click(function () {
-		webview.get(0).reload();
-	});
-
-	$('.tab-pane.active .gl-dev').click(function () {
-		webview.get(0).openDevTools();
-	});
-
-	$('.tab-pane.active .gl-goback').click(function () {
-		webview.get(0).goBack();
-	});
-
-	$('.tab-pane.active .gl-urltext').keypress(function (e) {
-		if (e.keyCode !== 13) {
-			return true;
-		}
-		webview.get(0).src = this.value;
-		return false;
-	});
-
-	webview.on('did-start-loading', () => {
-		indicator.toggleClass('glyphicon glyphicon-refresh');
-	});
-	webview.on('did-stop-loading', () => {
-		indicator.toggleClass('glyphicon glyphicon-refresh');
-	});
-	webview.on('load-commit', function (e) {
-		let url = e.originalEvent.url;
-		webview.on('did-finish-load', function () {
-			let inject = getToInject(url);
-			if (inject) {
-				webview.get(0).insertCSS(inject.css);
-				webview.get(0).executeJavaScript(inject.js);
-			}
-			$(this).off('did-finish-load');
-		});
-	});
-}
-
-$('.nav-tabs').on('click', 'span', function () {
-	let anchor = $(this).siblings('a');
-	$(anchor.attr('href')).remove();
-	$(this).parent().remove();
-	$('.nav-tabs li').children('a').first().click();
-});
-
-$('.add-url').click(function (e) {
-	e.stopPropagation();
-	let elemid = 'url' + $('.nav-tabs').children().length;
-	$(this).closest('li').before(`<li><a href="#${elemid}" data-toggle="tab">${elemid}</a><span class="close">&times;</span></li>`);
-	$('.tab-content').append(`<div class="tab-pane fade" id="${elemid}">${webComponent}</div>`);
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function () {
-		refreshWebComponentEvents();
-		refreshWebComponentSize();
-	});
-	$(`a[href="#${elemid}"]`).tab('show');
-});
-
 window.onresize = function () {
-	refreshWebComponentSize();
+	glRefreshWebComponentSize();
 };
 
 window.onload = function () {
-	refreshWebComponentEvents();
-	refreshWebComponentSize();
-	$('.add-url').click();
+	glRefreshWebComponentSize();
 };

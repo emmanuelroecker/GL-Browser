@@ -10,30 +10,18 @@
 
 <body>
   <div>
-    <ul class="nav nav-tabs">
-      <li><a href="#todo" role="button" data-toggle="tab">todo</a></li>
-      <li><a role="button" class="add-url" data-toggle="tab">+</a></li>
-    </ul>
-    <div class="tab-content">
-      <div class="tab-pane fade" id="todo"><todo></todo></div>
-    </div>
+    <tabs>
+    </tabs>
   </div>
 </body>
 
 <script src="./js/glbrowser.js" type="text/javascript"></script>
 
-<script src="todo.riot.tag" type="riot/tag"></script>
+<script src="components/tabs.riot.tag" type="riot/tag"></script>
+<script src="components/page.riot.tag" type="riot/tag"></script>
 <script src="./node_modules/riot/riot+compiler.min.js"></script>
 
 <script>
-riot.mount('todo', {
-     title: 'I want to behave!',
-     items: [
-       'Avoid excessive caffeine',
-       'Hidden item',
-       'Be less provocative',
-       'Be nice to people'
-     ]
-   })
+riot.mount('*');
 </script>
 </html>
