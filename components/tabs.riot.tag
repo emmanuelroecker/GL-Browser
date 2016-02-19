@@ -1,6 +1,6 @@
 <tabs>
   <ul class="nav nav-tabs">
-    <li each={ item in items } if={item.toggled}>
+    <li each={ item in items }>
       <a href="#{item.id}" data-toggle="tab">
         {item.id}
       </a>
@@ -15,7 +15,7 @@
     </li>
   </ul>
   <div class="tab-content">
-    <div each={item in items} class="tab-pane fade" id={item.id} if={item.toggled}>
+    <div each={item in items} class="tab-pane fade" id={item.id}>
       <page name={item.id}></page>
     </div>
   </div>
@@ -54,29 +54,37 @@
 
  <script>
     'use strict';
-    this.items = [{id:'url0',toggled:true}];
+    this.items = [];
+    this.incid = 0;
 
     add(e) {
-      this.items.push({id:'url' + this.items.length, toggled:true});
+      this.currentid = 'url' + this.incid;
+      this.items.push({id:this.currentid});
+      this.incid++;
     }
 
+    this.add();
+
     remove (e) {
+      if (this.items.length <= 1)
+        return;
+
       let item = e.item.item;
-      item.toggled = false;
+      let index = this.items.indexOf(item);
+      this.items.splice(index,1);
+
+      index--;
+      if (index < 0)
+        index = 0;
+      this.currentid = this.items[index].id;
     }
 
     this.on('updated', function() {
-      let index = 0;
-      for (index = this.items.length - 1; index >= 0; index--) {
-          if (this.items[index].toggled) {
-            break;
-          }
-      }
       let $node = $(this.root);
       $node.find('a[data-toggle="tab"]').on('shown.bs.tab', function () {
         glRefreshWebComponentSize();
       });
-      $node.find(`a[href="#url${index}"]`).tab('show');
+      $node.find(`a[href="#${this.currentid}"]`).tab('show');
     });
  </script>
 </tabs>
