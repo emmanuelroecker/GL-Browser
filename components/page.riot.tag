@@ -54,7 +54,6 @@
 
       webview.on('did-start-loading', () => {
         indicator.toggleClass('glyphicon glyphicon-refresh');
-        console.log('start-loading');
       });
       webview.on('did-stop-loading', () => {
         indicator.toggleClass('glyphicon glyphicon-refresh');
