@@ -6,12 +6,12 @@
 
 ### Requests blocker
 
-filter.yml in match pattern format
+Block all requests which matches with url patterns in filter.yml.
 
 ### Customize the way a web page displays or behaves
 
-config.yml -> cfg directory
-Inject CSS/JS
+Inject files inject/list/{name}.css and inject/list/{name}.js
+in url which matches with patterns configured in inject/inject.yml.
 
 ## Install & Start Browser
 
