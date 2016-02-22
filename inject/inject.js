@@ -18,21 +18,20 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 'use strict';
 
-function customize() {
+function glicerCustomize() {
   %customizejs%
 }
 
-function login() {
+function glicerLogin() {
   %loginjs%
 }
 
-customize();
-login();
+glicerCustomize();
+glicerLogin();
 
-let MutationObserver = window.MutationObserver;
-if (MutationObserver) {
+if (window.MutationObserver) {
   let observer = new MutationObserver(function(mutations) {
-    customize();
+    glicerCustomize();
   });
   observer.observe(document.body, {
     childList: true,

@@ -17,11 +17,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-let loginform = document.getElementsByClassName('LoginForm');
-let username = loginform.getElementsByClassName('LoginForm-username').getElementsByTagName('input');
-let password = loginform.getElementsByClassName('LoginForm-password').getElementsByTagName('input');
-let login = loginform.getElementsByClassName('submit');
+let loginform = document.getElementsByClassName('LoginForm')[0];
+let username = loginform.getElementsByClassName('LoginForm-username')[0].getElementsByTagName('input')[0];
+let password = loginform.getElementsByClassName('LoginForm-password')[0].getElementsByTagName('input')[0];
+let login = loginform.getElementsByClassName('submit')[0];
 
-console.log(username);
-console.log(password);
-console.log(login);
+username.value = "test";
+password.value = "test";
+login.click();
