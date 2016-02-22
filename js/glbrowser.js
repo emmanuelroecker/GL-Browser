@@ -9,18 +9,25 @@ const path = require('path');
 window.$ = window.jQuery = require('jquery');
 require('bootstrap');
 
-const directoryCfg = 'cfg';
-const fileCfg = 'config.yml';
+const directoryInject = 'inject';
+const directoryInjectList = path.join(directoryInject, 'list');
+const fileInject = path.join(directoryInject, 'inject.yml');
+const fileTemplateJsInject = path.join(directoryInject, 'inject.js');
 const encoding = 'utf-8';
 
 let cfg;
+let templatejs;
 
 try {
-	cfg = yaml.safeLoad(fs.readFileSync(fileCfg, encoding));
+	templatejs = fs.readFileSync(fileTemplateJsInject, encoding);
+
+	cfg = yaml.safeLoad(fs.readFileSync(fileInject, encoding));
 	cfg = cfg.map(elem => {
 		let name = elem.name;
-		elem.css = fs.readFileSync(path.join(directoryCfg, `${name}.css`), encoding);
-		elem.js = fs.readFileSync(path.join(directoryCfg, `${name}.js`), encoding);
+		elem.css = fs.readFileSync(path.join(directoryInjectList, `${name}.css`), encoding);
+		let injectjs = fs.readFileSync(path.join(directoryInjectList, `${name}.js`), encoding);
+
+		elem.js = templatejs.replace('%injectjs%', injectjs);
 
 		elem.patterns = elem.patterns.map(pattern => {
 			pattern = matchPattern.parse(pattern);
