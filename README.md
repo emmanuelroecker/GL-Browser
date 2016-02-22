@@ -4,6 +4,8 @@
 
 ## Features
 
+### Password Manager
+
 ### Requests blocker
 
 Block all requests which matches with url patterns in filter.yml.

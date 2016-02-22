@@ -16,26 +16,12 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-'use strict';
 
-function customize() {
-  %customizejs%
-}
+let loginform = document.getElementsByClassName('LoginForm');
+let username = loginform.getElementsByClassName('LoginForm-username').getElementsByTagName('input');
+let password = loginform.getElementsByClassName('LoginForm-password').getElementsByTagName('input');
+let login = loginform.getElementsByClassName('submit');
 
-function login() {
-  %loginjs%
-}
-
-customize();
-login();
-
-let MutationObserver = window.MutationObserver;
-if (MutationObserver) {
-  let observer = new MutationObserver(function(mutations) {
-    customize();
-  });
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
-}
+console.log(username);
+console.log(password);
+console.log(login);

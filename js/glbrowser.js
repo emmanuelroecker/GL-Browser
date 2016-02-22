@@ -29,38 +29,59 @@ const path = require('path');
 window.$ = window.jQuery = require('jquery');
 require('bootstrap');
 
-const directoryInject = 'inject';
-const directoryInjectList = path.join(directoryInject, 'list');
-const fileInject = path.join(directoryInject, 'inject.yml');
-const fileTemplateJsInject = path.join(directoryInject, 'inject.js');
+const directoryInject = path.join(__dirname, 'inject');
 const encoding = 'utf-8';
 
 let cfg;
 let templatejs;
 
 try {
-	templatejs = fs.readFileSync(fileTemplateJsInject, encoding);
-
-	cfg = yaml.safeLoad(fs.readFileSync(fileInject, encoding));
-	cfg = cfg.map(elem => {
-		let name = elem.name;
-		elem.css = fs.readFileSync(path.join(directoryInjectList, `${name}.css`), encoding);
-		let injectjs = fs.readFileSync(path.join(directoryInjectList, `${name}.js`), encoding);
-
-		elem.js = templatejs.replace('%injectjs%', injectjs);
-
-		elem.patterns = elem.patterns.map(pattern => {
-			pattern = matchPattern.parse(pattern);
-			if (pattern === null) {
-				console.log(`Bad pattern : ${pattern} in ${name}`);
-			}
-			return pattern;
-		});
-		return elem;
-	});
+	templatejs = fs.readFileSync(path.join(directoryInject, 'inject.js'), encoding);
+	cfg = yaml.safeLoad(fs.readFileSync(path.join(directoryInject, 'inject.yml'), encoding));
 } catch (e) {
 	console.log(e);
 }
+
+cfg = cfg.map(elem => {
+	elem.css = "";
+	elem.js = "";
+
+	let customizecssFile = path.join(directoryInject, elem.name, 'customize.css');
+	try {
+		elem.css = fs.readFileSync(customizecssFile, encoding);
+	} catch (e) {
+		console.log(e)
+	}
+
+	let customizejsFile = path.join(directoryInject, elem.name, 'customize.js');
+	let loginjsFile = path.join(directoryInject, elem.name, 'login.js');
+
+	let customizejs = "";
+	try {
+		customizejs = fs.readFileSync(customizejsFile, encoding);
+	} catch (e) {
+		console.log(e)
+	}
+
+	let loginjs = "";
+	try {
+		loginjs = fs.readFileSync(loginjsFile, encoding);
+	} catch (e) {
+		console.log(e)
+	}
+
+	let injectjs = templatejs.replace('%customizejs%', customizejs);
+	elem.js = injectjs.replace('%loginjs%', loginjs);
+
+	elem.patterns = elem.patterns.map(pattern => {
+		pattern = matchPattern.parse(pattern);
+		if (pattern === null) {
+			console.log(`Bad pattern : ${pattern} in ${name}`);
+		}
+		return pattern;
+	});
+	return elem;
+});
 
 function glGetToInject(url) {
 	for (let elem of cfg) {

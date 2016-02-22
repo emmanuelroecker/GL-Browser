@@ -40,7 +40,7 @@ app.on('ready', function () {
 		width: 800,
 		height: 600
 	});
-	mainWindow.loadURL(path.join('file://', __dirname, '/index.html'));
+	mainWindow.loadURL(path.join('file://', __dirname, 'index.html'));
 
 	let filter = yaml.safeLoad(fs.readFileSync('filter.yml', 'utf-8'));
 	let ses = mainWindow.webContents.session;
