@@ -7,7 +7,7 @@
     "start": "electron main.js"
   },
   "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
-  "license": "MIT",
+  "license": "GPL-2.0",
   "devDependencies": {
     "electron-prebuilt": "^0.36.0",
     "js-yaml": "^3.5.0",

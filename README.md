@@ -11,7 +11,7 @@ Block all requests which matches with url patterns in filter.yml.
 ### Customize the way a web page displays or behaves
 
 Inject files inject/list/{name}.css and inject/list/{name}.js
-in url which matches with patterns configured in inject/inject.yml.
+in url which match with patterns configured in file inject/inject.yml.
 
 ## Install & Start Browser
 
@@ -21,7 +21,10 @@ in url which matches with patterns configured in inject/inject.yml.
 npm install
 npm start
 ```
-## License MIT
+## License GPL-2.0
+
+GNU General Public License v2.0
+Please see the LICENSE file distributed with this source code for further information regarding copyright and licensing.
 
 ## Contact
 
