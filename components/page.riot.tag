@@ -84,7 +84,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
           if (inject) {
             webview.get(0).insertCSS(inject.css);
             webview.get(0).executeJavaScript(inject.js);
-            webview.get(0).send('login',inject.user);
+            if (glPassword && glPassword.length > 0) {
+              webview.get(0).send('login',inject.user);
+            }
           }
           $(this).off('did-finish-load');
         });

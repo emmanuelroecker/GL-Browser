@@ -36,6 +36,7 @@ const encoding = 'utf-8';
 let cfg;
 let templatejs;
 let users;
+let glPassword;
 
 try {
 	templatejs = fs.readFileSync(path.join(directoryInject, 'inject.js'), encoding);
@@ -96,7 +97,7 @@ cfg = cfg.map(elem => {
 });
 
 function glDecrypt(text) {
-	let decipher = crypto.createDecipher('aes-256-ctr', '********');
+	let decipher = crypto.createDecipher('aes-256-ctr', glPassword);
 	let dec = decipher.update(text, 'hex', 'utf8')
 	dec += decipher.final('utf8');
 	return dec;
@@ -109,9 +110,11 @@ function glGetToInject(url) {
 			if (pattern.test(url)) {
 				let cloneElem = Object.assign({}, elem);
 				cloneElem.user = Object.assign({}, elem.user);
-				if ((elem.user) && (elem.user.login) && (elem.user.password)) {
-					cloneElem.user.login = glDecrypt(elem.user.login);
-					cloneElem.user.password = glDecrypt(elem.user.password);
+				if (glPassword && glPassword.length > 0) {
+					if ((elem.user) && (elem.user.login) && (elem.user.password)) {
+						cloneElem.user.login = glDecrypt(elem.user.login);
+						cloneElem.user.password = glDecrypt(elem.user.password);
+					}
 				}
 				return cloneElem;
 			}
