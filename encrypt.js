@@ -17,18 +17,26 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-ipcRenderer.on('login', function (event,user) {
-	let body = document.getElementsByTagName('body')[0];
-	if (body.classList.contains('logged-out')) {
-		let loginform = document.getElementsByClassName('LoginForm')[0];
-		let username = loginform.getElementsByClassName('LoginForm-username')[0].getElementsByTagName('input')[0];
-		let password = loginform.getElementsByClassName('LoginForm-password')[0].getElementsByTagName('input')[0];
-		let login = loginform.getElementsByClassName('submit')[0];
+'use strict';
 
-		username.value = user.login;
-		password.value = user.password;
-		loginform.submit();
-		username.value = "";
-		password.value = "";
-	}
-});
+const crypto = require('crypto');
+const program = require('commander');
+
+program
+	.version('0.0.1')
+  .option('-t, --text [text]','text to encrypt')
+	.option('-p, --password [password]', 'password used to encrypt')
+	.parse(process.argv);
+
+let cipher = crypto.createCipher('aes-256-ctr', program.password)
+let crypted = cipher.update(program.text, 'utf8', 'hex')
+crypted += cipher.final('hex');
+
+console.log(crypted);
+
+/*
+let decipher = crypto.createDecipher('aes-256-ctr', program.password);
+let decrypted = decipher.update(crypted,'hex','utf8')
+decrypted += decipher.final('utf8');
+console.log(decrypted);
+*/

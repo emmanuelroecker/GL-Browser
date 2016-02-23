@@ -29,7 +29,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       <a class="gl-dev btn btn-default" role="button"><span class="glyphicon glyphicon-wrench"></span></a>
     </div>
   </div>
-  <webview class="gl-webview">
+  <webview class="gl-webview" preload="./inject/preload.js">
   </webview>
 
   <style scoped>
@@ -84,6 +84,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
           if (inject) {
             webview.get(0).insertCSS(inject.css);
             webview.get(0).executeJavaScript(inject.js);
+            webview.get(0).send('login',inject.user);
           }
           $(this).off('did-finish-load');
         });

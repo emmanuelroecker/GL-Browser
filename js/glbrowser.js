@@ -29,22 +29,34 @@ const path = require('path');
 window.$ = window.jQuery = require('jquery');
 require('bootstrap');
 
+const crypto = require('crypto');
 const directoryInject = path.join(__dirname, 'inject');
 const encoding = 'utf-8';
 
 let cfg;
 let templatejs;
+let users;
 
 try {
 	templatejs = fs.readFileSync(path.join(directoryInject, 'inject.js'), encoding);
 	cfg = yaml.safeLoad(fs.readFileSync(path.join(directoryInject, 'inject.yml'), encoding));
+	users = yaml.safeLoad(fs.readFileSync('login.yml'), encoding);
 } catch (e) {
 	console.log(e);
+}
+
+function getUser(name) {
+	for (let user of users) {
+		if (user.name == name)
+			return user;
+	}
+	return null;
 }
 
 cfg = cfg.map(elem => {
 	elem.css = "";
 	elem.js = "";
+	elem.user = getUser(elem.name);
 
 	let customizecssFile = path.join(directoryInject, elem.name, 'customize.css');
 	try {
@@ -83,15 +95,25 @@ cfg = cfg.map(elem => {
 	return elem;
 });
 
+function glDecrypt(text) {
+	let decipher = crypto.createDecipher('aes-256-ctr', '********');
+	let dec = decipher.update(text, 'hex', 'utf8')
+	dec += decipher.final('utf8');
+	return dec;
+}
+
 function glGetToInject(url) {
 	for (let elem of cfg) {
 		let patterns = elem.patterns;
 		for (let pattern of patterns) {
 			if (pattern.test(url)) {
-				return {
-					css: elem.css,
-					js: elem.js
-				};
+				let cloneElem = Object.assign({}, elem);
+				cloneElem.user = Object.assign({}, elem.user);
+				if ((elem.user) && (elem.user.login) && (elem.user.password)) {
+					cloneElem.user.login = glDecrypt(elem.user.login);
+					cloneElem.user.password = glDecrypt(elem.user.password);
+				}
+				return cloneElem;
 			}
 		}
 	}
