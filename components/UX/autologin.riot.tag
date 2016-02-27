@@ -24,7 +24,7 @@
     'use strict';
     login(e) {
       let $node = $(this.root);
-      glPassword = this.password.value;
+      autologin.setMasterPassword(this.password.value);
       $node.find('#dropdown').dropdown('toggle');
       $node.find('#dropdownicon').removeClass('text-danger');
     }

@@ -22,8 +22,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const customize = require('./components/autologin/autologin.js');
-const autologin = require('./components/customize/customize.js');
+const customize = require('./components/customize/customize.js');
+const autologin = require('./components/autologin/autologin.js');
 
 window.$ = window.jQuery = require('jquery');
 require('bootstrap');

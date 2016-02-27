@@ -23,7 +23,7 @@ class autologinClass {
 	constructor(encoding) {
 		this._modFs = require('fs');
 		this._modPath = require('path');
-		this._modCrypyo = require('crypto');
+		this._modCrypto = require('crypto');
 		this._modYaml = require('js-yaml');
 		this._modMatchPattern = require('match-pattern');
 		this._encoding = encoding;
@@ -34,6 +34,8 @@ class autologinClass {
 		this._cryptAlgorithm = 'aes-256-ctr';
 		this._cryptEncoding = 'hex';
 		this._injectJsFile = 'inject.js';
+		this._masterPasswordEnable = false;
+		this._masterPassword = "";
 		this.init();
 	}
 
@@ -52,24 +54,22 @@ class autologinClass {
 		});
 	}
 
-	decrypt(text, password) {
-		let decipher = this._modCrypto.createDecipher(this._cryptAlgorithm, password);
+	decrypt(text) {
+		let decipher = this._modCrypto.createDecipher(this._cryptAlgorithm, this._masterPassword);
 		let dec = decipher.update(text, this._cryptEncoding, this._encoding)
 		dec += decipher.final(this._encoding);
 		return dec;
 	}
 
-	getToInject(url, password) {
+	getToInject(url) {
 		for (let elem of this._autologin) {
 			let patterns = elem.patterns;
 			for (let pattern of patterns) {
 				if (pattern.test(url)) {
 					let cloneElem = Object.assign({}, elem);
-					cloneElem.user = Object.assign({}, elem.user);
-					if ((elem.user) && (elem.user.login) && (elem.user.password)) {
-						cloneElem.user.login = this.decrypt(elem.user.login, password);
-						cloneElem.user.password = this.decrypt(elem.user.password, password);
-					}
+					cloneElem.user = {};
+					cloneElem.user.login = this.decrypt(elem.login);
+					cloneElem.user.password = this.decrypt(elem.password);
 					return cloneElem;
 				}
 			}
@@ -98,11 +98,18 @@ class autologinClass {
 	}
 
 	inject(webview, url) {
+		if (!this._masterPasswordEnable)
+			return;
 		let inject = this.getToInject(url);
 		if (inject) {
 			webview.executeJavaScript(inject.js);
 			webview.send(this._loginMessage, inject.user);
 		}
+	}
+
+	setMasterPassword(masterPassword) {
+		this._masterPassword = masterPassword;
+		this._masterPasswordEnable = true;
 	}
 }
 
