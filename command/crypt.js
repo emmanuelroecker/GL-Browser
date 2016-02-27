@@ -19,24 +19,39 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const crypto = require('crypto');
-const program = require('commander');
+class glCryptClass {
 
+	constructor() {
+		 this._crypto = require('crypto');
+	}
+
+	encrypt(text,password) {
+		let cipher = this._crypto.createCipher('aes-256-ctr', password)
+		let crypted = cipher.update(text, 'utf8', 'hex')
+		crypted += cipher.final('hex');
+		return crypted;
+	}
+
+	decrypt(text, password) {
+		let decipher = this._crypto.createDecipher('aes-256-ctr', password);
+		let decrypted = decipher.update(text,'hex','utf8')
+		decrypted += decipher.final('utf8');
+		return decrypted;
+	}
+}
+
+const program = require('commander');
 program
 	.version('0.0.1')
   .option('-t, --text [text]','text to encrypt')
 	.option('-p, --password [password]', 'password used to encrypt')
 	.parse(process.argv);
 
-let cipher = crypto.createCipher('aes-256-ctr', program.password)
-let crypted = cipher.update(program.text, 'utf8', 'hex')
-crypted += cipher.final('hex');
-
+let crypt = new glCryptClass();
+let crypted = crypt.encrypt(program.text,program.password);
 console.log(crypted);
 
 /*
-let decipher = crypto.createDecipher('aes-256-ctr', program.password);
-let decrypted = decipher.update(crypted,'hex','utf8')
-decrypted += decipher.final('utf8');
+let decrypted = crypt.decrypt(crypted, program.password);
 console.log(decrypted);
 */

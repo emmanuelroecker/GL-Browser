@@ -1,4 +1,4 @@
-- name : pinterest
+- name: pinterest
   patterns:
            - "*://*.pinterest.com/*"
 - name: twitter

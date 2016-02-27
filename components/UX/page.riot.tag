@@ -29,7 +29,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       <a class="gl-dev btn btn-default" role="button"><span class="glyphicon glyphicon-wrench"></span></a>
     </div>
   </div>
-  <webview class="gl-webview" preload="./inject/preload.js">
+  <webview class="gl-webview" preload="./components/preload.js">
   </webview>
 
   <style scoped>
@@ -80,14 +80,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       webview.on('load-commit', function (e) {
         let url = e.originalEvent.url;
         webview.on('did-finish-load', function () {
-          let inject = glGetToInject(url);
-          if (inject) {
-            webview.get(0).insertCSS(inject.css);
-            webview.get(0).executeJavaScript(inject.js);
-            if (glPassword && glPassword.length > 0) {
-              webview.get(0).send('login',inject.user);
-            }
-          }
+          customize.inject(webview.get(0), url);
+          autologin.inject(webview.get(0), url);
           $(this).off('did-finish-load');
         });
       });

@@ -16,25 +16,15 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-'use strict';
 
-function glicerCustomize() {
-  %customizejs%
-}
-
-function glicerLogin() {
-  %loginjs%
-}
-
-glicerCustomize();
-glicerLogin();
-
-if (window.MutationObserver) {
-  let observer = new MutationObserver(function(mutations) {
-    glicerCustomize();
-  });
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
-}
+ipcRenderer.on('login', function (event,user) {
+	let body = document.getElementsByTagName('body')[0];
+	if (body.classList.contains('logged_out')) {
+		if (window.location.href != "/login") {
+			console.log("ok non login");
+			window.location.href = "/login";
+		} else {
+			console.log("ok login");
+		}
+	}
+});

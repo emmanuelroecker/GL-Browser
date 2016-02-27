@@ -18,41 +18,58 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 'use strict';
-const electron = require('electron');
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
 
-let mainWindow;
+console.log(`Electron Version : ${process.versions.electron}`);
 
-app.on('window-all-closed', function () {
-	if (process.platform !== 'darwin') {
-		app.quit();
+class mainProcessClass {
+	constructor(encoding) {
+		this._modElectron = require('electron');
+		this._modYaml = require('js-yaml');
+		this._modFs = require('fs');
+		this._modPath = require('path');
+    this._app = this._modElectron.app;
+
+		this._encoding = encoding;
+		this._blockCfgFile = './components/block/block.yml';
+		this._indexHtmlFile = 'index.html';
+
+    this.init();
 	}
-});
 
-app.on('ready', function () {
-	console.log(`Electron Version : ${process.versions.electron}`);
 
-	mainWindow = new BrowserWindow({
-		width: 800,
-		height: 600
-	});
-	mainWindow.loadURL(path.join('file://', __dirname, 'index.html'));
-
-	let filter = yaml.safeLoad(fs.readFileSync('filter.yml', 'utf-8'));
-	let ses = mainWindow.webContents.session;
-	ses.webRequest.onBeforeRequest({
-		urls: filter
-	}, function (details, callback) {
-		callback({
-			cancel: true
+	init() {
+		this._app.on('window-all-closed', () => {
+			if (process.platform !== 'darwin') {
+				this._app.quit();
+			}
 		});
-	});
 
-	mainWindow.on('closed', function () {
-		mainWindow = null;
-	});
-});
+		this._app.on('ready', () => {
+			this._mainWindow = new this._modElectron.BrowserWindow({
+				width: 800,
+				height: 600
+			});
+			this._mainWindow.loadURL(this._modPath.join('file://', __dirname, this._indexHtmlFile));
+
+			this.block(this._mainWindow);
+
+			this._mainWindow.on('closed', () => {
+				this._mainWindow = null;
+			});
+		});
+	}
+
+	block(window) {
+		let filter = this._modYaml.safeLoad(this._modFs.readFileSync(this._blockCfgFile, this._encoding));
+		let ses = window.webContents.session;
+		ses.webRequest.onBeforeRequest({
+			urls: filter
+		}, function (details, callback) {
+			callback({
+				cancel: true
+			});
+		});
+	}
+}
+
+let mainProcess = new mainProcessClass("utf8");
