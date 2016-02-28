@@ -26,6 +26,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     <span id="indicator" class="input-group-addon"></span>
     <div class="input-group-btn">
       <a onclick={refresh} class="btn btn-default" role="button"><span class="glyphicon glyphicon-repeat"></span></a>
+      <a onclick={autologin} class="btn btn-default" role="button"><span class="glyphicon glyphicon-log-in"></span></a>
       <a onclick={dev} class="btn btn-default" role="button"><span class="glyphicon glyphicon-wrench"></span></a>
     </div>
   </div>
@@ -48,7 +49,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     'use strict';
 
     keypress(e) {
-      if (e.which !== 13) {
+      if (e.which != 13) {
         return true;
       }
       this.webview.src = this.urltext.value;
@@ -67,6 +68,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       this.webview.reload();
     }
 
+    autologin(e) {
+      autologin.inject(this.webview);
+    }
+
     this.on('mount', function() {
 
       this.webview.addEventListener('did-start-loading', () => {
@@ -81,8 +86,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
       this.webview.addEventListener('load-commit', (e) => {
         this.webview.addEventListener('did-finish-load', () => {
-          customize.inject(this.webview, e.url);
-          autologin.inject(this.webview, e.url);
+          customize.inject(this.webview);
           this.webview.removeEventListener('did-finish-load');
         });
       });

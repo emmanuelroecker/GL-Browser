@@ -93,8 +93,8 @@ class customizeClass {
 		});
 	}
 
-	inject(webview, url) {
-		let inject = this.getToInject(url);
+	inject(webview) {
+		let inject = this.getToInject(webview.src);
 		if (inject) {
 			webview.insertCSS(inject.css);
 			webview.executeJavaScript(inject.js);

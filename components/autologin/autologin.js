@@ -91,10 +91,10 @@ class autologinClass {
 		});
 	}
 
-	inject(webview, url) {
+	inject(webview) {
 		if (!this._masterPasswordEnable)
 			return;
-		let inject = this.getToInject(url);
+		let inject = this.getToInject(webview.src);
 		if (inject) {
 			webview.executeJavaScript(inject.js);
 			webview.send(this._loginMessage, inject.user);

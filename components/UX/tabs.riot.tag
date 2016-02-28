@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 <tabs>
   <ul class="nav nav-tabs">
     <li each={ item in items }>
-      <a href="#{item.id}" data-toggle="tab">
+      <a href="#{item.id}" onclick={parent.view} data-toggle="tab">
         {item.id}
       </a>
       <span class="close" onclick={parent.remove}>
@@ -95,6 +95,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       index--;
       if (index < 0)
         index = 0;
+      this.currentid = this.items[index].id;
+    }
+
+    view (e) {
+      if (this.items.length <= 1)
+        return;
+
+      let item = e.item.item;
+      let index = this.items.indexOf(item);
       this.currentid = this.items[index].id;
     }
 
