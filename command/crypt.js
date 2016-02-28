@@ -19,30 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-class glCryptClass {
-
-	constructor() {
-		 this._crypto = require('crypto');
-	}
-
-  hash(password) {
-		return this._crypto.createHash('sha256').update(password).digest('base64');
-	}
-
-	encrypt(text,password) {
-		let cipher = this._crypto.createCipher('aes-256-ctr', password)
-		let crypted = cipher.update(text, 'utf8', 'hex')
-		crypted += cipher.final('hex');
-		return crypted;
-	}
-
-	decrypt(text, password) {
-		let decipher = this._crypto.createDecipher('aes-256-ctr', password);
-		let decrypted = decipher.update(text,'hex','utf8')
-		decrypted += decipher.final('utf8');
-		return decrypted;
-	}
-}
+const crypt = require('../components/crypt/crypt.js');;
 
 const program = require('commander');
 program
@@ -51,7 +28,6 @@ program
 	.option('-p, --password [password]', 'password used to encrypt')
 	.parse(process.argv);
 
-let crypt = new glCryptClass();
 let crypted = crypt.encrypt(program.text,program.password);
 let hashed = crypt.hash(program.password);
 console.log('aes-256-ctr: ' + crypted);

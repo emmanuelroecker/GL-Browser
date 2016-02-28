@@ -23,7 +23,7 @@ class autologinClass {
 	constructor(encoding) {
 		this._modFs = require('fs');
 		this._modPath = require('path');
-		this._modCrypto = require('crypto');
+		this._modCrypt = require('../crypt/crypt.js');
 		this._modYaml = require('js-yaml');
 		this._modMatchPattern = require('match-pattern');
 		this._encoding = encoding;
@@ -31,9 +31,6 @@ class autologinClass {
 		this._autologinJsFile = 'autologin.js';
 		this._autologinTemplate = '%autologinjs%';
 		this._loginMessage = 'login';
-		this._cryptAlgorithm = 'aes-256-ctr';
-		this._hashAlgorithm = 'sha256';
-		this._cryptEncoding = 'hex';
 		this._injectJsFile = 'inject.js';
 		this._masterPasswordEnable = false;
 		this._masterPasswordHash = "";
@@ -58,17 +55,6 @@ class autologinClass {
 		});
 	}
 
-	hash(password) {
-		return this._modCrypto.createHash('sha256').update(password).digest('base64');
-	}
-
-	decrypt(text) {
-		let decipher = this._modCrypto.createDecipher(this._cryptAlgorithm, this._masterPassword);
-		let dec = decipher.update(text, this._cryptEncoding, this._encoding)
-		dec += decipher.final(this._encoding);
-		return dec;
-	}
-
 	getToInject(url) {
 		for (let elem of this._autologin) {
 			let patterns = elem.patterns;
@@ -76,8 +62,8 @@ class autologinClass {
 				if (pattern.test(url)) {
 					let cloneElem = Object.assign({}, elem);
 					cloneElem.user = {};
-					cloneElem.user.login = this.decrypt(elem.login);
-					cloneElem.user.password = this.decrypt(elem.password);
+					cloneElem.user.login = this._modCrypt.decrypt(elem.login,this._masterPassword);
+					cloneElem.user.password = this._modCrypt.decrypt(elem.password,this._masterPassword);
 					return cloneElem;
 				}
 			}
@@ -116,7 +102,7 @@ class autologinClass {
 	}
 
 	setMasterPassword(masterPassword) {
-		if (this.hash(masterPassword) != this._masterPasswordHash) {
+		if (this._modCrypt.hash(masterPassword) != this._masterPasswordHash) {
 			return false;
 		}
 		this._masterPassword = masterPassword;
