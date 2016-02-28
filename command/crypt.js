@@ -25,6 +25,10 @@ class glCryptClass {
 		 this._crypto = require('crypto');
 	}
 
+  hash(password) {
+		return this._crypto.createHash('sha256').update(password).digest('base64');
+	}
+
 	encrypt(text,password) {
 		let cipher = this._crypto.createCipher('aes-256-ctr', password)
 		let crypted = cipher.update(text, 'utf8', 'hex')
@@ -49,7 +53,9 @@ program
 
 let crypt = new glCryptClass();
 let crypted = crypt.encrypt(program.text,program.password);
-console.log(crypted);
+let hashed = crypt.hash(program.password);
+console.log('aes-256-ctr: ' + crypted);
+console.log('sha256: ' + hashed);
 
 /*
 let decrypted = crypt.decrypt(crypted, program.password);

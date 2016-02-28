@@ -32,9 +32,11 @@ class autologinClass {
 		this._autologinTemplate = '%autologinjs%';
 		this._loginMessage = 'login';
 		this._cryptAlgorithm = 'aes-256-ctr';
+		this._hashAlgorithm = 'sha256';
 		this._cryptEncoding = 'hex';
 		this._injectJsFile = 'inject.js';
 		this._masterPasswordEnable = false;
+		this._masterPasswordHash = "";
 		this._masterPassword = "";
 		this.init();
 	}
@@ -47,11 +49,17 @@ class autologinClass {
 			console.log(e);
 		}
 
+		this._masterPasswordHash = this._autologin.shift().hash;
+
 		this._autologin = this._autologin.map(elem => {
 			elem.js = this.getJS(elem.name);
 			elem.patterns = this.compilePatterns(elem.patterns);
 			return elem;
 		});
+	}
+
+	hash(password) {
+		return this._modCrypto.createHash('sha256').update(password).digest('base64');
 	}
 
 	decrypt(text) {
@@ -108,8 +116,12 @@ class autologinClass {
 	}
 
 	setMasterPassword(masterPassword) {
+		if (this.hash(masterPassword) != this._masterPasswordHash) {
+			return false;
+		}
 		this._masterPassword = masterPassword;
 		this._masterPasswordEnable = true;
+		return true;
 	}
 }
 

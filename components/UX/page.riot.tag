@@ -20,25 +20,25 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 <page>
   <div class="gl-header input-group">
     <div class="input-group-btn">
-      <a class="gl-goback btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
+      <a onclick={goback} class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
     </div>
-    <input class="gl-urltext form-control" type="text" placeholder="URL">
-    <span class="gl-indicator input-group-addon"></span>
+    <input id="urltext" class="form-control" onkeypress={keypress} type="text" placeholder="URL">
+    <span id="indicator" class="input-group-addon"></span>
     <div class="input-group-btn">
-      <a class="gl-refresh btn btn-default" role="button"><span class="glyphicon glyphicon-repeat"></span></a>
-      <a class="gl-dev btn btn-default" role="button"><span class="glyphicon glyphicon-wrench"></span></a>
+      <a onclick={refresh} class="btn btn-default" role="button"><span class="glyphicon glyphicon-repeat"></span></a>
+      <a onclick={dev} class="btn btn-default" role="button"><span class="glyphicon glyphicon-wrench"></span></a>
     </div>
   </div>
-  <webview class="gl-webview" preload="./components/preload.js">
+  <webview id="webview" class="gl-webview" preload="./components/preloadWebview.js">
   </webview>
 
   <style scoped>
-    .gl-indicator {
+    #indicator {
         top: 0px;
         width: 40px;
       }
 
-    .gl-webview {
+    #webview {
       display: block;
       border: none;
     }
@@ -46,43 +46,44 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
   <script>
     'use strict';
+
+    keypress(e) {
+      if (e.which !== 13) {
+        return true;
+      }
+      this.webview.src = this.urltext.value;
+      return false;
+    }
+
+    goback(e) {
+      this.webview.goBack();
+    }
+
+    dev(e) {
+      this.webview.openDevTools();
+    }
+
+    refresh(e) {
+      this.webview.reload();
+    }
+
     this.on('mount', function() {
-      let $node = $(this.root);
-      let webview = $node.find('.gl-webview');
-      let indicator = $node.find('.gl-indicator');
 
-      $node.find('.gl-refresh').click(function () {
-        webview.get(0).reload();
+      this.webview.addEventListener('did-start-loading', () => {
+        this.indicator.classList.toggle('glyphicon');
+        this.indicator.classList.toggle('glyphicon-refresh');
       });
 
-      $node.find('.gl-dev').click(function () {
-        webview.get(0).openDevTools();
+      this.webview.addEventListener('did-stop-loading', () => {
+        this.indicator.classList.toggle('glyphicon');
+        this.indicator.classList.toggle('glyphicon-refresh');
       });
 
-      $node.find('.gl-goback').click(function () {
-       webview.get(0).goBack();
-      });
-
-      $node.find('.gl-urltext').keypress(function (e) {
-        if (e.keyCode !== 13) {
-          return true;
-        }
-        webview.get(0).src = this.value;
-        return false;
-      });
-
-      webview.on('did-start-loading', () => {
-        indicator.toggleClass('glyphicon glyphicon-refresh');
-      });
-      webview.on('did-stop-loading', () => {
-        indicator.toggleClass('glyphicon glyphicon-refresh');
-      });
-      webview.on('load-commit', function (e) {
-        let url = e.originalEvent.url;
-        webview.on('did-finish-load', function () {
-          customize.inject(webview.get(0), url);
-          autologin.inject(webview.get(0), url);
-          $(this).off('did-finish-load');
+      this.webview.addEventListener('load-commit', (e) => {
+        this.webview.addEventListener('did-finish-load', () => {
+          customize.inject(this.webview, e.url);
+          autologin.inject(this.webview, e.url);
+          this.webview.removeEventListener('did-finish-load');
         });
       });
     });
