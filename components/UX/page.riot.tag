@@ -25,9 +25,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     <input id="urltext" class="form-control" onkeypress={keypress} type="text" placeholder="URL">
     <span id="indicator" class="input-group-addon"></span>
     <div class="input-group-btn">
-      <a onclick={refresh} class="btn btn-default" role="button"><span class="glyphicon glyphicon-repeat"></span></a>
-      <a onclick={autologin} class="btn btn-default" role="button"><span class="glyphicon glyphicon-log-in"></span></a>
-      <a onclick={dev} class="btn btn-default" role="button"><span class="glyphicon glyphicon-wrench"></span></a>
+      <a id="refreshButton" onclick={refresh} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-repeat"></span></a>
+      <a id="autologinButton" onclick={autologin} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-log-in"></span></a>
+      <a id="devButton" onclick={dev} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-wrench"></span></a>
     </div>
   </div>
   <webview id="webview" class="gl-webview" preload="./components/preloadWebview.js">
@@ -70,10 +70,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
     autologin(e) {
       autologin.inject(this.webview);
+      this.webview.addEventListener('did-finish-load', () => {
+        autologin.inject(this.webview);
+      });
     }
 
     this.on('mount', function() {
-
       this.webview.addEventListener('did-start-loading', () => {
         this.indicator.classList.toggle('glyphicon');
         this.indicator.classList.toggle('glyphicon-refresh');
@@ -84,11 +86,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
         this.indicator.classList.toggle('glyphicon-refresh');
       });
 
-      this.webview.addEventListener('load-commit', (e) => {
-        this.webview.addEventListener('did-finish-load', () => {
-          customize.inject(this.webview);
-          this.webview.removeEventListener('did-finish-load');
-        });
+      this.webview.addEventListener('did-finish-load', () => {
+        this.refreshButton.classList.remove('disabled');
+        this.devButton.classList.remove('disabled');
+        this.autologinButton.classList.remove('disabled');
+        customize.inject(this.webview);
       });
     });
   </script>

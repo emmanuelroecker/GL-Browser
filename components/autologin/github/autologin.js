@@ -17,14 +17,28 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-ipcRenderer.on('login', function (event,user) {
+ipcRenderer.on('login', function (event, user) {
+	if (sessionStorage.getItem('glAutologin'))
+		return;
+
 	let body = document.getElementsByTagName('body')[0];
-	if (body.classList.contains('logged_out')) {
-		if (window.location.href != "/login") {
-			console.log("ok non login");
-			window.location.href = "/login";
-		} else {
-			console.log("ok login");
-		}
+	if (!body.classList.contains('logged_out'))
+		return;
+
+	if (window.location.pathname != "/login") {
+		window.location.href = "/login";
+		return;
 	}
+
+  let loginform = document.getElementsByTagName('form')[0];
+	let username = document.getElementById('login_field');
+	let password = document.getElementById('password');
+
+	username.value = user.login;
+	password.value = user.password;
+	loginform.submit();
+	username.value = "";
+	password.value = "";
+
+  sessionStorage.setItem('glAutologin', true);
 });

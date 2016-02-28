@@ -21,12 +21,12 @@ ipcRenderer.on('login', function (event, user) {
 	if (sessionStorage.getItem('glAutologin'))
 		return;
 	let body = document.getElementsByTagName('body')[0];
-	if (!(body.classList.contains('logged-out')))
+	if (!(body.classList.contains('logged-out'))) {
 		return;
+	}
 	let loginform = document.getElementsByClassName('LoginForm')[0];
 	let username = loginform.getElementsByClassName('LoginForm-username')[0].getElementsByTagName('input')[0];
 	let password = loginform.getElementsByClassName('LoginForm-password')[0].getElementsByTagName('input')[0];
-	let login = loginform.getElementsByClassName('submit')[0];
 
 	username.value = user.login;
 	password.value = user.password;
