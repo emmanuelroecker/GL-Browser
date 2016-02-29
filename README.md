@@ -1,19 +1,21 @@
 # GLICER Browser
 
-![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/tabs.gif)
-
 ## Features
 
 ### Password Manager
 
-### Requests blocker
-
-Block all requests which matches with url patterns in filter.yml.
+![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/autologin.gif)
 
 ### Customize the way a web page displays or behaves
 
 Inject files inject/list/{name}.css and inject/list/{name}.js
 in url which match with patterns configured in file inject/inject.yml.
+
+![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/tabs.gif)
+
+### Requests blocker
+
+Block all requests which matches with url patterns in filter.yml.
 
 ## Install & Start Browser
 
