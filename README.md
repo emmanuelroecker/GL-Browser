@@ -27,7 +27,7 @@ npm start
 ```
 ## License GPL-2.0
 
-GNU General Public License v2.0
+GNU General Public License v2.0  
 Please see the LICENSE file distributed with this source code for further information regarding copyright and licensing.
 
 ## Contact
