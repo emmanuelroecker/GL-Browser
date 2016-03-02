@@ -19,7 +19,7 @@ Block all requests which matches with url patterns in components/block/block.yml
 
 ## Architecture
 
-![Architecture](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/schema.png)
+![Architecture](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/scheme.png)
 
 ## Install & Start Browser
 
