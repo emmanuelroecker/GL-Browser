@@ -24,14 +24,17 @@ const crypt = require('../components/crypt/crypt.js');;
 const program = require('commander');
 program
 	.version('0.0.1')
-  .option('-t, --text [text]','text to encrypt')
-	.option('-p, --password [password]', 'password used to encrypt')
+  .option('-u, --username [username]','username to encrypt')
+	.option('-p, --userpassword [userpassword]', 'user password to encrypt')
+	.option('-P, --masterpassword [masterpassword]', 'masterpassword used to encrypt')
 	.parse(process.argv);
 
-let crypted = crypt.encrypt(program.text,program.password);
-let hashed = crypt.hash(program.password);
-console.log('aes-256-ctr: ' + crypted);
-console.log('sha256: ' + hashed);
+let usernameCrypted = crypt.encrypt(program.username,program.masterpassword);
+let userpasswordCrypted = crypt.encrypt(program.userpassword, program.masterpassword);
+let masterpasswordHashed = crypt.hash(program.masterpassword);
+console.log('Username Crypted: ' + usernameCrypted);
+console.log('UserPassword Crypted: ' + userpasswordCrypted);
+console.log('MasterPassword Hashed: ' + masterpasswordHashed);
 
 /*
 let decrypted = crypt.decrypt(crypted, program.password);
