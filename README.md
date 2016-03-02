@@ -8,14 +8,18 @@
 
 ### Customize the way a web page displays or behaves
 
-Inject files inject/list/{name}.css and inject/list/{name}.js
-in url which match with patterns configured in file inject/inject.yml.
+Inject files components/customize/{name}/customize.css and components/customize/{name}/customize.js
+in url which match with patterns configured in file components/customize/customize.yml.
 
 ![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/tabs.gif)
 
 ### Requests blocker
 
-Block all requests which matches with url patterns in filter.yml.
+Block all requests which matches with url patterns in components/block/block.yml.
+
+## Architecture
+
+![Architecture](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/schema.png)
 
 ## Install & Start Browser
 
