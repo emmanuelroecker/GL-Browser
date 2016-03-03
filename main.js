@@ -27,10 +27,10 @@ class mainProcessClass {
 		this._modYaml = require('js-yaml');
 		this._modFs = require('fs');
 		this._modPath = require('path');
+		this._modBlock = require('./components/block/block.js');
     this._app = this._modElectron.app;
 
 		this._encoding = encoding;
-		this._blockCfgFile = './components/block/block.yml';
 		this._indexHtmlFile = 'index.html';
 
     this.init();
@@ -51,22 +51,10 @@ class mainProcessClass {
 			});
 			this._mainWindow.loadURL(this._modPath.join('file://', __dirname, this._indexHtmlFile));
 
-			this.block(this._mainWindow);
+			this._modBlock.block(this._mainWindow);
 
 			this._mainWindow.on('closed', () => {
 				this._mainWindow = null;
-			});
-		});
-	}
-
-	block(window) {
-		let filter = this._modYaml.safeLoad(this._modFs.readFileSync(this._blockCfgFile, this._encoding));
-		let ses = window.webContents.session;
-		ses.webRequest.onBeforeRequest({
-			urls: filter
-		}, function (details, callback) {
-			callback({
-				cancel: true
 			});
 		});
 	}

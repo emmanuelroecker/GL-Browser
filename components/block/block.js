@@ -20,6 +20,24 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 'use strict';
 
 class blockClass {
-	constructor(encoding) {    
+	constructor(encoding) {
+		this._modFs = require('fs');
+		this._modYaml = require('js-yaml');
+		this._blockCfgFile = './components/block/block.yml';
+		this._encoding = encoding;
   }
+
+	block(window) {
+		let filter = this._modYaml.safeLoad(this._modFs.readFileSync(this._blockCfgFile, this._encoding));
+		let ses = window.webContents.session;
+		ses.webRequest.onBeforeRequest({
+			urls: filter
+		}, function (details, callback) {
+			callback({
+				cancel: true
+			});
+		});
+	}
 }
+
+module.exports = new blockClass('utf8');
