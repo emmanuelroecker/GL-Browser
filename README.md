@@ -9,17 +9,17 @@
 ### Customize the way a web page displays or behaves
 
 Inject files components/customize/{name}/customize.css and components/customize/{name}/customize.js
-in url which match with patterns configured in file components/customize/customize.yml.
+in URL which matches with patterns configured in file components/customize/customize.yml.
 
 ![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/tabs.gif)
 
 ### Requests blocker
 
-Block all requests which matches with url patterns in components/block/block.yml.
+Block all requests which match with URL patterns in components/block/block.yml.
 
 ## Architecture
 
-![Architecture](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/scheme.png)
+![Architecture](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/scheme_en.png)
 
 ## Install & Start Browser
 
