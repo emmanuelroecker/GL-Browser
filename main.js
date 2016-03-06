@@ -28,12 +28,12 @@ class mainProcessClass {
 		this._modFs = require('fs');
 		this._modPath = require('path');
 		this._modBlock = require('./components/block/block.js');
-    this._app = this._modElectron.app;
+		this._app = this._modElectron.app;
 
 		this._encoding = encoding;
 		this._indexHtmlFile = 'index.html';
 
-    this.init();
+		this.init();
 	}
 
 
@@ -60,4 +60,4 @@ class mainProcessClass {
 	}
 }
 
-let mainProcess = new mainProcessClass("utf8");
+let mainProcess = new mainProcessClass('utf8');

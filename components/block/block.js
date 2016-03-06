@@ -25,7 +25,7 @@ class blockClass {
 		this._modYaml = require('js-yaml');
 		this._blockCfgFile = './components/block/block.yml';
 		this._encoding = encoding;
-  }
+	}
 
 	block(window) {
 		let filter = this._modYaml.safeLoad(this._modFs.readFileSync(this._blockCfgFile, this._encoding));
