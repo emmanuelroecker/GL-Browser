@@ -17,6 +17,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+/// <reference path="../../typings/main.d.ts" />
+
+'use strict';
+
+import * as sqlite3 from "sqlite3";
+
 interface Diacritics {
   base: string;
   characters: string;
@@ -41,8 +47,12 @@ let defaultDiacritics: Diacritics[] = [
 export default class FullTextSearchClass {
   private minQueryLength: number = 2;
   private diacriticsMap: string[] = [];
+  private tableFilter: string;
+  private tableFullText: string;
+  private fields: string[];
+  private db:sqlite3.Database;
 
-  constructor(minQueryLength: number = 2) {
+  constructor(filename: string, tableFilter: string, tableFullText: string, fields: string[], minQueryLength: number = 2) {
     for (let i = 0; i < defaultDiacritics.length; i++) {
       let characters = defaultDiacritics[i].characters.split("");
       for (let j = 0; j < characters.length; j++) {
@@ -51,6 +61,10 @@ export default class FullTextSearchClass {
     }
 
     this.minQueryLength = minQueryLength;
+    this.db = new sqlite3.Database(filename);
+    this.tableFilter = tableFilter;
+    this.tableFullText = tableFullText;
+    this.fields = fields;
   }
 
   private removeDiacritics(sentence: string): string {
@@ -118,68 +132,62 @@ export default class FullTextSearchClass {
     return result;
   }
 
-  public highlights(query: string[], fields: string[], result) {
-    let coords = result.highlights.split(/ /);
+  /*
+  query:string[] - liste des débuts de mots recherchés (['je','cherc','un','truc'])
+  fields:string[] - liste de tous les champs de la table
+
+  result.offsets is a text value containing a series of space-separated integers
+
+  */
+  public highlights(query: string[], fields: string[], value: any, highlights: string) {
+    let coords = highlights.split(/ /);
     let length = coords.length;
 
     let i: number = 0;
 
-    let colnumInc = Array.apply(null, Array(fields.length)).map(function() {
+    let colnumInc = Array.apply(null, Array(fields.length)).map(function() { //créer un tableau du nombre de fields avec valeur 0
       return 0
     });
+    let openTag = "<b>";
+    let closeTag = "</b>";
+    let lengthTag = openTag.length + closeTag.length; //longueur de <b></b> = 7
     while (i < length) {
-      let colnum = coords[i++];
-      let itemnum = coords[i++];
-      let offset = parseInt(coords[i++]) + colnumInc[colnum];
-      let size = coords[i++];
+      let colnum = coords[i++]; //The column number that the term instance occurs in (0 for the leftmost column of the FTS table, 1 for the next leftmost, etc.).
+      let itemnum = coords[i++]; //The term number of the matching term within the full-text query expression. Terms within a query expression are numbered starting from 0 in the order that they occur.
+      let offset = parseInt(coords[i++]) + colnumInc[colnum]; //The byte offset of the matching term within the column.
+      let size = coords[i++]; //The size of the matching term in bytes.
 
-      let value = result.value[fields[colnum]];
-      let queryLength = query[itemnum].length;
+      let valuefield = value[fields[colnum]]; //valeur du champs correspondant avant highlights
+      let queryLength = query[itemnum].length; //The size of the matching term in bytes.
 
-      result.value[fields[colnum]] = value.substr(0, offset) + "<b>" + value.substr(offset, queryLength) + "</b>" + value.substr(offset + queryLength);
-      colnumInc[colnum] += 7;
+      value[fields[colnum]] = valuefield.substr(0, offset) + openTag + valuefield.substr(offset, queryLength) + closeTag + valuefield.substr(offset + queryLength); //remplace les champs en insérant les balises b
+      colnumInc[colnum] += lengthTag;
     }
   }
 
-  private httpGet(url: string, callback: (response: Response) => void) {
-    let anHttpRequest = new XMLHttpRequest();
-    anHttpRequest.onreadystatechange = function() {
-      if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200) {
-        callback(JSON.parse(anHttpRequest.responseText));
-      }
-    };
-
-    anHttpRequest.open("GET", url, true);
-    anHttpRequest.send(null);
-  }
-
-  public query(words: string, callbackEach: (value: any) => void, callbackEnd: (values: any[]) => void, filter: string = null, hightlights: boolean = true) {
+  public query(words: string, callbackEach: (err: any, obj: any) => void, filter: string = null, hightlights: boolean = true) {
     if (words.length < this.minQueryLength) {
-      callbackEnd(null);
       return;
     }
 
     let query: string[] = this.normalize(words);
     let highlights = this.highlights;
 
-    if (!filter) {
-      filter = '';
-    }
+    this.db.serialize(function() {
+      let sql = `SELECT json,offsets FROM ${this.tableFilter} JOIN
+      (SELECT docid, offsets(${this.tableFullText}) AS offsets
+       FROM ${this.tableFullText} WHERE ${this.tableFullText}
+       MATCH '${this.toQuery(query) }') USING (docid);`;
 
-    /*
-    var url = this.urlServer.replace('{q}', this.toQuery(query));
-    url = url.replace('{f}', filter);
-    this.httpGet(url, function(data: Response) {
-      let fields: string[] = data.fields;
-      let results = data.results;
-      results.forEach(function(result) {
-        if (hightlights) {
-          highlights(query, fields, result);
-        }
-        callbackEach(result.value);
+      if (filter) {
+        sql += ` WHERE ${filter}`;
+      }
+
+      this.db.each(sql, (err: any, row: any) => {
+        let obj = JSON.parse(row.json);
+        this.highlights(query, this.fields, obj, row.offsets);
+        callbackEach(err, obj);
       });
-      callbackEnd(results);
     });
-    */
   }
 }

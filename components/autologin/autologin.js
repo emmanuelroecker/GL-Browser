@@ -33,8 +33,8 @@ class autologinClass {
 		this._loginMessage = 'login';
 		this._injectJsFile = 'inject.js';
 		this._masterPasswordEnable = false;
-		this._masterPasswordHash = "";
-		this._masterPassword = "";
+		this._masterPasswordHash = '';
+		this._masterPassword = '';
 		this.init();
 	}
 
@@ -71,12 +71,12 @@ class autologinClass {
 	}
 
 	getJS(name) {
-		let js = "";
+		let js = '';
 		try {
 			let customizejs = this._modFs.readFileSync(this._modPath.join(__dirname, name, this._autologinJsFile), this._encoding);
 			js = this._injectJS.replace(this._autologinTemplate, customizejs);
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 		}
 		return js;
 	}
@@ -85,7 +85,7 @@ class autologinClass {
 		return patterns.map(pattern => {
 			pattern = this._modMatchPattern.parse(pattern);
 			if (pattern === null) {
-				console.log(`Bad pattern : ${pattern} in ${name}`);
+				console.log(`Bad pattern : ${pattern}`);
 			}
 			return pattern;
 		});
