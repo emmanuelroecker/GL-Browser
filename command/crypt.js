@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const crypt = require('../components/crypt/crypt.js');;
+const crypt = require('../components/crypt/crypt.js');
 
 const program = require('commander');
 program
