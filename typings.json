@@ -1,6 +1,7 @@
 {
   "ambientDependencies": {
     "mocha": "github:DefinitelyTyped/DefinitelyTyped/mocha/mocha.d.ts#d6dd320291705694ba8e1a79497a908e9f5e6617",
+    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#48c1e3c1d6baefa4f1a126f188c27c4fefd36bff",
     "should": "github:DefinitelyTyped/DefinitelyTyped/should/should.d.ts#5aa6dff6990465c7fb41504538ad7aa133ab01d3",
     "sqlite3": "github:DefinitelyTyped/DefinitelyTyped/sqlite3/sqlite3.d.ts#abc2bcfb8524b1e027e6298d3348012b5b06eda5"
   }

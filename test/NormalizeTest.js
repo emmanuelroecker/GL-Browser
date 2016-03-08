@@ -18,13 +18,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 /// <reference path="../typings/main.d.ts" />
 'use strict';
-var search_1 = require('../components/search/search');
+var normalize_1 = require('../components/search/normalize');
 var should = require('should');
 var persist = should;
-describe('FullTextSearchClass', function () {
+describe('NormalizeClass', function () {
     var subject;
     beforeEach(function () {
-        subject = new search_1.default("test.db", null, null, null);
+        subject = new normalize_1.default();
     });
     describe('#diacritics', function () {
         it('simple word', function () {
@@ -52,15 +52,6 @@ describe('FullTextSearchClass', function () {
         it('prefixes', function () {
             var result = subject.normalize('economi econo uni universel');
             result.should.eql(['economi', 'universel']);
-        });
-    });
-    describe('#highlights', function () {
-        it('test1', function () {
-            var value = { field1: "j'aime le word1", field2: "je préfère le word25 qui est meilleur" };
-            var highlights = '0 0 10 5 1 1 14 6';
-            subject.highlights(["word1", "word2"], ["field1", "field2"], value, highlights);
-            value.field1.should.equal("j'aime le <b>word1</b>");
-            value.field2.should.equal("je préfère le <b>word2</b>5 qui est meilleur");
         });
     });
     describe('#sqlquery', function () {
