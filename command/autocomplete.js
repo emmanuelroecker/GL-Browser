@@ -7,7 +7,9 @@ db.serialize(function () {
 
 	let stmt = db.prepare('INSERT INTO pages VALUES (?,?,?)');
 	stmt.run('test1', 'bonjour rien du tout', 'corps du text');
-	stmt.run('test2', 'tout pour ça', 'second texte');
+	stmt.run('test2','tout pour ça', 'second texte', function(err) {
+		console.log(err);
+	});
 	stmt.finalize();
 
 	db.each('SELECT body,offsets(pages) AS offset FROM pages WHERE keywords MATCH "ça";', function (err, row) {

@@ -22,14 +22,29 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 'use strict';
 
 import IndexClass from '../components/search/index';
+import * as fs from "fs";
+import * as path from "path";
 import * as should from 'should';
 let persist = should;
 
 describe('IndexClass', () => {
-  let subject: IndexClass;
+  let db = null;
 
-  beforeEach(function() {
-    subject = new IndexClass("test.db","test",["field1"],null);
+  beforeEach(function(done) {
+    let dbfile = path.join(__dirname,'data','test.db');
+    let dbdata = path.join(__dirname,'data','web.yml');
+    try {
+      fs.unlinkSync(dbfile);
+    } catch (e) {
+    }
+    db = new IndexClass(dbfile,"test",['title','tags','description','address','city'],['gps']);
+    db.init(function() {
+      db.importYaml(dbdata, done);
+    });
+  });
+
+  afterEach(function() {
+    db.close();
   });
 
   describe('#highlights', () => {
@@ -37,7 +52,7 @@ describe('IndexClass', () => {
       let value = {field1: "j'aime le word1", field2: "je préfère le word25 qui est meilleur"};
       let highlights = '0 0 10 5 1 1 14 6';
 
-      subject.highlights(["word1", "word2"], ["field1", "field2"], value, highlights);
+      db.highlights(["word1", "word2"], ["field1", "field2"], value, highlights);
 
       value.field1.should.equal("j'aime le <b>word1</b>");
       value.field2.should.equal("je préfère le <b>word2</b>5 qui est meilleur");

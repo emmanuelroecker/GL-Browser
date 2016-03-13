@@ -19,18 +19,33 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 /// <reference path="../typings/main.d.ts" />
 'use strict';
 var index_1 = require('../components/search/index');
+var fs = require("fs");
+var path = require("path");
 var should = require('should');
 var persist = should;
 describe('IndexClass', function () {
-    var subject;
-    beforeEach(function () {
-        subject = new index_1.default("test.db", "test", ["field1"], null);
+    var db = null;
+    beforeEach(function (done) {
+        var dbfile = path.join(__dirname, 'data', 'test.db');
+        var dbdata = path.join(__dirname, 'data', 'web.yml');
+        try {
+            fs.unlinkSync(dbfile);
+        }
+        catch (e) {
+        }
+        db = new index_1.default(dbfile, "test", ['title', 'tags', 'description', 'address', 'city'], ['gps']);
+        db.init(function () {
+            db.importYaml(dbdata, done);
+        });
+    });
+    afterEach(function () {
+        db.close();
     });
     describe('#highlights', function () {
         it('test1', function () {
             var value = { field1: "j'aime le word1", field2: "je préfère le word25 qui est meilleur" };
             var highlights = '0 0 10 5 1 1 14 6';
-            subject.highlights(["word1", "word2"], ["field1", "field2"], value, highlights);
+            db.highlights(["word1", "word2"], ["field1", "field2"], value, highlights);
             value.field1.should.equal("j'aime le <b>word1</b>");
             value.field2.should.equal("je préfère le <b>word2</b>5 qui est meilleur");
         });

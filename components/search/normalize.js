@@ -65,7 +65,14 @@ var NormalizeClass = (function () {
         }
         return result;
     };
-    NormalizeClass.prototype.normalize = function (sentence) {
+    NormalizeClass.prototype.normalizeImport = function (sentence) {
+        if (!sentence)
+            return '';
+        sentence = this.removeDiacritics(sentence);
+        sentence = sentence.replace('/\r\n?/', "");
+        return sentence;
+    };
+    NormalizeClass.prototype.normalizeQuery = function (sentence) {
         if (!sentence)
             return [];
         sentence = this.removeDiacritics(sentence);

@@ -29,6 +29,13 @@ Block all requests which match with URL patterns in components/block/block.yml.
 npm install
 npm start
 ```
+
+## Tests
+
+```console
+npm test
+```
+
 ## License GPL-2.0
 
 GNU General Public License v2.0  

@@ -26,13 +26,23 @@ describe('NormalizeClass', function () {
     beforeEach(function () {
         subject = new normalize_1.default();
     });
-    describe('#diacritics', function () {
+    describe('#normalizeImport', function () {
+        it('test1', function () {
+            var result = subject.normalizeImport("L’Âme Sœur");
+            result.should.equal("l'ame soeur");
+        });
+        it('test2', function () {
+            var result = subject.normalizeImport("Le Comptoir d'Oz");
+            result.should.equal("le comptoir d'oz");
+        });
+    });
+    describe('#normalizeQuery', function () {
         it('simple word', function () {
-            var result = subject.normalize('école');
+            var result = subject.normalizeQuery('école');
             result.should.eql(['ecole']);
         });
         it('multi words', function () {
-            var result = subject.normalize('ça été un être chère à cœur chez les zoulous');
+            var result = subject.normalizeQuery('ça été un être chère à cœur chez les zoulous');
             var expected = [
                 'ca',
                 'un',
@@ -46,11 +56,11 @@ describe('NormalizeClass', function () {
             result.should.eql(expected);
         });
         it('french', function () {
-            var result = subject.normalize('äâàéèëêïîöôùüûœç');
+            var result = subject.normalizeQuery('äâàéèëêïîöôùüûœç');
             result.should.eql(['aaaeeeeiioouuuoec']);
         });
         it('prefixes', function () {
-            var result = subject.normalize('economi econo uni universel');
+            var result = subject.normalizeQuery('economi econo uni universel');
             result.should.eql(['economi', 'universel']);
         });
     });

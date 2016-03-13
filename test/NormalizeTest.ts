@@ -32,13 +32,25 @@ describe('NormalizeClass', () => {
     subject = new NormalizeClass();
   });
 
-  describe('#diacritics', () => {
+  describe('#normalizeImport', () => {
+     it('test1', () => {
+       let result = subject.normalizeImport("L’Âme Sœur");
+       result.should.equal("l'ame soeur")
+     });
+
+     it('test2', () => {
+       let result = subject.normalizeImport("Le Comptoir d'Oz");
+       result.should.equal("le comptoir d'oz");
+     });
+  });
+
+  describe('#normalizeQuery', () => {
     it('simple word', () => {
-      let result: string[] = subject.normalize('école');
+      let result: string[] = subject.normalizeQuery('école');
       result.should.eql(['ecole']);
     });
     it('multi words', () => {
-      let result: string[] = subject.normalize('ça été un être chère à cœur chez les zoulous');
+      let result: string[] = subject.normalizeQuery('ça été un être chère à cœur chez les zoulous');
       let expected: string[] = [
         'ca',
         'un',
@@ -52,15 +64,15 @@ describe('NormalizeClass', () => {
       result.should.eql(expected);
     });
     it('french', () => {
-      let result: string[] = subject.normalize('äâàéèëêïîöôùüûœç');
+      let result: string[] = subject.normalizeQuery('äâàéèëêïîöôùüûœç');
       result.should.eql(['aaaeeeeiioouuuoec']);
     });
     it('prefixes', () => {
-      let result: string[] = subject.normalize('economi econo uni universel');
+      let result: string[] = subject.normalizeQuery('economi econo uni universel');
       result.should.eql(['economi', 'universel']);
     });
   });
-  
+
   describe('#sqlquery', () => {
     it('test1', () => {
       let result = subject.toQuery(['maison', 'voiture', 'a', 'de']);

@@ -19,7 +19,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 /// <reference path="../../typings/main.d.ts" />
 'use strict';
 var normalize_1 = require("./normalize");
+var yaml = require("js-yaml");
+var fs = require("fs");
 var sqlite3 = require("sqlite3");
+sqlite3.verbose();
 var IndexClass = (function () {
     function IndexClass(filename, table, fieldsFullText, fieldsFilter, minQueryLength) {
         if (minQueryLength === void 0) { minQueryLength = 2; }
@@ -34,7 +37,8 @@ var IndexClass = (function () {
         this.tableFilter = table + "F";
         this.tableFullText = table + "FT";
     }
-    IndexClass.prototype.init = function () {
+    IndexClass.prototype.init = function (done) {
+        var _this = this;
         var createSQLFilter = '';
         if (this.fieldsFilter) {
             var sqlfieldsFilter = this.fieldsFilter.join("','");
@@ -45,51 +49,102 @@ var IndexClass = (function () {
         }
         var sqlfieldsFullText = this.fieldsFullText.join("','");
         var createSQLFullText = "CREATE VIRTUAL TABLE " + this.tableFullText + " USING fts4('" + sqlfieldsFullText + "');";
-        var valuesFilter = Array(this.fieldsFilter.length).join(",");
-        this.stmtInsertFilter = this.db.prepare("INSERT INTO " + this.tableFilter + " VALUES (?, ?, " + valuesFilter + ")");
-        var valuesFullText = Array(this.fieldsFullText.length).join(",");
-        this.stmtInsertFullText = this.db.prepare("INSERT INTO " + this.tableFullText + " (docid,'" + sqlfieldsFullText + "') VALUES (?," + valuesFullText + ")");
+        var valuesFilter = (Array.apply(null, Array(this.fieldsFilter.length)).map(function () {
+            return '?';
+        })).join(",");
+        var valuesFilterSQL = "INSERT INTO " + this.tableFilter + " VALUES (?, ?, " + valuesFilter + ")";
+        var valuesFullText = (Array.apply(null, Array(this.fieldsFullText.length)).map(function () {
+            return '?';
+        })).join(",");
+        var valuesFullTextSQL = "INSERT INTO " + this.tableFullText + " (docid,'" + sqlfieldsFullText + "') VALUES (?," + valuesFullText + ")";
         this.db.serialize(function () {
-            this.db.run(createSQLFilter);
-            this.db.run(createSQLFullText);
+            _this.db.run(createSQLFilter, function (err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+            _this.db.run(createSQLFullText, function (err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+            _this.stmtInsertFilter = _this.db.prepare(valuesFilterSQL, function (err) {
+                if (err) {
+                    console.log("Insert Filter : " + valuesFilterSQL + " " + err);
+                }
+            });
+            _this.stmtInsertFullText = _this.db.prepare(valuesFullTextSQL, function (err) {
+                if (err) {
+                    console.log("Insert Full Test : " + valuesFullTextSQL + " " + err);
+                }
+                done();
+            });
+        });
+    };
+    IndexClass.prototype.close = function () {
+        this.db.close();
+    };
+    IndexClass.prototype.clear = function (done) {
+        var _this = this;
+        this.db.serialize(function () {
+            _this.db.run("DELETE * FROM " + _this.tableFilter);
+            _this.db.run("DELETE * FROM " + _this.tableFullText, done);
         });
     };
     IndexClass.prototype.valuesFullText = function (obj) {
         var valuesFullText = [];
+        valuesFullText.push(obj.id);
         for (var _i = 0, _a = this.fieldsFullText; _i < _a.length; _i++) {
             var fieldFullText = _a[_i];
             if (obj[fieldFullText]) {
-                valuesFullText[fieldFullText] = this.normalize.normalize(obj[fieldFullText]);
+                valuesFullText.push(this.normalize.normalizeImport(obj[fieldFullText]));
             }
             else {
-                valuesFullText[fieldFullText] = '';
+                valuesFullText.push('');
             }
         }
         return valuesFullText;
     };
     IndexClass.prototype.valuesFilter = function (obj) {
         var valuesFilter = [];
+        valuesFilter.push(obj.id);
+        valuesFilter.push(JSON.stringify(obj));
         for (var _i = 0, _a = this.fieldsFilter; _i < _a.length; _i++) {
             var fieldFilter = _a[_i];
             if (obj[fieldFilter]) {
-                valuesFilter[fieldFilter] = this.normalize.normalize(obj[fieldFilter]);
+                valuesFilter.push(obj[fieldFilter]);
             }
             else {
-                valuesFilter[fieldFilter] = '';
+                valuesFilter.push('');
             }
         }
         return valuesFilter;
     };
+    IndexClass.prototype.importYaml = function (filename, done) {
+        var objs = yaml.safeLoad(fs.readFileSync(filename, "utf8"));
+        for (var _i = 0, objs_1 = objs; _i < objs_1.length; _i++) {
+            var obj = objs_1[_i];
+            this.import(obj);
+        }
+        this.stmtInsertFilter.finalize();
+        this.stmtInsertFullText.finalize(done);
+    };
     IndexClass.prototype.import = function (obj) {
         var valuesFullText = this.valuesFullText(obj);
-        if (valuesFullText.length <= 0) {
+        if (Object.keys(valuesFullText).length <= 0) {
             throw new RangeError("At least one full text field");
         }
         var valuesFilter = this.valuesFilter(obj);
-        var json = JSON.stringify(obj);
-        this.stmtInsertFilter.run(obj.id, json, valuesFilter);
-        this.stmtInsertFilter.finalize();
-        this.stmtInsertFullText.run(obj.id, valuesFullText);
+        this.stmtInsertFilter.run(valuesFilter, function (err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+        this.stmtInsertFullText.run(valuesFullText, function (err) {
+            if (err) {
+                console.log(err);
+            }
+        });
     };
     /*
     query:string[] - liste des débuts de mots recherchés (['je','cherc','un','truc'])
@@ -126,7 +181,7 @@ var IndexClass = (function () {
         if (words.length < this.minQueryLength) {
             return;
         }
-        var query = this.normalize.normalize(words);
+        var query = this.normalize.normalizeQuery(words);
         this.db.serialize(function () {
             var sql = "SELECT json,offsets FROM " + _this.tableFilter + " JOIN\n      (SELECT docid, offsets(" + _this.tableFullText + ") AS offsets\n       FROM " + _this.tableFullText + " WHERE " + _this.tableFullText + "\n       MATCH '" + _this.normalize.toQuery(query) + "') USING (docid);";
             if (filter) {

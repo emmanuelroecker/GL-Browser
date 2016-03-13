@@ -22,7 +22,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 'use strict';
 
 import NormalizeClass from "./normalize";
+import * as yaml from "js-yaml";
+import * as fs from "fs";
+import * as path from "path";
 import * as sqlite3 from "sqlite3";
+sqlite3.verbose();
 
 export default class IndexClass {
   private tableFilter: string;
@@ -36,11 +40,10 @@ export default class IndexClass {
   private stmtInsertFullText: sqlite3.Statement;
   private minQueryLength: number = 2;
 
-  constructor(filename: string, table: string, fieldsFullText: string[], fieldsFilter: string[],minQueryLength: number = 2) {
+  constructor(filename: string, table: string, fieldsFullText: string[], fieldsFilter: string[], minQueryLength: number = 2) {
     if (fieldsFullText.length <= 0) {
       throw new RangeError("You must have at least one field full text");
     }
-
     this.db = new sqlite3.Database(filename);
     this.normalize = new NormalizeClass();
     this.fieldsFilter = fieldsFilter;
@@ -49,7 +52,7 @@ export default class IndexClass {
     this.tableFullText = `${table}FT`;
   }
 
-  public init() {
+  public init(done: () => void) {
     let createSQLFilter = '';
     if (this.fieldsFilter) {
       let sqlfieldsFilter = this.fieldsFilter.join("','");
@@ -61,57 +64,106 @@ export default class IndexClass {
     let sqlfieldsFullText = this.fieldsFullText.join("','");
     let createSQLFullText = `CREATE VIRTUAL TABLE ${this.tableFullText} USING fts4('${sqlfieldsFullText}');`;
 
-    let valuesFilter = Array(this.fieldsFilter.length).join(",");
-    this.stmtInsertFilter = this.db.prepare(`INSERT INTO ${this.tableFilter} VALUES (?, ?, ${valuesFilter})`);
+    let valuesFilter = (Array.apply(null, Array(this.fieldsFilter.length)).map(function() {
+      return '?'
+    })).join(",");
+    let valuesFilterSQL = `INSERT INTO ${this.tableFilter} VALUES (?, ?, ${valuesFilter})`;
+    let valuesFullText = (Array.apply(null, Array(this.fieldsFullText.length)).map(function() {
+      return '?'
+    })).join(",");
+    let valuesFullTextSQL = `INSERT INTO ${this.tableFullText} (docid,'${sqlfieldsFullText}') VALUES (?,${valuesFullText})`;
 
-    let valuesFullText = Array(this.fieldsFullText.length).join(",");
-    this.stmtInsertFullText = this.db.prepare(`INSERT INTO ${this.tableFullText} (docid,'${sqlfieldsFullText}') VALUES (?,${valuesFullText})`);
+    this.db.serialize(() => {
+      this.db.run(createSQLFilter, function(err: Error) {
+        if (err) {
+          console.log(err);
+        }
+      });
+      this.db.run(createSQLFullText, function(err: Error) {
+        if (err) {
+          console.log(err);
+        }
+      });
+      this.stmtInsertFilter = this.db.prepare(valuesFilterSQL, function(err: Error) {
+        if (err) {
+          console.log("Insert Filter : " + valuesFilterSQL + " " + err);
+        }
+      });
+      this.stmtInsertFullText = this.db.prepare(valuesFullTextSQL, function(err: Error) {
+        if (err) {
+          console.log("Insert Full Test : " + valuesFullTextSQL + " " + err);
+        }
+        done();
+      });
+    });
+  }
 
-    this.db.serialize(function() {
-      this.db.run(createSQLFilter);
-      this.db.run(createSQLFullText);
+  public close() {
+    this.db.close();
+  }
+
+  public clear(done: () => void) {
+    this.db.serialize(() => {
+      this.db.run(`DELETE * FROM ${this.tableFilter}`);
+      this.db.run(`DELETE * FROM ${this.tableFullText}`,done);
     });
   }
 
   private valuesFullText(obj: any): string[] {
     let valuesFullText = [];
+    valuesFullText.push(obj.id);
     for (let fieldFullText of this.fieldsFullText) {
       if (obj[fieldFullText]) {
-        valuesFullText[fieldFullText] = this.normalize.normalize(obj[fieldFullText]);
+        valuesFullText.push(this.normalize.normalizeImport(obj[fieldFullText]));
       } else {
-        valuesFullText[fieldFullText] = '';
+        valuesFullText.push('');
       }
     }
-
     return valuesFullText;
   }
 
   private valuesFilter(obj: any): string[] {
     let valuesFilter = [];
+    valuesFilter.push(obj.id);
+    valuesFilter.push(JSON.stringify(obj));
     for (let fieldFilter of this.fieldsFilter) {
       if (obj[fieldFilter]) {
-        valuesFilter[fieldFilter] = this.normalize.normalize(obj[fieldFilter]);
+        valuesFilter.push(obj[fieldFilter]);
       } else {
-        valuesFilter[fieldFilter] = '';
+        valuesFilter.push('');
       }
     }
     return valuesFilter;
   }
 
+  public importYaml(filename: string, done: () => void) {
+    let objs = yaml.safeLoad(fs.readFileSync(filename, "utf8"));
+    for (let obj of objs) {
+      this.import(obj);
+    }
+    this.stmtInsertFilter.finalize();
+    this.stmtInsertFullText.finalize(done);
+  }
+
   public import(obj: any) {
     let valuesFullText: string[] = this.valuesFullText(obj);
 
-    if (valuesFullText.length <= 0) {
+    if (Object.keys(valuesFullText).length <= 0) {
       throw new RangeError("At least one full text field");
     }
 
     let valuesFilter: string[] = this.valuesFilter(obj);
-    let json = JSON.stringify(obj);
+    this.stmtInsertFilter.run(valuesFilter, function(err: Error) {
+      if (err) {
+        console.log(err);
+      }
+    });
 
-    this.stmtInsertFilter.run(obj.id, json, valuesFilter);
-    this.stmtInsertFilter.finalize();
-
-    this.stmtInsertFullText.run(obj.id, valuesFullText);
+    this.stmtInsertFullText.run(valuesFullText, function(err: Error) {
+      if (err) {
+        console.log(err);
+      }
+    });
   }
 
   /*
@@ -152,7 +204,7 @@ export default class IndexClass {
       return;
     }
 
-    let query: string[] = this.normalize.normalize(words);
+    let query: string[] = this.normalize.normalizeQuery(words);
     this.db.serialize(() => {
       let sql = `SELECT json,offsets FROM ${this.tableFilter} JOIN
       (SELECT docid, offsets(${this.tableFullText}) AS offsets

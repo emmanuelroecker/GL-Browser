@@ -1,0 +1,57 @@
+-   id: 0
+    title: "Cinéma Comoedia"
+    link: "http://www.cinema-comoedia.com"
+    sociallink: "https://www.facebook.com/cinemacomoedia"
+    feedlink: "http://www.cinema-comoedia.com/rss/"
+    feedlimit: 5
+    tags: "cinéma"
+    gps: "45.7473766,4.8355764"
+    description: |
+                  Cinéma indépendant art et essai, lieu de rencontres dans lequel
+                  projections de films, expositions, conférences et débats sont également possibles ...
+    address: "13 Avenue Berthelot"
+    city: "Lyon 7"
+    phone: "04 26 99 45 00"
+-   id: 1
+    title : "Jean-Pierre, le coureur des berges du Rhône"
+    sociallink: "https://fr-fr.facebook.com/pages/Jean-Pierre-le-coureur-des-berges-du-Rh%C3%B4ne/101738059870725"
+    rel: ""
+    tags: "athlète papy joggeur short rouge"
+    description: |
+                  Courir, courir, et encore courir... sans jamais s'arrêter ...
+-   id: 2
+    title : "Gym Suédoise Lyon"
+    sociallink: "https://fr-fr.facebook.com/gymsuedoise.lyon"
+    rel: ""
+    videolink: "https://www.youtube.com/embed/r0xiohshSgU"
+    moviethumb: "http://img.youtube.com/vi/r0xiohshSgU/0.jpg"
+    tags: "sport loisir"
+    description: |
+                  En cercle autour de l'animateur, les participants reproduisent des mouvements simples
+                  à exécuter au rythme d'une musique entraînante ...
+-   id: 3
+    title: "Le 126"
+    sociallink: "https://www.facebook.com/Le126/photos_stream"
+    rel: ""
+    tags: "restaurant evenement gourmet français"
+    gps: "45.7689867,4.8566032"
+    description: |
+                   Solution de continuité
+    address: "126 rue de Sèze"
+    city: "Lyon 6"
+    phone: "04 78 52 74 34"
+    article:
+          - title: "scène de film à laquelle on pense en sortant"
+            link: "https://www.youtube.com/embed/33MTqal5N5Y?autoplay=true&rel=0&autohide=2"
+-   id: 4
+    title: "Aklé - Le Comptoir à Mezzés"
+    link: "http://www.akle.fr"
+    sociallink: "https://www.facebook.com/aklelyon/photos_stream"
+    rel: ""
+    tags: "restaurant libanais monde"
+    description: |
+                   Pour ceux qui ont l'âme d'un pois chiche
+    gps: "45.7584076,4.8497723"
+    address: "108 rue Chaponnay"
+    city: "Lyon 3"
+    phone: "06 58 30 52 54"

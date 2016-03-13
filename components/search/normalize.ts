@@ -78,7 +78,15 @@ export default class NormalizeClass {
     return result;
   }
 
-  public normalize(sentence: string): string[] {
+  public normalizeImport(sentence: string): string {
+    if (!sentence)
+      return '';
+    sentence = this.removeDiacritics(sentence);
+    sentence = sentence.replace('/\r\n?/', "");
+    return sentence;
+  }
+
+  public normalizeQuery(sentence: string): string[] {
     if (!sentence)
       return [];
     sentence = this.removeDiacritics(sentence);
