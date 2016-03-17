@@ -55,12 +55,14 @@ describe('IndexClass', function () {
     });
     describe("#search", function () {
         it('search1', function () {
-            db.query('rest* chaponnay', function (err, obj) { }, function (err, objs) {
+            db.query('rest chaponnay', function (err, obj) { }, function (err, objs) {
                 objs[0].title.should.containEql("Aklé");
+                objs[0].tags.should.equal("<b>rest</b>aurant libanais monde");
+                objs[0].address.should.equal("108 rue <b>Chaponnay</b>");
             });
         });
         it('search2', function () {
-            db.query('zol*', function (err, obj) { }, function (err, objs) {
+            db.query('zol', function (err, obj) { }, function (err, objs) {
                 objs[0].title.should.equal("Le <b>Zol</b>a");
             });
         });
@@ -79,6 +81,7 @@ describe('IndexClass', function () {
         it('search5', function () {
             db.query('l\'ame soeur', function (err, obj) { }, function (err, objs) {
                 objs.length.should.equal(1);
+                objs[0].title.should.equal("L’<b>Âme</b> <b>Sœur</b>");
             });
         });
     });

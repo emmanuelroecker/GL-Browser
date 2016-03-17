@@ -64,14 +64,16 @@ describe('IndexClass', () => {
 
   describe("#search", () => {
     it('search1', () => {
-       db.query('rest* chaponnay', (err:any,obj:any) => {}, (err:any,objs:any) => {
+       db.query('rest chaponnay', (err:any,obj:any) => {}, (err:any,objs:any) => {
           objs[0].title.should.containEql("Aklé");
+          objs[0].tags.should.equal("<b>rest</b>aurant libanais monde");
+          objs[0].address.should.equal("108 rue <b>Chaponnay</b>");
        });
     });
 
 
     it('search2', () => {
-      db.query('zol*', (err:any,obj:any) => {}, (err:any, objs:any) => {
+      db.query('zol', (err:any,obj:any) => {}, (err:any, objs:any) => {
         objs[0].title.should.equal("Le <b>Zol</b>a");
       });
     });
@@ -95,6 +97,7 @@ describe('IndexClass', () => {
     it('search5', () => {
       db.query('l\'ame soeur', (err:any,obj:any) => {}, (err:any,objs:any) => {
         objs.length.should.equal(1);
+        objs[0].title.should.equal("L’<b>Âme</b> <b>Sœur</b>");
       });
     })
   });
