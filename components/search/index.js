@@ -52,11 +52,11 @@ var IndexClass = (function () {
         var valuesFilter = (Array.apply(null, Array(this.fieldsFilter.length)).map(function () {
             return '?';
         })).join(",");
-        var valuesFilterSQL = "INSERT INTO " + this.tableFilter + " VALUES (?, ?, " + valuesFilter + ")";
+        this.valuesFilterSQL = "INSERT INTO " + this.tableFilter + " VALUES (?, ?, " + valuesFilter + ")";
         var valuesFullText = (Array.apply(null, Array(this.fieldsFullText.length)).map(function () {
             return '?';
         })).join(",");
-        var valuesFullTextSQL = "INSERT INTO " + this.tableFullText + " (docid,'" + sqlfieldsFullText + "') VALUES (?," + valuesFullText + ")";
+        this.valuesFullTextSQL = "INSERT INTO " + this.tableFullText + " (docid,'" + sqlfieldsFullText + "') VALUES (?," + valuesFullText + ")";
         this.db.serialize(function () {
             _this.db.run(createSQLFilter, function (err) {
                 if (err) {
@@ -67,22 +67,12 @@ var IndexClass = (function () {
                 if (err) {
                     console.log(err);
                 }
-            });
-            _this.stmtInsertFilter = _this.db.prepare(valuesFilterSQL, function (err) {
-                if (err) {
-                    console.log("Insert Filter : " + valuesFilterSQL + " " + err);
-                }
-            });
-            _this.stmtInsertFullText = _this.db.prepare(valuesFullTextSQL, function (err) {
-                if (err) {
-                    console.log("Insert Full Test : " + valuesFullTextSQL + " " + err);
-                }
                 done();
             });
         });
     };
-    IndexClass.prototype.close = function () {
-        this.db.close();
+    IndexClass.prototype.close = function (done) {
+        this.db.close(done);
     };
     IndexClass.prototype.clear = function (done) {
         var _this = this;
@@ -115,19 +105,30 @@ var IndexClass = (function () {
                 valuesFilter.push(obj[fieldFilter]);
             }
             else {
-                valuesFilter.push('');
+                valuesFilter.push(null);
             }
         }
         return valuesFilter;
     };
     IndexClass.prototype.importYaml = function (filename, done) {
-        var objs = yaml.safeLoad(fs.readFileSync(filename, "utf8"));
-        for (var _i = 0, objs_1 = objs; _i < objs_1.length; _i++) {
-            var obj = objs_1[_i];
-            this.import(obj);
-        }
-        this.stmtInsertFilter.finalize();
-        this.stmtInsertFullText.finalize(done);
+        var _this = this;
+        this.stmtInsertFilter = this.db.prepare(this.valuesFilterSQL, function (err) {
+            if (err) {
+                console.log(err);
+            }
+            _this.stmtInsertFullText = _this.db.prepare(_this.valuesFullTextSQL, function (err) {
+                if (err) {
+                    console.log(err);
+                }
+                var objs = yaml.safeLoad(fs.readFileSync(filename, "utf8"));
+                for (var _i = 0, objs_1 = objs; _i < objs_1.length; _i++) {
+                    var obj = objs_1[_i];
+                    _this.import(obj);
+                }
+                _this.stmtInsertFilter.finalize();
+                _this.stmtInsertFullText.finalize(done);
+            });
+        });
     };
     IndexClass.prototype.import = function (obj) {
         var valuesFullText = this.valuesFullText(obj);
@@ -174,7 +175,7 @@ var IndexClass = (function () {
             colnumInc[colnum] += lengthTag;
         }
     };
-    IndexClass.prototype.query = function (words, callbackEach, filter, hightlights) {
+    IndexClass.prototype.query = function (words, callbackEach, callbackComplete, filter, hightlights) {
         var _this = this;
         if (filter === void 0) { filter = null; }
         if (hightlights === void 0) { hightlights = true; }
@@ -183,14 +184,18 @@ var IndexClass = (function () {
         }
         var query = this.normalize.normalizeQuery(words);
         this.db.serialize(function () {
-            var sql = "SELECT json,offsets FROM " + _this.tableFilter + " JOIN\n      (SELECT docid, offsets(" + _this.tableFullText + ") AS offsets\n       FROM " + _this.tableFullText + " WHERE " + _this.tableFullText + "\n       MATCH '" + _this.normalize.toQuery(query) + "') USING (docid);";
+            var sql = "SELECT json,offsets FROM " + _this.tableFilter + " JOIN\n      (SELECT docid, offsets(" + _this.tableFullText + ") AS offsets\n       FROM " + _this.tableFullText + " WHERE " + _this.tableFullText + "\n       MATCH '" + _this.normalize.toQuery(query) + "') USING (docid)";
             if (filter) {
                 sql += " WHERE " + filter;
             }
+            var objs = [];
             _this.db.each(sql, function (err, row) {
                 var obj = JSON.parse(row.json);
                 _this.highlights(query, _this.fieldsFullText, obj, row.offsets);
+                objs.push(obj);
                 callbackEach(err, obj);
+            }, function (err, rows) {
+                callbackComplete(err, objs);
             });
         });
     };

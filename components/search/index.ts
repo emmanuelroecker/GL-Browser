@@ -34,6 +34,8 @@ export default class IndexClass {
   private fields: string[];
   private fieldsFilter: string[];
   private fieldsFullText: string[];
+  private valuesFilterSQL: string;
+  private valuesFullTextSQL: string;
   private normalize: NormalizeClass;
   private db: sqlite3.Database;
   private stmtInsertFilter: sqlite3.Statement;
@@ -67,11 +69,11 @@ export default class IndexClass {
     let valuesFilter = (Array.apply(null, Array(this.fieldsFilter.length)).map(function() {
       return '?'
     })).join(",");
-    let valuesFilterSQL = `INSERT INTO ${this.tableFilter} VALUES (?, ?, ${valuesFilter})`;
+    this.valuesFilterSQL = `INSERT INTO ${this.tableFilter} VALUES (?, ?, ${valuesFilter})`;
     let valuesFullText = (Array.apply(null, Array(this.fieldsFullText.length)).map(function() {
       return '?'
     })).join(",");
-    let valuesFullTextSQL = `INSERT INTO ${this.tableFullText} (docid,'${sqlfieldsFullText}') VALUES (?,${valuesFullText})`;
+    this.valuesFullTextSQL = `INSERT INTO ${this.tableFullText} (docid,'${sqlfieldsFullText}') VALUES (?,${valuesFullText})`;
 
     this.db.serialize(() => {
       this.db.run(createSQLFilter, function(err: Error) {
@@ -83,29 +85,19 @@ export default class IndexClass {
         if (err) {
           console.log(err);
         }
-      });
-      this.stmtInsertFilter = this.db.prepare(valuesFilterSQL, function(err: Error) {
-        if (err) {
-          console.log("Insert Filter : " + valuesFilterSQL + " " + err);
-        }
-      });
-      this.stmtInsertFullText = this.db.prepare(valuesFullTextSQL, function(err: Error) {
-        if (err) {
-          console.log("Insert Full Test : " + valuesFullTextSQL + " " + err);
-        }
         done();
       });
     });
   }
 
-  public close() {
-    this.db.close();
+  public close(done: () => void) {
+    this.db.close(done);
   }
 
   public clear(done: () => void) {
     this.db.serialize(() => {
       this.db.run(`DELETE * FROM ${this.tableFilter}`);
-      this.db.run(`DELETE * FROM ${this.tableFullText}`,done);
+      this.db.run(`DELETE * FROM ${this.tableFullText}`, done);
     });
   }
 
@@ -130,19 +122,29 @@ export default class IndexClass {
       if (obj[fieldFilter]) {
         valuesFilter.push(obj[fieldFilter]);
       } else {
-        valuesFilter.push('');
+        valuesFilter.push(null);
       }
     }
     return valuesFilter;
   }
 
   public importYaml(filename: string, done: () => void) {
-    let objs = yaml.safeLoad(fs.readFileSync(filename, "utf8"));
-    for (let obj of objs) {
-      this.import(obj);
-    }
-    this.stmtInsertFilter.finalize();
-    this.stmtInsertFullText.finalize(done);
+    this.stmtInsertFilter = this.db.prepare(this.valuesFilterSQL, (err: Error) => {
+      if (err) {
+        console.log(err);
+      }
+      this.stmtInsertFullText = this.db.prepare(this.valuesFullTextSQL, (err: Error) => {
+        if (err) {
+          console.log(err);
+        }
+        let objs = yaml.safeLoad(fs.readFileSync(filename, "utf8"));
+        for (let obj of objs) {
+          this.import(obj);
+        }
+        this.stmtInsertFilter.finalize();
+        this.stmtInsertFullText.finalize(done);
+      });
+    });
   }
 
   public import(obj: any) {
@@ -199,7 +201,7 @@ export default class IndexClass {
     }
   }
 
-  public query(words: string, callbackEach: (err: any, obj: any) => void, filter: string = null, hightlights: boolean = true) {
+  public query(words: string, callbackEach: (err: any, obj: any) => void, callbackComplete: (err: any, objs: any) => void, filter: string = null, hightlights: boolean = true) {
     if (words.length < this.minQueryLength) {
       return;
     }
@@ -209,17 +211,21 @@ export default class IndexClass {
       let sql = `SELECT json,offsets FROM ${this.tableFilter} JOIN
       (SELECT docid, offsets(${this.tableFullText}) AS offsets
        FROM ${this.tableFullText} WHERE ${this.tableFullText}
-       MATCH '${this.normalize.toQuery(query) }') USING (docid);`;
+       MATCH '${this.normalize.toQuery(query) }') USING (docid)`;
 
       if (filter) {
         sql += ` WHERE ${filter}`;
       }
 
+      let objs = [];
       this.db.each(sql, (err: any, row: any) => {
         let obj = JSON.parse(row.json);
         this.highlights(query, this.fieldsFullText, obj, row.offsets);
+        objs.push(obj);
         callbackEach(err, obj);
-      });
+      }, (err: any, rows: number) => {
+          callbackComplete(err, objs);
+        });
     });
   }
 }
