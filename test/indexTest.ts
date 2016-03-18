@@ -22,26 +22,96 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 'use strict';
 
 import IndexClass from '../components/search/index';
+import * as yaml from "js-yaml";
 import * as fs from "fs";
 import * as path from "path";
 import * as should from 'should';
 let persist = should;
 
-describe('IndexClass', () => {
-  let db = null;
+describe('indexClass Favorites', () => {
+  let db: IndexClass = null;
 
   beforeEach(function(done) {
-    let dbfile = path.join(__dirname, 'data', 'test.db');
-    let dbdata1 = path.join(__dirname, 'data', 'web.yml');
-    let dbdata2 = path.join(__dirname, 'data', 'web2.yml');
+    let dbfile = path.join(__dirname, 'data', 'favorites', 'test2.db');
+    try {
+      fs.unlinkSync(dbfile);
+    } catch (e) {
+    }
+    db = new IndexClass(dbfile, "test", ['title', 'url']).init(done);
+  });
+
+  afterEach(function(done) {
+    db.close(done);
+  });
+
+  describe('#search', () => {
+    it('test1', () => {
+      let objs = [{ title: "Blog de développement Web", url: "http://dev.glicer.com" }];
+      db.importObjs(objs, () => {
+        db.query('dev', (err: any, obj: any) => { }, (err: any, objs: any) => {
+          objs[0].title.should.equal("Blog de <b>dév</b>eloppement Web");
+          objs[0].url.should.equal("http://<b>dev</b>.glicer.com");
+        })
+      });
+    })
+  });
+});
+
+describe('indexClass Favorites PreData', () => {
+  let db: IndexClass = null;
+
+  beforeEach(function(done) {
+    let dbfile = path.join(__dirname, 'data', 'favorites', 'test.db');
+    let dbdata = path.join(__dirname, 'data', 'favorites', 'favorites.yml');
+    try {
+      fs.unlinkSync(dbfile);
+    } catch (e) {
+    }
+    db = new IndexClass(dbfile, "test", ['title', 'url']);
+    db.init(function() {
+      let objs = yaml.safeLoad(fs.readFileSync(dbdata, "utf8"));
+      db.importObjs(objs, done);
+    });
+  });
+
+  afterEach(function(done) {
+    db.close(done);
+  });
+
+  describe('#search', () => {
+    it('test1', () => {
+      db.query('dev', (err: any, obj: any) => { }, (err: any, objs: any) => {
+        objs[0].title.should.equal("Blog de <b>dév</b>eloppement web");
+        objs[0].url.should.equal("http://<b>dev</b>.glicer.com");
+      });
+    })
+
+    it('test2', () => {
+      db.query('glicer', (err: any, obj: any) => { }, (err: any, objs: any) => {
+        objs[0].url.should.equal("http://dev.<b>glicer</b>.com");
+        objs[1].url.should.equal("http://lyon.<b>glicer</b>.com");
+      });
+    });
+  });
+});
+
+describe('IndexClass Lyon', () => {
+  let db: IndexClass = null;
+
+  beforeEach(function(done) {
+    let dbfile = path.join(__dirname, 'data', 'lyon', 'test.db');
+    let dbdata1 = path.join(__dirname, 'data', 'lyon', 'web.yml');
+    let dbdata2 = path.join(__dirname, 'data', 'lyon', 'web2.yml');
     try {
       fs.unlinkSync(dbfile);
     } catch (e) {
     }
     db = new IndexClass(dbfile, "test", ['title', 'tags', 'description', 'address', 'city'], ['gps']);
     db.init(function() {
-      db.importYaml(dbdata1, function() {
-        db.importYaml(dbdata2, done);
+      let objs = yaml.safeLoad(fs.readFileSync(dbdata1, "utf8"));
+      db.importObjs(objs, function() {
+        let objs = yaml.safeLoad(fs.readFileSync(dbdata2, "utf8"));
+        db.importObjs(objs, done);
       });
     });
   });
@@ -64,38 +134,38 @@ describe('IndexClass', () => {
 
   describe("#search", () => {
     it('search1', () => {
-       db.query('rest chaponnay', (err:any,obj:any) => {}, (err:any,objs:any) => {
-          objs[0].title.should.containEql("Aklé");
-          objs[0].tags.should.equal("<b>rest</b>aurant libanais monde");
-          objs[0].address.should.equal("108 rue <b>Chaponnay</b>");
-       });
+      db.query('rest chaponnay', (err: any, obj: any) => { }, (err: any, objs: any) => {
+        objs[0].title.should.containEql("Aklé");
+        objs[0].tags.should.equal("<b>rest</b>aurant libanais monde");
+        objs[0].address.should.equal("108 rue <b>Chaponnay</b>");
+      });
     });
 
 
     it('search2', () => {
-      db.query('zol', (err:any,obj:any) => {}, (err:any, objs:any) => {
+      db.query('zol', (err: any, obj: any) => { }, (err: any, objs: any) => {
         objs[0].title.should.equal("Le <b>Zol</b>a");
       });
     });
 
 
     it('search3', () => {
-      db.query('lyon', (err:any,obj:any) => {}, (err:any,objs:any) => {
+      db.query('lyon', (err: any, obj: any) => { }, (err: any, objs: any) => {
         objs[0].title.should.equal("Gym Suédoise <b>Lyon</b>");
-      },'gps IS NULL');
+      }, 'gps IS NULL');
     })
 
 
     it('search4', () => {
-      db.query('tags:cinema', (err:any,obj:any) => {}, (err:any,objs:any) => {
-         objs.length.should.equal(2);
-         objs[0].title.should.equal("Cinéma Comoedia");
-         objs[1].title.should.equal("Le Zola");
+      db.query('tags:cinema', (err: any, obj: any) => { }, (err: any, objs: any) => {
+        objs.length.should.equal(2);
+        objs[0].title.should.equal("Cinéma Comoedia");
+        objs[1].title.should.equal("Le Zola");
       });
     })
 
     it('search5', () => {
-      db.query('l\'ame soeur', (err:any,obj:any) => {}, (err:any,objs:any) => {
+      db.query('l\'ame soeur', (err: any, obj: any) => { }, (err: any, objs: any) => {
         objs.length.should.equal(1);
         objs[0].title.should.equal("L’<b>Âme</b> <b>Sœur</b>");
       });

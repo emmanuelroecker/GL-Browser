@@ -18,12 +18,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-/* global window, $ */
+/* global window, $  */
 
 'use strict';
 
 const customize = require('./components/customize/customize.js');
 const autologin = require('./components/autologin/autologin.js');
+const index_1 = require('./components/search/index');
+
+let dbIndex = new index_1.default('./data/data.db', 'favorites', ['title', 'url']).init();
 
 window.$ = window.jQuery = require('jquery');
 require('bootstrap');

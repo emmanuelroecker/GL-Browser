@@ -25,12 +25,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     <input id="urltext" class="form-control" onkeypress={keypress} type="text" placeholder="URL">
     <span id="indicator" class="input-group-addon"></span>
     <div class="input-group-btn">
+      <a id="favoriteButton" onclick={favorite} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-star-empty"></span></a>
       <a id="refreshButton" onclick={refresh} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-repeat"></span></a>
       <a id="autologinButton" onclick={autologin} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-log-in"></span></a>
       <a id="devButton" onclick={dev} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-wrench"></span></a>
     </div>
   </div>
-  <webview id="webview" class="gl-webview" preload="./components/preloadWebview.js">
+  <webview id="webview" class="gl-webview" preload="./components/preloadWebview.js" autosize="on" minwidth="576" minheight="432">
   </webview>
 
   <style scoped>
@@ -54,6 +55,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       }
       this.webview.src = this.urltext.value;
       return false;
+    }
+
+    favorite(e) {
+      let objs = [{title: this.webview.getTitle(), url: this.webview.getURL()}];
+      console.log(objs);
+      dbIndex.importObjs(objs);
     }
 
     goback(e) {
@@ -90,7 +97,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
         this.refreshButton.classList.remove('disabled');
         this.devButton.classList.remove('disabled');
         this.autologinButton.classList.remove('disabled');
+        this.favoriteButton.classList.remove('disabled');
         customize.inject(this.webview);
+      });
+
+      this.webview.addEventListener('did-navigate', (e) => {
+         this.urltext.value = e.url;
       });
     });
   </script>

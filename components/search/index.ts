@@ -22,7 +22,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 'use strict';
 
 import NormalizeClass from "./normalize";
-import * as yaml from "js-yaml";
 import * as fs from "fs";
 import * as path from "path";
 import * as sqlite3 from "sqlite3";
@@ -33,8 +32,8 @@ export default class IndexClass {
   private tableFullText: string;
   private fields: string[];
   private fieldsFilter: string[];
+  private valuesFilterSQL: string = null;
   private fieldsFullText: string[];
-  private valuesFilterSQL: string;
   private valuesFullTextSQL: string;
   private normalize: NormalizeClass;
   private db: sqlite3.Database;
@@ -42,7 +41,7 @@ export default class IndexClass {
   private stmtInsertFullText: sqlite3.Statement;
   private minQueryLength: number = 2;
 
-  constructor(filename: string, table: string, fieldsFullText: string[], fieldsFilter: string[], minQueryLength: number = 2) {
+  constructor(filename: string, table: string, fieldsFullText: string[], fieldsFilter: string[] = null, minQueryLength: number = 2) {
     if (fieldsFullText.length <= 0) {
       throw new RangeError("You must have at least one field full text");
     }
@@ -54,22 +53,23 @@ export default class IndexClass {
     this.tableFullText = `${table}FT`;
   }
 
-  public init(done: () => void) {
+  public init(done: () => void = null) {
     let createSQLFilter = '';
     if (this.fieldsFilter) {
       let sqlfieldsFilter = this.fieldsFilter.join("','");
       createSQLFilter = `CREATE TABLE ${this.tableFilter}(docid INTEGER PRIMARY KEY, json, '${sqlfieldsFilter}')`;
+
+      let valuesFilter = (Array.apply(null, Array(this.fieldsFilter.length)).map(function() {
+        return '?'
+      })).join(",");
+      this.valuesFilterSQL = `INSERT INTO ${this.tableFilter} VALUES (?, ?, ${valuesFilter})`;
     } else {
       createSQLFilter = `CREATE TABLE ${this.tableFilter}(docid INTEGER PRIMARY KEY, json)`;
+      this.valuesFilterSQL = `INSERT INTO ${this.tableFilter} VALUES (?, ?)`;
     }
 
     let sqlfieldsFullText = this.fieldsFullText.join("','");
     let createSQLFullText = `CREATE VIRTUAL TABLE ${this.tableFullText} USING fts4('${sqlfieldsFullText}');`;
-
-    let valuesFilter = (Array.apply(null, Array(this.fieldsFilter.length)).map(function() {
-      return '?'
-    })).join(",");
-    this.valuesFilterSQL = `INSERT INTO ${this.tableFilter} VALUES (?, ?, ${valuesFilter})`;
     let valuesFullText = (Array.apply(null, Array(this.fieldsFullText.length)).map(function() {
       return '?'
     })).join(",");
@@ -85,9 +85,13 @@ export default class IndexClass {
         if (err) {
           console.log(err);
         }
-        done();
+        if (done) {
+          done();
+        }
       });
     });
+
+    return this;
   }
 
   public close(done: () => void) {
@@ -118,6 +122,11 @@ export default class IndexClass {
     let valuesFilter = [];
     valuesFilter.push(obj.id);
     valuesFilter.push(JSON.stringify(obj));
+
+    if (!this.fieldsFilter) {
+      return valuesFilter;
+    }
+
     for (let fieldFilter of this.fieldsFilter) {
       if (obj[fieldFilter]) {
         valuesFilter.push(obj[fieldFilter]);
@@ -128,40 +137,45 @@ export default class IndexClass {
     return valuesFilter;
   }
 
-  public importYaml(filename: string, done: () => void) {
-    this.stmtInsertFilter = this.db.prepare(this.valuesFilterSQL, (err: Error) => {
-      if (err) {
-        console.log(err);
-      }
+  public importObjs(objs:any[], done: () => void) {
+    this.db.serialize(() => {
+      this.stmtInsertFilter = this.db.prepare(this.valuesFilterSQL, (err: Error) => {
+        if (err) {
+          console.log(err);
+        }
+      });
       this.stmtInsertFullText = this.db.prepare(this.valuesFullTextSQL, (err: Error) => {
         if (err) {
           console.log(err);
         }
-        let objs = yaml.safeLoad(fs.readFileSync(filename, "utf8"));
+      });
+
+      this.db.parallelize(() => {
         for (let obj of objs) {
-          this.import(obj);
+          this.importObj(obj);
         }
-        this.stmtInsertFilter.finalize();
-        this.stmtInsertFullText.finalize(done);
       });
     });
+
+    this.stmtInsertFilter.finalize();
+    this.stmtInsertFullText.finalize(done);
   }
 
-  public import(obj: any) {
+  private importObj(obj: any) {
     let valuesFullText: string[] = this.valuesFullText(obj);
 
     if (Object.keys(valuesFullText).length <= 0) {
       throw new RangeError("At least one full text field");
     }
 
-    let valuesFilter: string[] = this.valuesFilter(obj);
-    this.stmtInsertFilter.run(valuesFilter, function(err: Error) {
+    this.stmtInsertFullText.run(valuesFullText, function(err: Error) {
       if (err) {
         console.log(err);
       }
     });
 
-    this.stmtInsertFullText.run(valuesFullText, function(err: Error) {
+    let valuesFilter: string[] = this.valuesFilter(obj);
+    this.stmtInsertFilter.run(valuesFilter, function(err: Error) {
       if (err) {
         console.log(err);
       }
@@ -213,7 +227,7 @@ export default class IndexClass {
        FROM ${this.tableFullText} WHERE ${this.tableFullText}
        MATCH '${this.normalize.toQuery(query) }') USING (docid)`;
 
-      if (filter) {
+      if ((filter) && (this.fieldsFilter)) {
         sql += ` WHERE ${filter}`;
       }
 

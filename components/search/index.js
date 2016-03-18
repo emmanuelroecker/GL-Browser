@@ -19,13 +19,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 /// <reference path="../../typings/main.d.ts" />
 'use strict';
 var normalize_1 = require("./normalize");
-var yaml = require("js-yaml");
-var fs = require("fs");
 var sqlite3 = require("sqlite3");
 sqlite3.verbose();
 var IndexClass = (function () {
     function IndexClass(filename, table, fieldsFullText, fieldsFilter, minQueryLength) {
+        if (fieldsFilter === void 0) { fieldsFilter = null; }
         if (minQueryLength === void 0) { minQueryLength = 2; }
+        this.valuesFilterSQL = null;
         this.minQueryLength = 2;
         if (fieldsFullText.length <= 0) {
             throw new RangeError("You must have at least one field full text");
@@ -39,20 +39,22 @@ var IndexClass = (function () {
     }
     IndexClass.prototype.init = function (done) {
         var _this = this;
+        if (done === void 0) { done = null; }
         var createSQLFilter = '';
         if (this.fieldsFilter) {
             var sqlfieldsFilter = this.fieldsFilter.join("','");
             createSQLFilter = "CREATE TABLE " + this.tableFilter + "(docid INTEGER PRIMARY KEY, json, '" + sqlfieldsFilter + "')";
+            var valuesFilter = (Array.apply(null, Array(this.fieldsFilter.length)).map(function () {
+                return '?';
+            })).join(",");
+            this.valuesFilterSQL = "INSERT INTO " + this.tableFilter + " VALUES (?, ?, " + valuesFilter + ")";
         }
         else {
             createSQLFilter = "CREATE TABLE " + this.tableFilter + "(docid INTEGER PRIMARY KEY, json)";
+            this.valuesFilterSQL = "INSERT INTO " + this.tableFilter + " VALUES (?, ?)";
         }
         var sqlfieldsFullText = this.fieldsFullText.join("','");
         var createSQLFullText = "CREATE VIRTUAL TABLE " + this.tableFullText + " USING fts4('" + sqlfieldsFullText + "');";
-        var valuesFilter = (Array.apply(null, Array(this.fieldsFilter.length)).map(function () {
-            return '?';
-        })).join(",");
-        this.valuesFilterSQL = "INSERT INTO " + this.tableFilter + " VALUES (?, ?, " + valuesFilter + ")";
         var valuesFullText = (Array.apply(null, Array(this.fieldsFullText.length)).map(function () {
             return '?';
         })).join(",");
@@ -67,9 +69,12 @@ var IndexClass = (function () {
                 if (err) {
                     console.log(err);
                 }
-                done();
+                if (done) {
+                    done();
+                }
             });
         });
+        return this;
     };
     IndexClass.prototype.close = function (done) {
         this.db.close(done);
@@ -99,6 +104,9 @@ var IndexClass = (function () {
         var valuesFilter = [];
         valuesFilter.push(obj.id);
         valuesFilter.push(JSON.stringify(obj));
+        if (!this.fieldsFilter) {
+            return valuesFilter;
+        }
         for (var _i = 0, _a = this.fieldsFilter; _i < _a.length; _i++) {
             var fieldFilter = _a[_i];
             if (obj[fieldFilter]) {
@@ -110,38 +118,41 @@ var IndexClass = (function () {
         }
         return valuesFilter;
     };
-    IndexClass.prototype.importYaml = function (filename, done) {
+    IndexClass.prototype.importObjs = function (objs, done) {
         var _this = this;
-        this.stmtInsertFilter = this.db.prepare(this.valuesFilterSQL, function (err) {
-            if (err) {
-                console.log(err);
-            }
+        this.db.serialize(function () {
+            _this.stmtInsertFilter = _this.db.prepare(_this.valuesFilterSQL, function (err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
             _this.stmtInsertFullText = _this.db.prepare(_this.valuesFullTextSQL, function (err) {
                 if (err) {
                     console.log(err);
                 }
-                var objs = yaml.safeLoad(fs.readFileSync(filename, "utf8"));
+            });
+            _this.db.parallelize(function () {
                 for (var _i = 0, objs_1 = objs; _i < objs_1.length; _i++) {
                     var obj = objs_1[_i];
-                    _this.import(obj);
+                    _this.importObj(obj);
                 }
-                _this.stmtInsertFilter.finalize();
-                _this.stmtInsertFullText.finalize(done);
             });
         });
+        this.stmtInsertFilter.finalize();
+        this.stmtInsertFullText.finalize(done);
     };
-    IndexClass.prototype.import = function (obj) {
+    IndexClass.prototype.importObj = function (obj) {
         var valuesFullText = this.valuesFullText(obj);
         if (Object.keys(valuesFullText).length <= 0) {
             throw new RangeError("At least one full text field");
         }
-        var valuesFilter = this.valuesFilter(obj);
-        this.stmtInsertFilter.run(valuesFilter, function (err) {
+        this.stmtInsertFullText.run(valuesFullText, function (err) {
             if (err) {
                 console.log(err);
             }
         });
-        this.stmtInsertFullText.run(valuesFullText, function (err) {
+        var valuesFilter = this.valuesFilter(obj);
+        this.stmtInsertFilter.run(valuesFilter, function (err) {
             if (err) {
                 console.log(err);
             }
@@ -185,7 +196,7 @@ var IndexClass = (function () {
         var query = this.normalize.normalizeQuery(words);
         this.db.serialize(function () {
             var sql = "SELECT json,offsets FROM " + _this.tableFilter + " JOIN\n      (SELECT docid, offsets(" + _this.tableFullText + ") AS offsets\n       FROM " + _this.tableFullText + " WHERE " + _this.tableFullText + "\n       MATCH '" + _this.normalize.toQuery(query) + "') USING (docid)";
-            if (filter) {
+            if ((filter) && (_this.fieldsFilter)) {
                 sql += " WHERE " + filter;
             }
             var objs = [];

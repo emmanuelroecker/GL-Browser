@@ -19,16 +19,77 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 /// <reference path="../typings/main.d.ts" />
 'use strict';
 var index_1 = require('../components/search/index');
+var yaml = require("js-yaml");
 var fs = require("fs");
 var path = require("path");
 var should = require('should');
 var persist = should;
-describe('IndexClass', function () {
+describe('indexClass Favorites', function () {
     var db = null;
     beforeEach(function (done) {
-        var dbfile = path.join(__dirname, 'data', 'test.db');
-        var dbdata1 = path.join(__dirname, 'data', 'web.yml');
-        var dbdata2 = path.join(__dirname, 'data', 'web2.yml');
+        var dbfile = path.join(__dirname, 'data', 'favorites', 'test2.db');
+        try {
+            fs.unlinkSync(dbfile);
+        }
+        catch (e) {
+        }
+        db = new index_1.default(dbfile, "test", ['title', 'url']).init(done);
+    });
+    afterEach(function (done) {
+        db.close(done);
+    });
+    describe('#search', function () {
+        it('test1', function () {
+            var objs = [{ title: "Blog de développement Web", url: "http://dev.glicer.com" }];
+            db.importObjs(objs, function () {
+                db.query('dev', function (err, obj) { }, function (err, objs) {
+                    objs[0].title.should.equal("Blog de <b>dév</b>eloppement Web");
+                    objs[0].url.should.equal("http://<b>dev</b>.glicer.com");
+                });
+            });
+        });
+    });
+});
+describe('indexClass Favorites PreData', function () {
+    var db = null;
+    beforeEach(function (done) {
+        var dbfile = path.join(__dirname, 'data', 'favorites', 'test.db');
+        var dbdata = path.join(__dirname, 'data', 'favorites', 'favorites.yml');
+        try {
+            fs.unlinkSync(dbfile);
+        }
+        catch (e) {
+        }
+        db = new index_1.default(dbfile, "test", ['title', 'url']);
+        db.init(function () {
+            var objs = yaml.safeLoad(fs.readFileSync(dbdata, "utf8"));
+            db.importObjs(objs, done);
+        });
+    });
+    afterEach(function (done) {
+        db.close(done);
+    });
+    describe('#search', function () {
+        it('test1', function () {
+            db.query('dev', function (err, obj) { }, function (err, objs) {
+                objs[0].title.should.equal("Blog de <b>dév</b>eloppement web");
+                objs[0].url.should.equal("http://<b>dev</b>.glicer.com");
+            });
+        });
+        it('test2', function () {
+            db.query('glicer', function (err, obj) { }, function (err, objs) {
+                objs[0].url.should.equal("http://dev.<b>glicer</b>.com");
+                objs[1].url.should.equal("http://lyon.<b>glicer</b>.com");
+            });
+        });
+    });
+});
+describe('IndexClass Lyon', function () {
+    var db = null;
+    beforeEach(function (done) {
+        var dbfile = path.join(__dirname, 'data', 'lyon', 'test.db');
+        var dbdata1 = path.join(__dirname, 'data', 'lyon', 'web.yml');
+        var dbdata2 = path.join(__dirname, 'data', 'lyon', 'web2.yml');
         try {
             fs.unlinkSync(dbfile);
         }
@@ -36,8 +97,10 @@ describe('IndexClass', function () {
         }
         db = new index_1.default(dbfile, "test", ['title', 'tags', 'description', 'address', 'city'], ['gps']);
         db.init(function () {
-            db.importYaml(dbdata1, function () {
-                db.importYaml(dbdata2, done);
+            var objs = yaml.safeLoad(fs.readFileSync(dbdata1, "utf8"));
+            db.importObjs(objs, function () {
+                var objs = yaml.safeLoad(fs.readFileSync(dbdata2, "utf8"));
+                db.importObjs(objs, done);
             });
         });
     });
