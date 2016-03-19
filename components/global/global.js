@@ -24,7 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 const customize = require('./components/customize/customize.js');
 const autologin = require('./components/autologin/autologin.js');
-const index_1 = require('./components/search/index');
+const index_1 = require('./components/search/index.js');
 
 let dbIndex = new index_1.default('./data/data.db', 'favorites', ['title', 'url']).init();
 
