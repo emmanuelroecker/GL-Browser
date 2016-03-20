@@ -20,46 +20,84 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 <page>
   <div class="gl-header input-group">
     <div class="input-group-btn">
-      <a onclick={goback} class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
+      <a onclick={goback} class="btn btn-default" role="button">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+      </a>
     </div>
-    <input id="urltext" class="form-control" onkeypress={keypress} type="text" placeholder="URL">
+    <div id="favoritesList" class="dropdown">
+      <input id="urltext" class="form-control" onkeyup={keyup} type="text" placeholder="URL">
+      <ul id="favoritesDropDown" class="dropdown-menu" role="menu">
+        <li each={ favorite in favorites }>
+          <a href="#{favorite.id}" onclick={parent.favoriteClick} role="button">
+            <raw content={favorite.url}></raw>
+          </a>
+        </li>
+      </ul>
+    </div>
     <span id="indicator" class="input-group-addon"></span>
     <div class="input-group-btn">
-      <a id="favoriteButton" onclick={favorite} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-star-empty"></span></a>
-      <a id="refreshButton" onclick={refresh} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-repeat"></span></a>
-      <a id="autologinButton" onclick={autologin} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-log-in"></span></a>
-      <a id="devButton" onclick={dev} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-wrench"></span></a>
+      <a id="favoriteButton" onclick={favoriteAdd} class="btn btn-default disabled" role="button">
+        <span class="glyphicon glyphicon-star-empty"></span>
+      </a>
+      <a id="refreshButton" onclick={refresh} class="btn btn-default disabled" role="button">
+        <span class="glyphicon glyphicon-repeat"></span>
+      </a>
+      <a id="autologinButton" onclick={autologin} class="btn btn-default disabled" role="button">
+        <span class="glyphicon glyphicon-log-in"></span>
+      </a>
+      <a id="devButton" onclick={dev} class="btn btn-default disabled" role="button">
+        <span class="glyphicon glyphicon-wrench"></span>
+      </a>
     </div>
   </div>
-  <webview id="webview" class="gl-webview" preload="./components/preloadWebview.js" autosize="on" minwidth="576" minheight="432">
-  </webview>
+  <webview id="webview" class="gl-webview" preload="./components/preloadWebview.js" autosize="on" minwidth="576" minheight="432"></webview>
 
   <style scoped>
+    #favoritesDropDown {
+      top: 30px;
+    }
+
     #indicator {
-        top: 0px;
-        width: 40px;
-      }
+      top: 0;
+      width: 40px;
+    }
 
     #webview {
       display: block;
       border: none;
     }
+
   </style>
 
   <script>
     'use strict';
 
-    keypress(e) {
+    this.favorites = [];
+
+    keyup(e) {
       if (e.which != 13) {
+        dbIndex.query(this.urltext.value, (err, obj) => {}, (err, objs) => {
+          this.favorites = objs;
+          this.favoritesList.classList.add('open');
+        });
         return true;
       }
       this.webview.src = this.urltext.value;
       return false;
     }
 
-    favorite(e) {
-      let objs = [{title: this.webview.getTitle(), url: this.webview.getURL()}];
-      console.log(objs);
+    favoriteClick(e) {
+      console.log(e.item.favorite);
+      this.favoritesList.classList.remove('open');
+    }
+
+    favoriteAdd(e) {
+      let objs = [
+        {
+          title: this.webview.getTitle(),
+          url: this.webview.getURL()
+        }
+      ];
       dbIndex.importObjs(objs);
     }
 
@@ -82,7 +120,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       });
     }
 
-    this.on('mount', function() {
+    this.on('mount', function () {
       this.webview.addEventListener('did-start-loading', () => {
         this.indicator.classList.toggle('glyphicon');
         this.indicator.classList.toggle('glyphicon-refresh');
@@ -102,7 +140,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       });
 
       this.webview.addEventListener('did-navigate', (e) => {
-         this.urltext.value = e.url;
+        this.urltext.value = e.url;
       });
     });
   </script>
