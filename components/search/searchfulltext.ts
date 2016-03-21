@@ -27,6 +27,11 @@ import * as path from "path";
 import * as sqlite3 from "sqlite3";
 sqlite3.verbose();
 
+interface queryResponse {
+  highlights: any;
+  original: any;
+}
+
 export default class IndexClass {
   private tableFilter: string;
   private tableFullText: string;
@@ -215,7 +220,7 @@ export default class IndexClass {
     }
   }
 
-  public query(words: string, callbackEach: (err: any, obj: any) => void, callbackComplete: (err: any, objs: any) => void, filter: string = null, hightlights: boolean = true) {
+  public query(words: string, callbackEach: (err: any, objOriginal: any, objHighlights:any) => void, callbackComplete: (err: any, objs: queryResponse[]) => void, filter: string = null) {
     if (words.length < this.minQueryLength) {
       return;
     }
@@ -231,12 +236,13 @@ export default class IndexClass {
         sql += ` WHERE ${filter}`;
       }
 
-      let objs = [];
+      let objs:queryResponse[] = [];
       this.db.each(sql, (err: any, row: any) => {
-        let obj = JSON.parse(row.json);
-        this.highlights(query, this.fieldsFullText, obj, row.offsets);
-        objs.push(obj);
-        callbackEach(err, obj);
+        let objOriginal = JSON.parse(row.json);
+        let objHighlights = JSON.parse(row.json); //TODO: use object assign to clone
+        this.highlights(query, this.fieldsFullText, objHighlights, row.offsets);
+        objs.push({highlights:objHighlights, original:objOriginal});
+        callbackEach(err, objOriginal, objHighlights);
       }, (err: any, rows: number) => {
           callbackComplete(err, objs);
         });

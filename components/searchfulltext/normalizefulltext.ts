@@ -37,7 +37,7 @@ let defaultDiacritics: Diacritics[] = [
   { base: "'", characters: '’' }
 ];
 
-export default class NormalizeClass {
+export default class NormalizeFullTextClass {
   private diacriticsMap: string[] = [];
 
   constructor() {

@@ -18,13 +18,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 /// <reference path="../typings/main.d.ts" />
 'use strict';
-var normalize_1 = require('../components/search/normalize');
+var normalizefulltext_1 = require('../components/searchfulltext/normalizefulltext');
 var should = require('should');
 var persist = should;
-describe('NormalizeClass', function () {
+describe('NormalizeFullTextClass', function () {
     var subject;
     beforeEach(function () {
-        subject = new normalize_1.default();
+        subject = new normalizefulltext_1.default();
     });
     describe('#normalizeImport', function () {
         it('test1', function () {

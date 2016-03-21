@@ -18,13 +18,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 /// <reference path="../typings/main.d.ts" />
 'use strict';
-var index_1 = require('../components/search/index');
+var searchfulltext_1 = require('../components/searchfulltext/searchfulltext');
 var yaml = require("js-yaml");
 var fs = require("fs");
 var path = require("path");
 var should = require('should');
 var persist = should;
-describe('indexClass Favorites', function () {
+describe('SearchFullTextClass Favorites', function () {
     var db = null;
     beforeEach(function (done) {
         var dbfile = path.join(__dirname, 'data', 'favorites', 'test2.db');
@@ -33,7 +33,7 @@ describe('indexClass Favorites', function () {
         }
         catch (e) {
         }
-        db = new index_1.default(dbfile, "test", ['title', 'url']).init(done);
+        db = new searchfulltext_1.default(dbfile, "test", ['title', 'url']).init(done);
     });
     afterEach(function (done) {
         db.close(done);
@@ -43,14 +43,14 @@ describe('indexClass Favorites', function () {
             var objs = [{ title: "Blog de développement Web", url: "http://dev.glicer.com" }];
             db.importObjs(objs, function () {
                 db.query('dev', function (err, obj) { }, function (err, objs) {
-                    objs[0].title.should.equal("Blog de <b>dév</b>eloppement Web");
-                    objs[0].url.should.equal("http://<b>dev</b>.glicer.com");
+                    objs[0].highlights.title.should.equal("Blog de <b>dév</b>eloppement Web");
+                    objs[0].highlights.url.should.equal("http://<b>dev</b>.glicer.com");
                 });
             });
         });
     });
 });
-describe('indexClass Favorites PreData', function () {
+describe('SearchFullTextClass Favorites PreData', function () {
     var db = null;
     beforeEach(function (done) {
         var dbfile = path.join(__dirname, 'data', 'favorites', 'test.db');
@@ -60,7 +60,7 @@ describe('indexClass Favorites PreData', function () {
         }
         catch (e) {
         }
-        db = new index_1.default(dbfile, "test", ['title', 'url']);
+        db = new searchfulltext_1.default(dbfile, "test", ['title', 'url']);
         db.init(function () {
             var objs = yaml.safeLoad(fs.readFileSync(dbdata, "utf8"));
             db.importObjs(objs, done);
@@ -72,19 +72,19 @@ describe('indexClass Favorites PreData', function () {
     describe('#search', function () {
         it('test1', function () {
             db.query('dev', function (err, obj) { }, function (err, objs) {
-                objs[0].title.should.equal("Blog de <b>dév</b>eloppement web");
-                objs[0].url.should.equal("http://<b>dev</b>.glicer.com");
+                objs[0].highlights.title.should.equal("Blog de <b>dév</b>eloppement web");
+                objs[0].highlights.url.should.equal("http://<b>dev</b>.glicer.com");
             });
         });
         it('test2', function () {
             db.query('glicer', function (err, obj) { }, function (err, objs) {
-                objs[0].url.should.equal("http://dev.<b>glicer</b>.com");
-                objs[1].url.should.equal("http://lyon.<b>glicer</b>.com");
+                objs[0].highlights.url.should.equal("http://dev.<b>glicer</b>.com");
+                objs[1].highlights.url.should.equal("http://lyon.<b>glicer</b>.com");
             });
         });
     });
 });
-describe('IndexClass Lyon', function () {
+describe('SearchFullTextClass Lyon', function () {
     var db = null;
     beforeEach(function (done) {
         var dbfile = path.join(__dirname, 'data', 'lyon', 'test.db');
@@ -95,7 +95,7 @@ describe('IndexClass Lyon', function () {
         }
         catch (e) {
         }
-        db = new index_1.default(dbfile, "test", ['title', 'tags', 'description', 'address', 'city'], ['gps']);
+        db = new searchfulltext_1.default(dbfile, "test", ['title', 'tags', 'description', 'address', 'city'], ['gps']);
         db.init(function () {
             var objs = yaml.safeLoad(fs.readFileSync(dbdata1, "utf8"));
             db.importObjs(objs, function () {
@@ -119,32 +119,32 @@ describe('IndexClass Lyon', function () {
     describe("#search", function () {
         it('search1', function () {
             db.query('rest chaponnay', function (err, obj) { }, function (err, objs) {
-                objs[0].title.should.containEql("Aklé");
-                objs[0].tags.should.equal("<b>rest</b>aurant libanais monde");
-                objs[0].address.should.equal("108 rue <b>Chaponnay</b>");
+                objs[0].highlights.title.should.containEql("Aklé");
+                objs[0].highlights.tags.should.equal("<b>rest</b>aurant libanais monde");
+                objs[0].highlights.address.should.equal("108 rue <b>Chaponnay</b>");
             });
         });
         it('search2', function () {
             db.query('zol', function (err, obj) { }, function (err, objs) {
-                objs[0].title.should.equal("Le <b>Zol</b>a");
+                objs[0].highlights.title.should.equal("Le <b>Zol</b>a");
             });
         });
         it('search3', function () {
             db.query('lyon', function (err, obj) { }, function (err, objs) {
-                objs[0].title.should.equal("Gym Suédoise <b>Lyon</b>");
+                objs[0].highlights.title.should.equal("Gym Suédoise <b>Lyon</b>");
             }, 'gps IS NULL');
         });
         it('search4', function () {
             db.query('tags:cinema', function (err, obj) { }, function (err, objs) {
                 objs.length.should.equal(2);
-                objs[0].title.should.equal("Cinéma Comoedia");
-                objs[1].title.should.equal("Le Zola");
+                objs[0].highlights.title.should.equal("Cinéma Comoedia");
+                objs[1].highlights.title.should.equal("Le Zola");
             });
         });
         it('search5', function () {
             db.query('l\'ame soeur', function (err, obj) { }, function (err, objs) {
                 objs.length.should.equal(1);
-                objs[0].title.should.equal("L’<b>Âme</b> <b>Sœur</b>");
+                objs[0].highlights.title.should.equal("L’<b>Âme</b> <b>Sœur</b>");
             });
         });
     });

@@ -186,10 +186,9 @@ var IndexClass = (function () {
             colnumInc[colnum] += lengthTag;
         }
     };
-    IndexClass.prototype.query = function (words, callbackEach, callbackComplete, filter, hightlights) {
+    IndexClass.prototype.query = function (words, callbackEach, callbackComplete, filter) {
         var _this = this;
         if (filter === void 0) { filter = null; }
-        if (hightlights === void 0) { hightlights = true; }
         if (words.length < this.minQueryLength) {
             return;
         }
@@ -201,10 +200,11 @@ var IndexClass = (function () {
             }
             var objs = [];
             _this.db.each(sql, function (err, row) {
-                var obj = JSON.parse(row.json);
-                _this.highlights(query, _this.fieldsFullText, obj, row.offsets);
-                objs.push(obj);
-                callbackEach(err, obj);
+                var objOriginal = JSON.parse(row.json);
+                var objHighlights = JSON.parse(row.json); //TODO: use object assign to clone
+                _this.highlights(query, _this.fieldsFullText, objHighlights, row.offsets);
+                objs.push({ highlights: objHighlights, original: objOriginal });
+                callbackEach(err, objOriginal, objHighlights);
             }, function (err, rows) {
                 callbackComplete(err, objs);
             });

@@ -21,15 +21,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-import NormalizeClass from '../components/search/normalize';
+import NormalizeFullTextClass from '../components/searchfulltext/normalizefulltext';
 import * as should from 'should';
 let persist = should;
 
-describe('NormalizeClass', () => {
-  let subject: NormalizeClass;
+describe('NormalizeFullTextClass', () => {
+  let subject: NormalizeFullTextClass;
 
   beforeEach(function() {
-    subject = new NormalizeClass();
+    subject = new NormalizeFullTextClass();
   });
 
   describe('#normalizeImport', () => {

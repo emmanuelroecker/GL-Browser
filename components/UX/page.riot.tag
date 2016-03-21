@@ -28,8 +28,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       <input id="urltext" class="form-control" onkeyup={keyup} type="text" placeholder="URL">
       <ul id="favoritesDropDown" class="dropdown-menu" role="menu">
         <li each={ favorite in favorites }>
-          <a href="#{favorite.id}" onclick={parent.favoriteClick} role="button">
-            <raw content={favorite.url}></raw>
+          <a href="#" onclick={parent.favoriteClick} role="button">
+            <raw content={favorite.highlights.url}></raw> |
+            <raw content={favorite.highlights.title}></raw>
           </a>
         </li>
       </ul>
@@ -75,19 +76,32 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     this.favorites = [];
 
     keyup(e) {
-      if (e.which != 13) {
-        dbIndex.query(this.urltext.value, (err, obj) => {}, (err, objs) => {
+      let value = this.urltext.value;
+
+      if (value.length <= 0) {
+        this.favoritesList.classList.remove('open');
+      }
+
+      if (e.which == 13) {
+        this.webview.src = value;
+        return false;
+      }
+
+      dbSearchFavorites.query(value, (err, obj) => {}, (err, objs) => {
+        if (objs.length <= 0) {
+          this.favorites = [];
+          this.favoritesList.classList.remove('open');
+        } else {
           this.favorites = objs;
           this.favoritesList.classList.add('open');
-        });
-        return true;
-      }
-      this.webview.src = this.urltext.value;
-      return false;
+        }
+        this.update();
+      });
+      return true;
     }
 
     favoriteClick(e) {
-      console.log(e.item.favorite);
+      this.webview.src = this.urltext.value = e.item.favorite.original.url;
       this.favoritesList.classList.remove('open');
     }
 
@@ -98,7 +112,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
           url: this.webview.getURL()
         }
       ];
-      dbIndex.importObjs(objs);
+      dbSearchFavorites.importObjs(objs);
     }
 
     goback(e) {

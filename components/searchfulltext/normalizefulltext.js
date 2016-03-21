@@ -28,8 +28,8 @@ var defaultDiacritics = [
     { base: 'oe', characters: 'œ' },
     { base: "'", characters: '’' }
 ];
-var NormalizeClass = (function () {
-    function NormalizeClass() {
+var NormalizeFullTextClass = (function () {
+    function NormalizeFullTextClass() {
         this.diacriticsMap = [];
         for (var i = 0; i < defaultDiacritics.length; i++) {
             var characters = defaultDiacritics[i].characters.split("");
@@ -38,7 +38,7 @@ var NormalizeClass = (function () {
             }
         }
     }
-    NormalizeClass.prototype.removeDiacritics = function (sentence) {
+    NormalizeFullTextClass.prototype.removeDiacritics = function (sentence) {
         if (!sentence)
             return '';
         var map = this.diacriticsMap;
@@ -47,7 +47,7 @@ var NormalizeClass = (function () {
         });
         return sentence;
     };
-    NormalizeClass.prototype.toQuery = function (words) {
+    NormalizeFullTextClass.prototype.toQuery = function (words) {
         var length = words.length;
         var result = "";
         var first = true;
@@ -65,14 +65,14 @@ var NormalizeClass = (function () {
         }
         return result;
     };
-    NormalizeClass.prototype.normalizeImport = function (sentence) {
+    NormalizeFullTextClass.prototype.normalizeImport = function (sentence) {
         if (!sentence)
             return '';
         sentence = this.removeDiacritics(sentence);
         sentence = sentence.replace('/\r\n?/', "");
         return sentence;
     };
-    NormalizeClass.prototype.normalizeQuery = function (sentence) {
+    NormalizeFullTextClass.prototype.normalizeQuery = function (sentence) {
         if (!sentence)
             return [];
         sentence = this.removeDiacritics(sentence);
@@ -102,7 +102,7 @@ var NormalizeClass = (function () {
         }
         return result;
     };
-    return NormalizeClass;
+    return NormalizeFullTextClass;
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = NormalizeClass;
+exports.default = NormalizeFullTextClass;
