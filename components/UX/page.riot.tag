@@ -51,7 +51,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       </a>
     </div>
   </div>
-  <webview id="webview" class="gl-webview" preload="./components/preloadWebview.js" autosize="on" minwidth="576" minheight="432"></webview>
+  <webview id="webview" class="gl-webview" preload="./components/preloadWebview.js"></webview>
 
   <style scoped>
     #favoritesDropDown {
@@ -62,12 +62,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       top: 0;
       width: 40px;
     }
-
-    #webview {
-      display: block;
-      border: none;
-    }
-
   </style>
 
   <script>
