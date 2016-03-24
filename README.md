@@ -4,18 +4,22 @@
 
 ### Password Manager
 
-![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/autologin.gif)
+![Password](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/autologin.gif)
 
 ### Customize the way a web page displays or behaves
 
 Inject files components/customize/{name}/customize.css and components/customize/{name}/customize.js
 in URL which matches with patterns configured in file components/customize/customize.yml.
 
-![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/tabs.gif)
+![Customize](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/tabs.gif)
 
 ### Requests blocker
 
 Block all requests which match with URL patterns in components/block/block.yml.
+
+### Search & Save favorites
+
+![Favorites](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/favorites.gif)
 
 ## Architecture
 
