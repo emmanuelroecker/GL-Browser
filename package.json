@@ -7,10 +7,14 @@
     "node": "^5.7.0",
     "npm": "^3.6.0"
   },
+  "keywords": [
+    "electron"
+  ],
   "scripts": {
     "test": "electron-mocha",
     "start": "electron main.js",
-    "postinstall": "./node_modules/.bin/electron-rebuild.cmd -f --pre-gyp-fix"
+    "prepublish": "tsc",
+    "postinstall": "electron-rebuild --pre-gyp-fix"
   },
   "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
   "license": "GPL-2.0",
