@@ -17,8 +17,9 @@
 
   <style scoped>
     .dropdown-menu {
-       padding: 5px 5px 5px;
+      padding: 5px;
     }
+
   </style>
 
   <script>

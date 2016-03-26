@@ -20,29 +20,32 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 <page>
   <div class="gl-header input-group">
     <div class="input-group-btn">
-      <a onclick={goback} class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
+      <a onclick={goback} class="btn btn-default" role="button">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+      </a>
     </div>
     <input id="urltext" class="form-control" onkeypress={keypress} type="text" placeholder="URL">
     <span id="indicator" class="input-group-addon"></span>
     <div class="input-group-btn">
-      <a id="refreshButton" onclick={refresh} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-repeat"></span></a>
-      <a id="autologinButton" onclick={autologin} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-log-in"></span></a>
-      <a id="devButton" onclick={dev} class="btn btn-default disabled" role="button"><span class="glyphicon glyphicon-wrench"></span></a>
+      <a id="refreshButton" onclick={refresh} class="btn btn-default disabled" role="button">
+        <span class="glyphicon glyphicon-repeat"></span>
+      </a>
+      <a id="autologinButton" onclick={autologin} class="btn btn-default disabled" role="button">
+        <span class="glyphicon glyphicon-log-in"></span>
+      </a>
+      <a id="devButton" onclick={dev} class="btn btn-default disabled" role="button">
+        <span class="glyphicon glyphicon-wrench"></span>
+      </a>
     </div>
   </div>
-  <webview id="webview" class="gl-webview" preload="./components/preloadWebview.js">
-  </webview>
+  <webview id="webview" class="gl-webview" preload="./components/preloadWebview.js"></webview>
 
   <style scoped>
     #indicator {
-        top: 0px;
-        width: 40px;
-      }
-
-    #webview {
-      display: block;
-      border: none;
+      top: 0;
+      width: 40px;
     }
+
   </style>
 
   <script>
@@ -75,7 +78,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       });
     }
 
-    this.on('mount', function() {
+    this.on('mount', function () {
       this.webview.addEventListener('did-start-loading', () => {
         this.indicator.classList.toggle('glyphicon');
         this.indicator.classList.toggle('glyphicon-refresh');
@@ -91,6 +94,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
         this.devButton.classList.remove('disabled');
         this.autologinButton.classList.remove('disabled');
         customize.inject(this.webview);
+      });
+
+      this.webview.addEventListener('did-navigate', (e) => {
+        this.urltext.value = e.url;
       });
     });
   </script>
