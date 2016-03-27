@@ -25,7 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 const customize = require('./components/customize/customize.js');
 const autologin = require('./components/autologin/autologin.js');
 const favoriteClass = require('./components/favorite/favorite.js');
-const favoriteDb = new favoriteClass('./data/favorites.yml');
+const favoriteDb = new favoriteClass('./data/favorites.json');
 
 window.$ = window.jQuery = require('jquery');
 require('bootstrap');

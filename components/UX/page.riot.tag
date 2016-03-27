@@ -94,7 +94,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     }
 
     favoriteClick(e) {
-      this.webview.src = this.urltext.value = e.item.favorite.url.original;
+      this.webview.src = this.urltext.value = e.item.favorite.url.value.o;
       this.favoritesList.classList.remove('open');
     }
 

@@ -29,7 +29,7 @@ program
 	.option('-t, --title [title]', 'add title')
 	.parse(process.argv);
 
-let favorite = new favoriteClass('./data/favorites.yml');
+let favorite = new favoriteClass('./data/favorites.json');
 
 if (program.url && program.title) {
 	console.log(`--- Add ${program.url} ${program.title} ---`);

@@ -19,28 +19,69 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 'use strict';
 
+let defaultDiacritics = [{
+	base: 'a',
+	characters: 'äâà'
+}, {
+	base: 'e',
+	characters: 'éèëê'
+}, {
+	base: 'i',
+	characters: 'ïî'
+}, {
+	base: 'o',
+	characters: 'öô'
+}, {
+	base: 'u',
+	characters: 'ùüû'
+}, {
+	base: 'c',
+	characters: 'ç'
+}, {
+	base: 'oe',
+	characters: 'œ'
+}, {
+	base: "'",
+	characters: '’'
+}];
+
 class favoriteClass {
 	constructor(filename) {
 		this._modFs = require('fs');
-		this._modPath = require('path');
-		this._modYaml = require('js-yaml');
 		this._filename = filename;
 		this._encoding = 'utf8';
+
+		this.diacriticsMap = [];
+		for (let defaultDiacritic of defaultDiacritics) {
+			let characters = defaultDiacritic.characters.split('');
+			for (let character of characters) {
+				this.diacriticsMap[character] = defaultDiacritic.base;
+			}
+		}
+
 		try {
-			this._favorites = this._modYaml.safeLoad(this._modFs.readFileSync(filename, this._encoding));
+			this._favorites = JSON.parse(this._modFs.readFileSync(filename, this._encoding));
 		} catch (e) {
 			this._favorites = [];
 		}
 	}
 
 	save() {
-		this._modFs.writeFileSync(this._filename, this._modYaml.safeDump(this._favorites), this._encoding);
+		this._modFs.writeFileSync(this._filename, JSON.stringify(this._favorites), this._encoding);
 	}
 
 	add(url, title) {
+		let normalizeUrl = this.normalizeValue(url);
+		let normalizeTitle = this.normalizeValue(title);
 		this._favorites.push({
-			url: url,
-			title: title
+			url: {
+				o: url,
+				n: normalizeUrl
+			},
+			title: {
+				o: title,
+				n: normalizeTitle
+			}
 		});
 	}
 
@@ -50,8 +91,8 @@ class favoriteClass {
 		let indexUrl = 0;
 		let indexTitle = 0;
 		for (let favorite of favorites) {
-			indexUrl = favorite.url.original.indexOf(prefix);
-			indexTitle = favorite.title.original.indexOf(prefix);
+			indexUrl = favorite.url.value.n.indexOf(prefix);
+			indexTitle = favorite.title.value.n.indexOf(prefix);
 
 			if ((indexUrl >= 0) || (indexTitle >= 0)) {
 				if (indexUrl >= 0) {
@@ -80,18 +121,18 @@ class favoriteClass {
 		let indexUrl = 0;
 		let indexTitle = 0;
 		for (let favorite of this._favorites) {
-			indexUrl = favorite.url.indexOf(prefix);
-			indexTitle = favorite.title.indexOf(prefix);
+			indexUrl = favorite.url.n.indexOf(prefix);
+			indexTitle = favorite.title.n.indexOf(prefix);
 
 			if ((indexUrl >= 0) || (indexTitle >= 0)) {
 				let obj = {
 					url: {
-						original: favorite.url,
+						value: favorite.url,
 						highlight: '',
 						offsets: []
 					},
 					title: {
-						original: favorite.title,
+						value: favorite.title,
 						highlight: '',
 						offsets: []
 					}
@@ -136,13 +177,23 @@ class favoriteClass {
 
 	setHighlights(favorites) {
 		for (let favorite of favorites) {
-			favorite.url.highlight = this.highLight(favorite.url.original, favorite.url.offsets);
-			favorite.title.highlight = this.highLight(favorite.title.original, favorite.title.offsets);
+			favorite.url.highlight = this.highLight(favorite.url.value.o, favorite.url.offsets);
+			favorite.title.highlight = this.highLight(favorite.title.value.o, favorite.title.offsets);
 		}
 	}
 
+	normalizeValue(value) {
+		if (!value)
+			return '';
+		let map = this.diacriticsMap;
+		value = value.toLowerCase().replace(/[^\u0000-\u007E]/g, function (character) {
+			return map[character] || character;
+		});
+		return value;
+	}
+
 	normalizeQuery(query) {
-		let prefixes = query.split(' ');
+		let prefixes = this.normalizeValue(query).split(' ');
 		//sort min length to max length
 		prefixes.sort(function (a, b) {
 			return a.length - b.length;
