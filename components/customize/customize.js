@@ -63,22 +63,22 @@ class customizeClass {
 	}
 
 	getJS(name) {
-		let js = "";
+		let js = '';
 		try {
 			let customizejs = this._modFs.readFileSync(this._modPath.join(__dirname, name, this._customizeJsFile), this._encoding);
 			js = this._injectJS.replace(this._customizeTemplate, customizejs);
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 		}
 		return js;
 	}
 
 	getCSS(name) {
-		let css = "";
+		let css = '';
 		try {
 			css = this._modFs.readFileSync(this._modPath.join(__dirname, name, this._customizeCssFile), this._encoding);
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 		}
 		return css;
 	}
@@ -87,7 +87,7 @@ class customizeClass {
 		return patterns.map(pattern => {
 			pattern = this._modMatchPattern.parse(pattern);
 			if (pattern === null) {
-				console.log(`Bad pattern : ${pattern} in ${name}`);
+				console.log(`Bad pattern : ${pattern}`);
 			}
 			return pattern;
 		});

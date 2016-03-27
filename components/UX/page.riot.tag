@@ -76,6 +76,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
       if (value.length <= 0) {
         this.favoritesList.classList.remove('open');
+        return true;
       }
 
       if (e.which == 13) {
