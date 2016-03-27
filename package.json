@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "description": "A custom browser",
   "main": "main.js",
-  "engines" : {
-    "node" : "^5.7.0",
-    "npm" : "^3.6.0"
+  "engines": {
+    "node": "^5.7.0",
+    "npm": "^3.6.0"
   },
   "scripts": {
     "start": "electron main.js"
@@ -14,17 +14,17 @@
   "license": "GPL-2.0",
   "eslintConfig": {
     "env": {
-        "browser": true,
-        "node": true
+      "browser": true,
+      "node": true
     }
   },
   "devDependencies": {
+    "bootstrap": "^3.3.0",
+    "commander": "^2.9.0",
     "electron-prebuilt": "^0.36.0",
+    "jquery": "^1.9.1",
     "js-yaml": "^3.5.0",
     "match-pattern": "^0.0.1",
-    "bootstrap": "^3.3.0",
-    "jquery": "^1.9.1",
-    "riot": "^2.3.0",
-    "commander": "^2.9.0"
+    "riot": "^2.3.0"
   }
 }

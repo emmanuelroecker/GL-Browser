@@ -19,24 +19,27 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const crypt = require('../components/crypt/crypt.js');
-
+const favoriteClass = require('../components/favorite/favorite.js');
 const program = require('commander');
 program
 	.version('0.0.1')
-  .option('-u, --username [username]','username to encrypt')
-	.option('-p, --userpassword [userpassword]', 'user password to encrypt')
-	.option('-P, --masterpassword [masterpassword]', 'masterpassword used to encrypt')
+	.option('-s, --search [search]', 'text to search')
+	.option('-d, --delete [delete]', 'delete object found')
+	.option('-u, --url [url]', 'add url')
+	.option('-t, --title [title]', 'add title')
 	.parse(process.argv);
 
-let usernameCrypted = crypt.encrypt(program.username,program.masterpassword);
-let userpasswordCrypted = crypt.encrypt(program.userpassword, program.masterpassword);
-let masterpasswordHashed = crypt.hash(program.masterpassword);
-console.log('Username Crypted: ' + usernameCrypted);
-console.log('UserPassword Crypted: ' + userpasswordCrypted);
-console.log('MasterPassword Hashed: ' + masterpasswordHashed);
+let favorite = new favoriteClass('./data/favorites.yml');
 
-/*
-let decrypted = crypt.decrypt(crypted, program.password);
-console.log(decrypted);
-*/
+if (program.url && program.title) {
+	console.log(`--- Add ${program.url} ${program.title} ---`);
+	favorite.add(program.url, program.title);
+	favorite.save();
+}
+
+if (program.search) {
+	let words = program.search.replace(',', ' ');
+	console.log(`--- Search ${words} ---`);
+	let result = favorite.search(words);
+	console.log(result);
+}

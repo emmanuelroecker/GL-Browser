@@ -24,9 +24,23 @@ with this program; if not, write to the Free Software Foundation, Inc.,
         <span class="glyphicon glyphicon-arrow-left"></span>
       </a>
     </div>
-    <input id="urltext" class="form-control" onkeypress={keypress} type="text" placeholder="URL">
+    <div id="favoritesList" class="dropdown">
+      <input id="urltext" class="form-control" onkeyup={keyup} type="text" placeholder="URL">
+      <ul id="favoritesDropDown" class="dropdown-menu" role="menu">
+        <li each={ favorite in favorites }>
+          <a href="#" onclick={parent.favoriteClick} role="button">
+            <raw content={favorite.url.highlight}></raw>
+            |
+            <raw content={favorite.title.highlight}></raw>
+          </a>
+        </li>
+      </ul>
+    </div>
     <span id="indicator" class="input-group-addon"></span>
     <div class="input-group-btn">
+      <a id="favoriteButton" onclick={favoriteAdd} class="btn btn-default disabled" role="button">
+        <span class="glyphicon glyphicon-star-empty"></span>
+      </a>
       <a id="refreshButton" onclick={refresh} class="btn btn-default disabled" role="button">
         <span class="glyphicon glyphicon-repeat"></span>
       </a>
@@ -41,6 +55,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
   <webview id="webview" class="gl-webview" preload="./components/preloadWebview.js"></webview>
 
   <style scoped>
+    #favoritesDropDown {
+      top: 30px;
+    }
+
     #indicator {
       top: 0;
       width: 40px;
@@ -51,12 +69,38 @@ with this program; if not, write to the Free Software Foundation, Inc.,
   <script>
     'use strict';
 
-    keypress(e) {
-      if (e.which != 13) {
-        return true;
+    this.favorites = [];
+
+    keyup(e) {
+      let value = this.urltext.value;
+
+      if (value.length <= 0) {
+        this.favoritesList.classList.remove('open');
       }
-      this.webview.src = this.urltext.value;
-      return false;
+
+      if (e.which == 13) {
+        this.webview.src = value;
+        return false;
+      }
+
+      this.favorites = favoriteDb.search(value);
+      if (this.favorites.length <= 0) {
+        this.favoritesList.classList.remove('open');
+      } else {
+        this.favoritesList.classList.add('open');
+      }
+
+      return true;
+    }
+
+    favoriteClick(e) {
+      this.webview.src = this.urltext.value = e.item.favorite.url.original;
+      this.favoritesList.classList.remove('open');
+    }
+
+    favoriteAdd(e) {
+      favoriteDb.add(this.webview.getURL(), this.webview.getTitle());
+      favoriteDb.save();
     }
 
     goback(e) {
@@ -93,6 +137,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
         this.refreshButton.classList.remove('disabled');
         this.devButton.classList.remove('disabled');
         this.autologinButton.classList.remove('disabled');
+        this.favoriteButton.classList.remove('disabled');
         customize.inject(this.webview);
       });
 
