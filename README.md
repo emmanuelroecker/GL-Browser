@@ -2,24 +2,28 @@
 
 ## Features
 
-### Password Manager
+### Password Manager & Autologin
 
-![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/autologin.gif)
+![Autologin](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article8/doc/autologin.gif)
 
 ### Customize the way a web page displays or behaves
 
 Inject files components/customize/{name}/customize.css and components/customize/{name}/customize.js
 in URL which matches with patterns configured in file components/customize/customize.yml.
 
-![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/tabs.gif)
+![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article8/doc/tabs.gif)
 
 ### Requests blocker
 
 Block all requests which match with URL patterns in components/block/block.yml.
 
+### Favorites
+
+![Favorites](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article8/doc/favorites.gif)
+
 ## Architecture
 
-![Architecture](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/scheme_en.png)
+![Architecture](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article8/doc/scheme_en.png)
 
 ## Install & Start Browser
 
