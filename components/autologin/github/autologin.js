@@ -20,8 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 ipcRenderer.on('login', function (event, user) {
 	if (sessionStorage.getItem('glAutologin'))
 		return;
-	console.log('test login');
-
 
 	let body = document.getElementsByTagName('body')[0];
 	if (!body.classList.contains('logged-out'))
