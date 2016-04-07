@@ -31,7 +31,7 @@ ipcRenderer.on('login', function (event, user) {
 	username.value = user.login;
 	password.value = user.password;
 	loginform.submit();
-	username.value = "";
-	password.value = "";
+	username.value = '';
+	password.value = '';
 	sessionStorage.setItem('glAutologin', true);
 });

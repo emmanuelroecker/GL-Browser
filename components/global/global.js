@@ -23,9 +23,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 'use strict';
 
 const customize = require('./components/customize/customize.js');
-const autologin = require('./components/autologin/autologin.js');
+
+const autologinClass = require('./components/autologin/autologin.js');
+const autologin = new autologinClass('./userdata/autologin.yml');
+
 const favoriteClass = require('./components/favorite/favorite.js');
-const favoriteDb = new favoriteClass('./data/favorites.json');
+const favoriteDb = new favoriteClass('./userdata/favorites.json');
 
 window.$ = window.jQuery = require('jquery');
 require('bootstrap');

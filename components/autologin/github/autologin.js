@@ -20,25 +20,27 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 ipcRenderer.on('login', function (event, user) {
 	if (sessionStorage.getItem('glAutologin'))
 		return;
+	console.log('test login');
+
 
 	let body = document.getElementsByTagName('body')[0];
-	if (!body.classList.contains('logged_out'))
+	if (!body.classList.contains('logged-out'))
 		return;
 
-	if (window.location.pathname != "/login") {
-		window.location.href = "/login";
+	if (window.location.pathname != '/login') {
+		window.location.href = '/login';
 		return;
 	}
 
-  let loginform = document.getElementsByTagName('form')[0];
+	let loginform = document.getElementsByTagName('form')[0];
 	let username = document.getElementById('login_field');
 	let password = document.getElementById('password');
 
 	username.value = user.login;
 	password.value = user.password;
 	loginform.submit();
-	username.value = "";
-	password.value = "";
+	username.value = '';
+	password.value = '';
 
-  sessionStorage.setItem('glAutologin', true);
+	sessionStorage.setItem('glAutologin', true);
 });

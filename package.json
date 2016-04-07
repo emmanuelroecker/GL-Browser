@@ -8,6 +8,7 @@
     "npm": "^3.6.0"
   },
   "scripts": {
+    "test": "electron-mocha",
     "start": "electron main.js"
   },
   "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "bootstrap": "^3.3.0",
     "commander": "^2.9.0",
+    "electron-mocha": "^1.0.2",
     "electron-prebuilt": "^0.36.0",
     "jquery": "^1.9.1",
     "js-yaml": "^3.5.0",

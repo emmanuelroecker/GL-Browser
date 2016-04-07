@@ -20,28 +20,28 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 'use strict';
 
 class autologinClass {
-	constructor(encoding) {
+	constructor(filename) {
 		this._modFs = require('fs');
 		this._modPath = require('path');
 		this._modCrypt = require('../crypt/crypt.js');
 		this._modYaml = require('js-yaml');
 		this._modMatchPattern = require('match-pattern');
-		this._encoding = encoding;
-		this._autologinCfgFile = 'autologin.yml';
+		this._encoding = 'utf8';
+		this._autologinCfgFile = filename;
 		this._autologinJsFile = 'autologin.js';
 		this._autologinTemplate = '%autologinjs%';
 		this._loginMessage = 'login';
 		this._injectJsFile = 'inject.js';
 		this._masterPasswordEnable = false;
-		this._masterPasswordHash = "";
-		this._masterPassword = "";
+		this._masterPasswordHash = '';
+		this._masterPassword = '';
 		this.init();
 	}
 
 	init() {
 		try {
 			this._injectJS = this._modFs.readFileSync(this._modPath.join(__dirname, this._injectJsFile), this._encoding);
-			this._autologin = this._modYaml.safeLoad(this._modFs.readFileSync(this._modPath.join(__dirname, this._autologinCfgFile), this._encoding));
+			this._autologin = this._modYaml.safeLoad(this._modFs.readFileSync(this._autologinCfgFile, this._encoding));
 		} catch (e) {
 			console.log(e);
 		}
@@ -71,12 +71,12 @@ class autologinClass {
 	}
 
 	getJS(name) {
-		let js = "";
+		let js = '';
 		try {
 			let customizejs = this._modFs.readFileSync(this._modPath.join(__dirname, name, this._autologinJsFile), this._encoding);
 			js = this._injectJS.replace(this._autologinTemplate, customizejs);
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 		}
 		return js;
 	}
@@ -85,7 +85,7 @@ class autologinClass {
 		return patterns.map(pattern => {
 			pattern = this._modMatchPattern.parse(pattern);
 			if (pattern === null) {
-				console.log(`Bad pattern : ${pattern} in ${name}`);
+				console.log(`Bad pattern : ${pattern}`);
 			}
 			return pattern;
 		});
@@ -111,4 +111,4 @@ class autologinClass {
 	}
 }
 
-module.exports = new autologinClass('utf8');
+module.exports = autologinClass;
