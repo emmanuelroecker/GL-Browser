@@ -43,7 +43,7 @@ class autologinClass {
 			this._injectJS = this._modFs.readFileSync(this._modPath.join(__dirname, this._injectJsFile), this._encoding);
 			this._autologin = this._modYaml.safeLoad(this._modFs.readFileSync(this._autologinCfgFile, this._encoding));
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 		}
 
 		this._masterPasswordHash = this._autologin.shift().hash;
@@ -76,7 +76,7 @@ class autologinClass {
 			let customizejs = this._modFs.readFileSync(this._modPath.join(__dirname, name, this._autologinJsFile), this._encoding);
 			js = this._injectJS.replace(this._autologinTemplate, customizejs);
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 		}
 		return js;
 	}
@@ -85,7 +85,7 @@ class autologinClass {
 		return patterns.map(pattern => {
 			pattern = this._modMatchPattern.parse(pattern);
 			if (pattern === null) {
-				console.log(`Bad pattern : ${pattern}`);
+				console.error(`Bad pattern : ${pattern}`);
 			}
 			return pattern;
 		});

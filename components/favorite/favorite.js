@@ -41,7 +41,7 @@ let defaultDiacritics = [{
 	base: 'oe',
 	characters: 'œ'
 }, {
-	base: "'",
+	base: '\'',
 	characters: '’'
 }];
 
