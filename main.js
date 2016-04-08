@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 console.log(`Electron Version : ${process.versions.electron}`);
 
 class mainProcessClass {
-	constructor(encoding) {
+	constructor() {
 		this._modElectron = require('electron');
 		this._modYaml = require('js-yaml');
 		this._modFs = require('fs');
@@ -30,7 +30,7 @@ class mainProcessClass {
 		this._modBlock = require('./components/block/block.js');
 		this._app = this._modElectron.app;
 
-		this._encoding = encoding;
+		this._encoding = 'utf8';
 		this._indexHtmlFile = 'index.html';
 
 		this.init();
@@ -60,4 +60,4 @@ class mainProcessClass {
 	}
 }
 
-let mainProcess = new mainProcessClass('utf8');
+let mainProcess = new mainProcessClass();
