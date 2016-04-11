@@ -21,13 +21,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 let defaultDiacritics = [{
 	base: 'a',
-	characters: 'äâà'
+	characters: 'äâàáãå'
 }, {
 	base: 'e',
 	characters: 'éèëê'
 }, {
 	base: 'i',
-	characters: 'ïî'
+	characters: 'ïîì'
 }, {
 	base: 'o',
 	characters: 'öô'
@@ -51,6 +51,11 @@ class favoriteClass {
 		this._filename = filename;
 		this._encoding = 'utf8';
 
+		this.initDiacritics();
+		this.load(filename);
+	}
+
+	initDiacritics() {
 		this.diacriticsMap = [];
 		for (let defaultDiacritic of defaultDiacritics) {
 			let characters = defaultDiacritic.characters.split('');
@@ -58,7 +63,9 @@ class favoriteClass {
 				this.diacriticsMap[character] = defaultDiacritic.base;
 			}
 		}
+	}
 
+	load(filename) {
 		try {
 			this._favorites = JSON.parse(this._modFs.readFileSync(filename, this._encoding));
 		} catch (e) {
@@ -66,8 +73,9 @@ class favoriteClass {
 		}
 	}
 
-	save() {
-		this._modFs.writeFileSync(this._filename, JSON.stringify(this._favorites), this._encoding);
+	save(filename) {
+		filename = filename || this._filename;
+		this._modFs.writeFileSync(filename, JSON.stringify(this._favorites), this._encoding);
 	}
 
 	add(url, title) {
