@@ -20,12 +20,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 'use strict';
 
 class customizeClass {
-	constructor(encoding) {
+	constructor(directory) {
 		this._modFs = require('fs');
 		this._modYaml = require('js-yaml');
 		this._modMatchPattern = require('match-pattern');
 		this._modPath = require('path');
-		this._encoding = encoding;
+		this._encoding = 'utf8';
+		this._directory = directory;
 		this._customizeCfgFile = 'customize.yml';
 		this._customizeJsFile = 'customize.js';
 		this._customizeCssFile = 'customize.css';
@@ -36,8 +37,8 @@ class customizeClass {
 
 	init() {
 		try {
-			this._injectJS = this._modFs.readFileSync(this._modPath.join(__dirname, this._injectJsFile), this._encoding);
-			this._customize = this._modYaml.safeLoad(this._modFs.readFileSync(this._modPath.join(__dirname, this._customizeCfgFile), this._encoding));
+			this._injectJS = this._modFs.readFileSync(this._modPath.join(this._directory, this._injectJsFile), this._encoding);
+			this._customize = this._modYaml.safeLoad(this._modFs.readFileSync(this._modPath.join(this._directory, this._customizeCfgFile), this._encoding));
 		} catch (e) {
 			console.error(e);
 		}
@@ -65,7 +66,7 @@ class customizeClass {
 	getJS(name) {
 		let js = '';
 		try {
-			let customizejs = this._modFs.readFileSync(this._modPath.join(__dirname, name, this._customizeJsFile), this._encoding);
+			let customizejs = this._modFs.readFileSync(this._modPath.join(this._directory, name, this._customizeJsFile), this._encoding);
 			js = this._injectJS.replace(this._customizeTemplate, customizejs);
 		} catch (e) {
 			console.error(e);
@@ -76,7 +77,7 @@ class customizeClass {
 	getCSS(name) {
 		let css = '';
 		try {
-			css = this._modFs.readFileSync(this._modPath.join(__dirname, name, this._customizeCssFile), this._encoding);
+			css = this._modFs.readFileSync(this._modPath.join(this._directory, name, this._customizeCssFile), this._encoding);
 		} catch (e) {
 			console.error(e);
 		}
@@ -102,4 +103,4 @@ class customizeClass {
 	}
 }
 
-module.exports = new customizeClass('utf8');
+module.exports = customizeClass;

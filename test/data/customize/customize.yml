@@ -1,0 +1,10 @@
+- name: pinterest
+  patterns:
+           - "*://*.pinterest.com/*"
+- name: twitter
+  patterns:
+           - "*://*.twitter.com/*"
+- name: google
+  patterns:
+           - "*://www.google.fr/*"
+           - "*://www.google.com/*"

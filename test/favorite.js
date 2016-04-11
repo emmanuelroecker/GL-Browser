@@ -56,7 +56,7 @@ describe('favoriteClass', function () {
 
 		it('load from file', function () {
 			let favorite = new favoriteClass();
-			favorite.load(path.join(__dirname, 'data/favorites.json'));
+			favorite.load(path.join(__dirname, 'data/favorite/favorites.json'));
 			assert.equal(9, favorite._favorites.length);
 		});
 
@@ -81,8 +81,8 @@ describe('favoriteClass', function () {
 					'n': 'emmanuel roecker & rym bouchagour - blog de developpement web'
 				}
 			}];
-			favorite.save(path.join(__dirname, 'data/favorites.tmp.json'));
-			assert.equal(447, fs.statSync(path.join(__dirname, 'data/favorites.tmp.json'))['size']);
+			favorite.save(path.join(__dirname, 'data/favorite/favorites.tmp.json'));
+			assert.equal(447, fs.statSync(path.join(__dirname, 'data/favorite/favorites.tmp.json'))['size']);
 		});
 
 		it('add favorites', function () {
@@ -132,7 +132,7 @@ describe('favoriteClass', function () {
 		});
 
 		it('search', function () {
-			let favorite = new favoriteClass(path.join(__dirname, 'data/favorites.json'));
+			let favorite = new favoriteClass(path.join(__dirname, 'data/favorite/favorites.json'));
 			let result = favorite.search('dev navi');
 			assert.equal('http://<b>dev</b>.glicer.com/section/probleme-solution/creer-<b>navi</b>gateur-personnalise.html', result[0].url.highlight);
 			assert.equal('Créer un <b>navi</b>gateur personnalisé - Blog de <b>dév</b>eloppement web', result[0].title.highlight);

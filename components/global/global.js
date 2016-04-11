@@ -22,7 +22,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const customize = require('./components/customize/customize.js');
+const customizeClass = require('./components/customize/customize.js');
+const customize = new customizeClass('./components/customize');
 
 const autologinClass = require('./components/autologin/autologin.js');
 const autologin = new autologinClass('./userdata/autologin.yml');
