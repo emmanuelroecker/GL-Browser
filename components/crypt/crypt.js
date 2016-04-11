@@ -48,4 +48,4 @@ class cryptClass {
 	}
 }
 
-module.exports = new cryptClass();
+module.exports = cryptClass;

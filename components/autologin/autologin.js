@@ -23,7 +23,7 @@ class autologinClass {
 	constructor(filename) {
 		this._modFs = require('fs');
 		this._modPath = require('path');
-		this._modCrypt = require('../crypt/crypt.js');
+		this._modCrypt = new (require('../crypt/crypt.js'));
 		this._modYaml = require('js-yaml');
 		this._modMatchPattern = require('match-pattern');
 		this._encoding = 'utf8';
