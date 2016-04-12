@@ -52,7 +52,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       </a>
     </div>
   </div>
-  <webview id="webview" class="gl-webview" preload="./components/preloadWebview.js"></webview>
+  <webview id="webview" class="gl-webview" preload="./component/preloadWebview.js"></webview>
 
   <style scoped>
     #favoritesDropDown {

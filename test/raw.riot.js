@@ -27,11 +27,11 @@ const riot = require('riot');
 
 describe('raw riot', function () {
 	it('compile', function () {
-		let rawTag = fs.readFileSync('./components/UX/raw.riot.tag', 'utf8');
+		let rawTag = fs.readFileSync('./component/UX/raw.riot.tag', 'utf8');
 		assert.equal('raw', eval(riot.compile(rawTag)));
 	});
 	it('mount', function () {
-		let rawTag = fs.readFileSync('./components/UX/raw.riot.tag', 'utf8');
+		let rawTag = fs.readFileSync('./component/UX/raw.riot.tag', 'utf8');
 		eval(riot.compile(rawTag));
 		let html = document.createElement('raw');
 		document.body.appendChild(html);
@@ -45,7 +45,7 @@ describe('raw riot', function () {
 		assert.equal('<p><b>test</b></p>',document.querySelector('div').textContent);
 	});
 	it('with raw', function () {
-		let rawTag = fs.readFileSync('./components/UX/raw.riot.tag', 'utf8');
+		let rawTag = fs.readFileSync('./component/UX/raw.riot.tag', 'utf8');
 		eval(riot.compile(rawTag));
 		let html = document.createElement('raw');
 		document.body.appendChild(html);

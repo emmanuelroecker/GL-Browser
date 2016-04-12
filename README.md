@@ -8,14 +8,14 @@
 
 ### Customize the way a web page displays or behaves
 
-Inject files components/customize/{name}/customize.css and components/customize/{name}/customize.js
-in URL which matches with patterns configured in file components/customize/customize.yml.
+Inject files component/customize/{name}/customize.css and component/customize/{name}/customize.js
+in URL which matches with patterns configured in file component/customize/customize.yml.
 
 ![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article8/doc/tabs.gif)
 
 ### Requests blocker
 
-Block all requests which match with URL patterns in components/block/block.yml.
+Block all requests which match with URL patterns in component/block/block.yml.
 
 ### Favorites
 

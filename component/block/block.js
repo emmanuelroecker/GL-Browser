@@ -23,7 +23,7 @@ class blockClass {
 	constructor(encoding) {
 		this._modFs = require('fs');
 		this._modYaml = require('js-yaml');
-		this._blockCfgFile = './components/block/block.yml';
+		this._blockCfgFile = './component/block/block.yml';
 		this._encoding = encoding;
 	}
 

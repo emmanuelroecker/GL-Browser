@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const favoriteClass = require('../components/favorite/favorite.js');
+const favoriteClass = require('../component/favorite/favorite.js');
 const program = require('commander');
 program
 	.version('0.0.1')

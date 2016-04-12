@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const favoriteClass = require('../components/favorite/favorite.js');
+const favoriteClass = require('../component/favorite/favorite.js');
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');

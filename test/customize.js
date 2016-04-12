@@ -21,10 +21,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const customizeClass = require('../components/customize/customize.js');
+const customizeClass = require('../component/customize/customize.js');
 const assert = require('assert');
 const path = require('path');
-const crypt = new(require('../components/crypt/crypt.js'));
+const crypt = new(require('../component/crypt/crypt.js'));
 
 describe('customizeClass', function () {
 	it('init bad directory', function () {

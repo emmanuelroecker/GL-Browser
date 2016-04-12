@@ -27,7 +27,7 @@ class mainProcessClass {
 		this._modYaml = require('js-yaml');
 		this._modFs = require('fs');
 		this._modPath = require('path');
-		this._modBlock = require('./components/block/block.js');
+		this._modBlock = require('./component/block/block.js');
 		this._app = this._modElectron.app;
 
 		this._encoding = 'utf8';

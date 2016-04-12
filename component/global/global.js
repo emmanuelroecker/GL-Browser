@@ -22,13 +22,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const customizeClass = require('./components/customize/customize.js');
-const customize = new customizeClass('./components/customize');
+const customizeClass = require('./component/customize/customize.js');
+const customize = new customizeClass('./component/customize');
 
-const autologinClass = require('./components/autologin/autologin.js');
-const autologin = new autologinClass('./userdata/autologin.yml', './components/autologin');
+const autologinClass = require('./component/autologin/autologin.js');
+const autologin = new autologinClass('./userdata/autologin.yml', './component/autologin');
 
-const favoriteClass = require('./components/favorite/favorite.js');
+const favoriteClass = require('./component/favorite/favorite.js');
 const favoriteDb = new favoriteClass('./userdata/favorites.json');
 
 window.$ = window.jQuery = require('jquery');

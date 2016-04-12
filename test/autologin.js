@@ -21,10 +21,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const autologinClass = require('../components/autologin/autologin.js');
+const autologinClass = require('../component/autologin/autologin.js');
 const assert = require('assert');
 const path = require('path');
-const crypt = new(require('../components/crypt/crypt.js'));
+const crypt = new(require('../component/crypt/crypt.js'));
 
 describe('autologinClass', function () {
 	it('init bad cfg filename', function () {
