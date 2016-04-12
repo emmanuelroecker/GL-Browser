@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const cryptClass = require('../component/crypt/crypt.js');
+const cryptClass = require('../../component/crypt/crypt.js');
 const assert = require('assert');
 
 describe('cryptClass', function () {

@@ -21,24 +21,23 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const autologinClass = require('../component/autologin/autologin.js');
+const autologinClass = require('../../component/autologin/autologin.js');
 const assert = require('assert');
-const path = require('path');
-const crypt = new(require('../component/crypt/crypt.js'));
+const crypt = new(require('../../component/crypt/crypt.js'));
 
 describe('autologinClass', function () {
 	it('init bad cfg filename', function () {
 		assert.throws(function () {
-			new autologinClass(path.join(__dirname, '/data/autologin/bad.yml'), path.join(__dirname, 'data/customize'));
+			new autologinClass('./test/data/autologin/bad.yml', './test/data/customize');
 		}, Error);
 	});
 	it('init bad directory', function () {
 		assert.throws(function () {
-			new autologinClass(path.join(__dirname, '/data/autologin/autologin.yml'), path.join(__dirname, 'bad/bad'));
+			new autologinClass('./test/data/autologin/autologin.yml', './bad/bad');
 		}, Error);
 	});
 	it('compile patterns', function () {
-		let autologin = new autologinClass(path.join(__dirname, '/data/autologin/autologin.yml'), path.join(__dirname, 'data/autologin'));
+		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
 		let patterns = ['*://*.twitter.com/*', '*://*.github.com/*'];
 		let expected = [/^(http|https):\/\/[^\/]*?twitter\.com(\/.*)?$/,
 			/^(http|https):\/\/[^\/]*?github\.com(\/.*)?$/
@@ -46,15 +45,15 @@ describe('autologinClass', function () {
 		assert.deepEqual(expected, autologin.compilePatterns(patterns));
 	});
 	it('get js', function () {
-		let autologin = new autologinClass(path.join(__dirname, '/data/autologin/autologin.yml'), path.join(__dirname, 'data/autologin'));
+		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
 		assert.equal('p7MRebtDkSERaZeqedWd0t7wiaIyRilQfNXitilIkmI=', crypt.hash(autologin.getJS('github')));
 	});
 	it('init', function () {
-		let autologin = new autologinClass(path.join(__dirname, '/data/autologin/autologin.yml'), path.join(__dirname, 'data/autologin'));
+		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
 		assert.equal('8VGB7XGU+PMfQKjkOxJUwrZa0cUfbyUgtC51aed5koY=', crypt.hash(JSON.stringify(autologin._autologin)));
 	});
 	it('get to inject', function () {
-		let autologin = new autologinClass(path.join(__dirname, '/data/autologin/autologin.yml'), path.join(__dirname, 'data/autologin'));
+		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
 		let elem = autologin.getToInject('https://github.com/emmanuelroecker');
 		assert.equal('p7MRebtDkSERaZeqedWd0t7wiaIyRilQfNXitilIkmI=', crypt.hash(elem.js));
 	});

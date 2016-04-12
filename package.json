@@ -8,7 +8,7 @@
     "npm": "^3.6.0"
   },
   "scripts": {
-    "test": "electron-mocha --renderer",
+    "test": "electron-mocha --recursive --renderer ./test/component",
     "start": "electron main.js"
   },
   "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
