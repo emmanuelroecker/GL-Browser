@@ -26,7 +26,7 @@ const customizeClass = require('./components/customize/customize.js');
 const customize = new customizeClass('./components/customize');
 
 const autologinClass = require('./components/autologin/autologin.js');
-const autologin = new autologinClass('./userdata/autologin.yml');
+const autologin = new autologinClass('./userdata/autologin.yml', './components/autologin');
 
 const favoriteClass = require('./components/favorite/favorite.js');
 const favoriteDb = new favoriteClass('./userdata/favorites.json');

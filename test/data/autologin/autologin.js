@@ -23,7 +23,7 @@ class autologinClass {
 	constructor(autologinCfgFile, directory) {
 		this._modFs = require('fs');
 		this._modPath = require('path');
-		this._modCrypt = new(require('../crypt/crypt.js'));
+		this._modCrypt = new (require('../crypt/crypt.js'));
 		this._modYaml = require('js-yaml');
 		this._modMatchPattern = require('match-pattern');
 		this._encoding = 'utf8';
@@ -40,8 +40,12 @@ class autologinClass {
 	}
 
 	init() {
-		this._injectJS = this._modFs.readFileSync(this._modPath.join(this._directory, this._injectJsFile), this._encoding);
-		this._autologin = this._modYaml.safeLoad(this._modFs.readFileSync(this._autologinCfgFile, this._encoding));
+		try {
+			this._injectJS = this._modFs.readFileSync(this._modPath.join(this._directory, this._injectJsFile), this._encoding);
+			this._autologin = this._modYaml.safeLoad(this._modFs.readFileSync(this._autologinCfgFile, this._encoding));
+		} catch (e) {
+			console.error(e);
+		}
 
 		this._masterPasswordHash = this._autologin.shift().hash;
 
@@ -59,8 +63,8 @@ class autologinClass {
 				if (pattern.test(url)) {
 					let cloneElem = Object.assign({}, elem);
 					cloneElem.user = {};
-					cloneElem.user.login = this._modCrypt.decrypt(elem.login, this._masterPassword);
-					cloneElem.user.password = this._modCrypt.decrypt(elem.password, this._masterPassword);
+					cloneElem.user.login = this._modCrypt.decrypt(elem.login,this._masterPassword);
+					cloneElem.user.password = this._modCrypt.decrypt(elem.password,this._masterPassword);
 					return cloneElem;
 				}
 			}
@@ -69,8 +73,12 @@ class autologinClass {
 
 	getJS(name) {
 		let js = '';
-		let customizejs = this._modFs.readFileSync(this._modPath.join(this._directory, name, this._autologinJsFile), this._encoding);
-		js = this._injectJS.replace(this._autologinTemplate, customizejs);
+		try {
+			let customizejs = this._modFs.readFileSync(this._modPath.join(this._directory, name, this._autologinJsFile), this._encoding);
+			js = this._injectJS.replace(this._autologinTemplate, customizejs);
+		} catch (e) {
+			console.error(e);
+		}
 		return js;
 	}
 
@@ -78,7 +86,7 @@ class autologinClass {
 		return patterns.map(pattern => {
 			pattern = this._modMatchPattern.parse(pattern);
 			if (pattern === null) {
-				throw new Error(`Bad pattern : ${pattern}`);
+				console.error(`Bad pattern : ${pattern}`);
 			}
 			return pattern;
 		});

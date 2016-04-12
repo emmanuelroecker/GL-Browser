@@ -1,0 +1,11 @@
+- hash: 9onrkkqWhen6l0X+Snj0X5y+rGbuFw57oY5oZL2mXZw=
+- name: twitter
+  login: "f36425d54b4ccbb403e040ab02"
+  password: "fd3331d65f6e96b231c36cca044f3cd3e9d06de0"
+  patterns:
+           - "*://*.twitter.com/*"
+- name: github
+  login: "f4683ad6404bc1ad02fc40f8584b7f"
+  password: "e2363fda4d69c2f61bc057f452465fe1cabf05f3"
+  patterns:
+           - "*://*.github.com/*"

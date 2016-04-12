@@ -36,12 +36,8 @@ class customizeClass {
 	}
 
 	init() {
-		try {
-			this._injectJS = this._modFs.readFileSync(this._modPath.join(this._directory, this._injectJsFile), this._encoding);
-			this._customize = this._modYaml.safeLoad(this._modFs.readFileSync(this._modPath.join(this._directory, this._customizeCfgFile), this._encoding));
-		} catch (e) {
-			console.error(e);
-		}
+		this._injectJS = this._modFs.readFileSync(this._modPath.join(this._directory, this._injectJsFile), this._encoding);
+		this._customize = this._modYaml.safeLoad(this._modFs.readFileSync(this._modPath.join(this._directory, this._customizeCfgFile), this._encoding));
 
 		this._customize = this._customize.map(elem => {
 			elem.css = this.getCSS(elem.name);
@@ -65,22 +61,14 @@ class customizeClass {
 
 	getJS(name) {
 		let js = '';
-		try {
-			let customizejs = this._modFs.readFileSync(this._modPath.join(this._directory, name, this._customizeJsFile), this._encoding);
-			js = this._injectJS.replace(this._customizeTemplate, customizejs);
-		} catch (e) {
-			console.error(e);
-		}
+		let customizejs = this._modFs.readFileSync(this._modPath.join(this._directory, name, this._customizeJsFile), this._encoding);
+		js = this._injectJS.replace(this._customizeTemplate, customizejs);
 		return js;
 	}
 
 	getCSS(name) {
 		let css = '';
-		try {
-			css = this._modFs.readFileSync(this._modPath.join(this._directory, name, this._customizeCssFile), this._encoding);
-		} catch (e) {
-			console.error(e);
-		}
+		css = this._modFs.readFileSync(this._modPath.join(this._directory, name, this._customizeCssFile), this._encoding);
 		return css;
 	}
 
@@ -88,7 +76,7 @@ class customizeClass {
 		return patterns.map(pattern => {
 			pattern = this._modMatchPattern.parse(pattern);
 			if (pattern === null) {
-				console.log(`Bad pattern : ${pattern}`);
+				throw new Error(`Bad pattern : ${pattern}`);
 			}
 			return pattern;
 		});

@@ -23,11 +23,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 const customizeClass = require('../components/customize/customize.js');
 const assert = require('assert');
-const fs = require('fs');
 const path = require('path');
 const crypt = new(require('../components/crypt/crypt.js'));
 
 describe('customizeClass', function () {
+	it('init bad directory', function () {
+		assert.throws(function () {
+			new customizeClass(path.join(__dirname, 'data/bad'));
+		}, Error);
+	});
 	it('compile patterns', function () {
 		let customize = new customizeClass(path.join(__dirname, 'data/customize'));
 		let patterns = ['*://*.pinterest.com/*', '*://*.twitter.com/*', '*://www.google.fr/*'];
