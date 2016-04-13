@@ -24,37 +24,38 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 const assert = require('assert');
 const fs = require('fs');
 const riot = require('riot');
+const autologinClass = require('../../../component/autologin/autologin.js');
 
-describe('raw riot', function () {
+describe('autologin riot', function () {
 	beforeEach(function () {
 		document.body.innerHTML = '';
 	});
 	it('compile', function () {
-		let rawTag = fs.readFileSync('./component/UX/raw.riot.tag', 'utf8');
-		assert.equal('raw', eval(riot.compile(rawTag)));
+		let autologinTag = fs.readFileSync('./component/UX/autologin.riot.tag', 'utf8');
+		assert.equal('autologin', eval(riot.compile(autologinTag)));
 	});
 	it('mount', function () {
-		let rawTag = fs.readFileSync('./component/UX/raw.riot.tag', 'utf8');
-		eval(riot.compile(rawTag));
-		let html = document.createElement('raw');
+		let autologinTag = fs.readFileSync('./component/UX/autologin.riot.tag', 'utf8');
+		eval(riot.compile(autologinTag));
+		let html = document.createElement('autologin');
 		document.body.appendChild(html);
-		let tag = riot.mount('raw')[0];
+		let tag = riot.mount('autologin')[0];
 		assert.equal(true, tag.isMounted);
 	});
-	it('without raw', function () {
-		let html = document.createElement('div');
-		html.textContent = '<p><b>test</b></p>';
+	it('autologin bad enter', function () {
+		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
+		let autologinTag = fs.readFileSync('./component/UX/autologin.riot.tag', 'utf8');
+		eval(riot.compile(autologinTag));
+		let html = document.createElement('autologin');
 		document.body.appendChild(html);
-		assert.equal('<p><b>test</b></p>', document.querySelector('div').textContent);
+		riot.mount('autologin')[0];
 	});
-	it('with raw', function () {
-		let rawTag = fs.readFileSync('./component/UX/raw.riot.tag', 'utf8');
-		eval(riot.compile(rawTag));
-		let html = document.createElement('raw');
+	it('autologin ok enter', function () {
+		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
+		let autologinTag = fs.readFileSync('./component/UX/autologin.riot.tag', 'utf8');
+		eval(riot.compile(autologinTag));
+		let html = document.createElement('autologin');
 		document.body.appendChild(html);
-		riot.mount('raw', {
-			content: '<div><b>test</b></div>'
-		})[0];
-		assert.equal('test', document.querySelector('raw').textContent);
+		riot.mount('autologin')[0];
 	});
 });

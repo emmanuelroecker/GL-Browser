@@ -1,11 +1,11 @@
-- hash: 9onrkkqWhen6l0X+Snj0X5y+rGbuFw57oY5oZL2mXZw=
+- hash: A6eLJscKw4eCn7o5CHaKTO/9lox5z+H+t78wjUnT8n4=
 - name: twitter
-  login: "f36425d54b4ccbb403e040ab02"
-  password: "fd3331d65f6e96b231c36cca044f3cd3e9d06de0"
+  login: "1e43c2e88f1472d6c3"
+  password: "1b51d4e9961a6dd7c3"
   patterns:
            - "*://*.twitter.com/*"
 - name: github
-  login: "f4683ad6404bc1ad02fc40f8584b7f"
-  password: "e2363fda4d69c2f61bc057f452465fe1cabf05f3"
+  login: "1e43c2e88f1472d6c0"
+  password: "1b51d4e9961a6dd7c0"
   patterns:
            - "*://*.github.com/*"

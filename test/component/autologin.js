@@ -50,11 +50,22 @@ describe('autologinClass', function () {
 	});
 	it('init', function () {
 		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
-		assert.equal('8VGB7XGU+PMfQKjkOxJUwrZa0cUfbyUgtC51aed5koY=', crypt.hash(JSON.stringify(autologin._autologin)));
+		assert.equal('D6SF2aBF9uO+kd6D3UD+XuKGVaO/E38Ojxwy8dPS5oE=', crypt.hash(JSON.stringify(autologin._autologin)));
+	});
+	it('masterpassword bad', function() {
+		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
+		assert.equal(false,autologin.setMasterPassword('test'));
+	});
+	it('masterpassword ok', function() {
+		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
+		assert.equal(true,autologin.setMasterPassword('masterpassword'));
 	});
 	it('get to inject', function () {
 		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
+		autologin.setMasterPassword('masterpassword');
 		let elem = autologin.getToInject('https://github.com/emmanuelroecker');
 		assert.equal('p7MRebtDkSERaZeqedWd0t7wiaIyRilQfNXitilIkmI=', crypt.hash(elem.js));
+		assert.equal('username2',elem.user.login);
+		assert.equal('password2',elem.user.password);
 	});
 });
