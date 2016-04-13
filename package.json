@@ -1,32 +1,35 @@
 {
-  "name": "GL-Browser",
-  "version": "0.0.1",
-  "description": "A custom browser",
-  "main": "main.js",
-  "engines": {
-    "node": "^5.7.0",
-    "npm": "^3.6.0"
-  },
-  "scripts": {
-    "test": "electron-mocha --renderer --recursive ./test/component",
-    "start": "electron main.js"
-  },
-  "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
-  "license": "GPL-2.0",
-  "eslintConfig": {
-    "env": {
-      "browser": true,
-      "node": true
+    "name": "GL-Browser",
+    "version": "0.0.1",
+    "description": "A custom browser",
+    "main": "main.js",
+    "engines": {
+        "node": "^5.7.0",
+        "npm": "^3.6.0"
+    },
+    "scripts": {
+        "test": "electron-mocha --renderer --recursive ./test/component",
+        "start": "electron main.js",
+        "prepublish": "npm test"
+    },
+    "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
+    "license": "GPL-2.0",
+    "eslintConfig": {
+        "env": {
+            "browser": true,
+            "node": true
+        }
+    },
+    "dependencies": {
+        "bootstrap": "^3.3.0",
+        "commander": "^2.9.0",
+        "electron-prebuilt": "^0.37.0",
+        "jquery": "^1.9.1",
+        "js-yaml": "^3.5.0",
+        "match-pattern": "^0.0.1",
+        "riot": "^2.3.0"
+    },
+    "devDependencies": {
+        "electron-mocha": "^1.0.2"
     }
-  },
-  "devDependencies": {
-    "bootstrap": "^3.3.0",
-    "commander": "^2.9.0",
-    "electron-mocha": "^1.0.2",
-    "electron-prebuilt": "^0.37.0",
-    "jquery": "^1.9.1",
-    "js-yaml": "^3.5.0",
-    "match-pattern": "^0.0.1",
-    "riot": "^2.3.0"
-  }
 }

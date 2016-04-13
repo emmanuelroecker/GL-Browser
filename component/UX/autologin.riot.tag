@@ -7,7 +7,7 @@
       <form>
         <div class="form-group">
           <label for="password" class="sr-only">Mot de passe</label>
-          <input id="password" onkeypress={keypress} class="form-control" type="password" placeholder="Mot de passe"></input>
+          <input id="password" onkeydown={keydown} class="form-control" type="password" placeholder="Mot de passe"></input>
         </div>
         <span id="message" class="text-danger"></span>
         <button type="button" class="btn btn-default btn-block" onclick={login}>Connexion</button>
@@ -35,7 +35,7 @@
       this.password.value = "";
     }
 
-    keypress(e) {
+    keydown(e) {
       this.message.textContent = '';
       if (e.which !== 13) {
         return true;
