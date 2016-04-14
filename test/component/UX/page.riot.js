@@ -25,25 +25,23 @@ const assert = require('assert');
 const fs = require('fs');
 const riot = require('riot');
 
-/*
-const autologinClass = require('../../../component/autologin/autologin.js');
-
-describe('autologin riot', function () {
+describe('page riot', function () {
 	beforeEach(function () {
 		document.body.innerHTML = '';
 	});
 	it('compile', function () {
-		let autologinTag = fs.readFileSync('./component/UX/autologin.riot.tag', 'utf8');
-		assert.equal('autologin', eval(riot.compile(autologinTag)));
+		let pageTag = fs.readFileSync('./component/UX/page.riot.tag', 'utf8');
+		assert.equal('page', eval(riot.compile(pageTag)));
 	});
 	it('mount', function () {
-		let autologinTag = fs.readFileSync('./component/UX/autologin.riot.tag', 'utf8');
-		eval(riot.compile(autologinTag));
-		let html = document.createElement('autologin');
+		let pageTag = fs.readFileSync('./component/UX/page.riot.tag', 'utf8');
+		eval(riot.compile(pageTag));
+		let html = document.createElement('page');
 		document.body.appendChild(html);
-		let tag = riot.mount('autologin')[0];
+		let tag = riot.mount('page')[0];
 		assert.equal(true, tag.isMounted);
 	});
+	/*
 	it('autologin bad enter', function () {
 		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
 		let autologinTag = fs.readFileSync('./component/UX/autologin.riot.tag', 'utf8');
@@ -60,5 +58,5 @@ describe('autologin riot', function () {
 		document.body.appendChild(html);
 		riot.mount('autologin')[0];
 	});
+	*/
 });
-*/

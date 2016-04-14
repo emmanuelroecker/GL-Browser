@@ -23,7 +23,7 @@ class eventClass {
 	constructor() {}
 
 	triggerKeyboardEvent(element, type, keyCode) {
-		var eventObj = document.createEventObject ? document.createEventObject() : document.createEvent('Events');
+		let eventObj = document.createEventObject ? document.createEventObject() : document.createEvent('Events');
 
 		if (eventObj.initEvent) {
 			eventObj.initEvent(type, true, true);
