@@ -1,5 +1,7 @@
 # GLICER Browser
 
+[![Build Status](https://travis-ci.org/emmanuelroecker/GL-Browser.svg?branch=master)](https://travis-ci.org/emmanuelroecker/GL-Browser)
+
 ## Features
 
 ### Password Manager & Autologin
