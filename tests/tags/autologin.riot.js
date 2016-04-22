@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-/* global describe, it, document, beforeEach */
+/* global describe, it, document, before, beforeEach */
 
 'use strict';
 
@@ -31,26 +31,21 @@ describe('autologin riot', function () {
 	let autologinRiotTagFile = './tags/autologin.riot.tag';
 	let autologinDataCfgFile = './tests/data/autologin/autologin.yml';
 	let autologinDataDir = './tests/data/autologin';
-
+	before(function() {
+		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
+		let autologinTag = fs.readFileSync(autologinRiotTagFile, 'utf8');
+		eval(riot.compile(autologinTag));
+	});
 	beforeEach(function () {
 		document.body.innerHTML = '';
 	});
-	it('compile', function () {
-		let autologinTag = fs.readFileSync(autologinRiotTagFile, 'utf8');
-		assert.equal('autologin', eval(riot.compile(autologinTag)));
-	});
 	it('mount', function () {
-		let autologinTag = fs.readFileSync(autologinRiotTagFile, 'utf8');
-		eval(riot.compile(autologinTag));
 		let html = document.createElement('autologin');
 		document.body.appendChild(html);
 		let tag = riot.mount('autologin')[0];
 		assert.equal(true, tag.isMounted);
 	});
 	it('autologin bad button', function (done) {
-		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
-		let autologinTag = fs.readFileSync(autologinRiotTagFile, 'utf8');
-		eval(riot.compile(autologinTag));
 		let html = document.createElement('autologin');
 		document.body.appendChild(html);
 		riot.mount('autologin')[0];
@@ -67,9 +62,6 @@ describe('autologin riot', function () {
 		button.click();
 	});
 	it('autologin ok button', function (done) {
-		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
-		let autologinTag = fs.readFileSync(autologinRiotTagFile, 'utf8');
-		eval(riot.compile(autologinTag));
 		let html = document.createElement('autologin');
 		document.body.appendChild(html);
 		riot.mount('autologin')[0];
@@ -87,9 +79,6 @@ describe('autologin riot', function () {
 		button.click();
 	});
 	it('autologin ok touch enter', function (done) {
-		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
-		let autologinTag = fs.readFileSync(autologinRiotTagFile, 'utf8');
-		eval(riot.compile(autologinTag));
 		let html = document.createElement('autologin');
 		document.body.appendChild(html);
 		riot.mount('autologin')[0];
@@ -106,9 +95,6 @@ describe('autologin riot', function () {
 		event.triggerKeyboardEvent(passwordinput, 'keydown', 13);
 	});
 	it('autologin bad touch enter', function (done) {
-		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
-		let autologinTag = fs.readFileSync(autologinRiotTagFile, 'utf8');
-		eval(riot.compile(autologinTag));
 		let html = document.createElement('autologin');
 		document.body.appendChild(html);
 		riot.mount('autologin')[0];

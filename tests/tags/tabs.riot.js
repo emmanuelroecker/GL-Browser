@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-/* global describe, it, document, beforeEach */
+/* global describe, it, document, before, beforeEach */
 
 'use strict';
 
@@ -28,19 +28,26 @@ require('main.js');
 
 describe('tabs riot', () => {
 	let tabsRiotTag = './tags/tabs.riot.tag';
+	before(() => {
+		let tabsTag = fs.readFileSync(tabsRiotTag, 'utf8');
+		eval(riot.compile(tabsTag));
+	});
 	beforeEach(() => {
 		document.body.innerHTML = '';
 	});
-	it('compile', () => {
-		let tabsTag = fs.readFileSync(tabsRiotTag, 'utf8');
-		assert.equal('tabs', eval(riot.compile(tabsTag)));
-	});
 	it('mount', () => {
-		let tabsTag = fs.readFileSync(tabsRiotTag, 'utf8');
-		eval(riot.compile(tabsTag));
 		let html = document.createElement('tabs');
 		document.body.appendChild(html);
 		let tag = riot.mount('tabs')[0];
 		assert.equal(true, tag.isMounted);
+	});
+	it('add', () => {
+
+	});
+	it ('remove', () => {
+
+	});
+	it ('view', () => {
+
 	});
 });

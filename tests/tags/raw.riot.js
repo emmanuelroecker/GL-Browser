@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-/* global describe, it, document, beforeEach */
+/* global describe, it, document, before, beforeEach */
 
 'use strict';
 
@@ -27,16 +27,14 @@ const riot = require('riot');
 
 describe('raw riot', function () {
 	let rawRiotTagFile = './tags/raw.riot.tag';
+	before(function() {
+		let rawTag = fs.readFileSync(rawRiotTagFile, 'utf8');
+		eval(riot.compile(rawTag));
+	});
 	beforeEach(function () {
 		document.body.innerHTML = '';
 	});
-	it('compile', function () {
-		let rawTag = fs.readFileSync(rawRiotTagFile, 'utf8');
-		assert.equal('raw', eval(riot.compile(rawTag)));
-	});
 	it('mount', function () {
-		let rawTag = fs.readFileSync(rawRiotTagFile, 'utf8');
-		eval(riot.compile(rawTag));
 		let html = document.createElement('raw');
 		document.body.appendChild(html);
 		let tag = riot.mount('raw')[0];
@@ -49,8 +47,6 @@ describe('raw riot', function () {
 		assert.equal('<p><b>test</b></p>', document.querySelector('div').textContent);
 	});
 	it('with raw', function () {
-		let rawTag = fs.readFileSync(rawRiotTagFile, 'utf8');
-		eval(riot.compile(rawTag));
 		let html = document.createElement('raw');
 		document.body.appendChild(html);
 		riot.mount('raw', {

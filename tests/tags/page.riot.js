@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-/* global describe, it, document, beforeEach */
+/* global describe, it, document, before, beforeEach */
 
 'use strict';
 
@@ -27,19 +27,29 @@ const riot = require('riot');
 
 describe('page riot', function () {
 	let pageRiotTagFile = './tags/page.riot.tag';
+	before(function() {
+		let pageTag = fs.readFileSync(pageRiotTagFile, 'utf8');
+		eval(riot.compile(pageTag));
+	});
 	beforeEach(function () {
 		document.body.innerHTML = '';
 	});
-	it('compile', function () {
-		let pageTag = fs.readFileSync(pageRiotTagFile, 'utf8');
-		assert.equal('page', eval(riot.compile(pageTag)));
-	});
 	it('mount', function () {
-		let pageTag = fs.readFileSync(pageRiotTagFile, 'utf8');
-		eval(riot.compile(pageTag));
 		let html = document.createElement('page');
 		document.body.appendChild(html);
 		let tag = riot.mount('page')[0];
 		assert.equal(true, tag.isMounted);
+	});
+	it('url keyup', function () {
+
+	});
+	it('favorite click', function() {
+
+	});
+	it('favorite add', function() {
+
+	});
+	it('autologin', function() {
+
 	});
 });
