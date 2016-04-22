@@ -17,27 +17,29 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
+/* global describe, it, document, beforeEach */
+
 'use strict';
 
-class blockClass {
-	constructor(encoding) {
-		this._modFs = require('fs');
-		this._modYaml = require('js-yaml');
-		this._blockCfgFile = './component/block/block.yml';
-		this._encoding = encoding;
-	}
+const assert = require('assert');
+const fs = require('fs');
+const riot = require('riot');
 
-	block(window) {
-		let filter = this._modYaml.safeLoad(this._modFs.readFileSync(this._blockCfgFile, this._encoding));
-		let ses = window.webContents.session;
-		ses.webRequest.onBeforeRequest({
-			urls: filter
-		}, function (details, callback) {
-			callback({
-				cancel: true
-			});
-		});
-	}
-}
-
-module.exports = new blockClass('utf8');
+describe('page riot', function () {
+	let pageRiotTagFile = './tags/page.riot.tag';
+	beforeEach(function () {
+		document.body.innerHTML = '';
+	});
+	it('compile', function () {
+		let pageTag = fs.readFileSync(pageRiotTagFile, 'utf8');
+		assert.equal('page', eval(riot.compile(pageTag)));
+	});
+	it('mount', function () {
+		let pageTag = fs.readFileSync(pageRiotTagFile, 'utf8');
+		eval(riot.compile(pageTag));
+		let html = document.createElement('page');
+		document.body.appendChild(html);
+		let tag = riot.mount('page')[0];
+		assert.equal(true, tag.isMounted);
+	});
+});

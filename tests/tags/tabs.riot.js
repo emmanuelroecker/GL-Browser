@@ -24,37 +24,23 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 const assert = require('assert');
 const fs = require('fs');
 const riot = require('riot');
+require('main.js');
 
-describe('raw riot', function () {
-	beforeEach(function () {
+describe('tabs riot', () => {
+	let tabsRiotTag = './tags/tabs.riot.tag';
+	beforeEach(() => {
 		document.body.innerHTML = '';
 	});
-	it('compile', function () {
-		let rawTag = fs.readFileSync('./component/UX/raw.riot.tag', 'utf8');
-		assert.equal('raw', eval(riot.compile(rawTag)));
+	it('compile', () => {
+		let tabsTag = fs.readFileSync(tabsRiotTag, 'utf8');
+		assert.equal('tabs', eval(riot.compile(tabsTag)));
 	});
-	it('mount', function () {
-		let rawTag = fs.readFileSync('./component/UX/raw.riot.tag', 'utf8');
-		eval(riot.compile(rawTag));
-		let html = document.createElement('raw');
+	it('mount', () => {
+		let tabsTag = fs.readFileSync(tabsRiotTag, 'utf8');
+		eval(riot.compile(tabsTag));
+		let html = document.createElement('tabs');
 		document.body.appendChild(html);
-		let tag = riot.mount('raw')[0];
+		let tag = riot.mount('tabs')[0];
 		assert.equal(true, tag.isMounted);
-	});
-	it('without raw', function () {
-		let html = document.createElement('div');
-		html.textContent = '<p><b>test</b></p>';
-		document.body.appendChild(html);
-		assert.equal('<p><b>test</b></p>', document.querySelector('div').textContent);
-	});
-	it('with raw', function () {
-		let rawTag = fs.readFileSync('./component/UX/raw.riot.tag', 'utf8');
-		eval(riot.compile(rawTag));
-		let html = document.createElement('raw');
-		document.body.appendChild(html);
-		riot.mount('raw', {
-			content: '<div><b>test</b></div>'
-		})[0];
-		assert.equal('test', document.querySelector('raw').textContent);
 	});
 });

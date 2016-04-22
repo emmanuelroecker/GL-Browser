@@ -25,38 +25,37 @@ const assert = require('assert');
 const fs = require('fs');
 const riot = require('riot');
 
-describe('page riot', function () {
+describe('raw riot', function () {
+	let rawRiotTagFile = './tags/raw.riot.tag';
 	beforeEach(function () {
 		document.body.innerHTML = '';
 	});
 	it('compile', function () {
-		let pageTag = fs.readFileSync('./component/UX/page.riot.tag', 'utf8');
-		assert.equal('page', eval(riot.compile(pageTag)));
+		let rawTag = fs.readFileSync(rawRiotTagFile, 'utf8');
+		assert.equal('raw', eval(riot.compile(rawTag)));
 	});
 	it('mount', function () {
-		let pageTag = fs.readFileSync('./component/UX/page.riot.tag', 'utf8');
-		eval(riot.compile(pageTag));
-		let html = document.createElement('page');
+		let rawTag = fs.readFileSync(rawRiotTagFile, 'utf8');
+		eval(riot.compile(rawTag));
+		let html = document.createElement('raw');
 		document.body.appendChild(html);
-		let tag = riot.mount('page')[0];
+		let tag = riot.mount('raw')[0];
 		assert.equal(true, tag.isMounted);
 	});
-	/*
-	it('autologin bad enter', function () {
-		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
-		let autologinTag = fs.readFileSync('./component/UX/autologin.riot.tag', 'utf8');
-		eval(riot.compile(autologinTag));
-		let html = document.createElement('autologin');
+	it('without raw', function () {
+		let html = document.createElement('div');
+		html.textContent = '<p><b>test</b></p>';
 		document.body.appendChild(html);
-		riot.mount('autologin')[0];
+		assert.equal('<p><b>test</b></p>', document.querySelector('div').textContent);
 	});
-	it('autologin ok enter', function () {
-		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
-		let autologinTag = fs.readFileSync('./component/UX/autologin.riot.tag', 'utf8');
-		eval(riot.compile(autologinTag));
-		let html = document.createElement('autologin');
+	it('with raw', function () {
+		let rawTag = fs.readFileSync(rawRiotTagFile, 'utf8');
+		eval(riot.compile(rawTag));
+		let html = document.createElement('raw');
 		document.body.appendChild(html);
-		riot.mount('autologin')[0];
+		riot.mount('raw', {
+			content: '<div><b>test</b></div>'
+		})[0];
+		assert.equal('test', document.querySelector('raw').textContent);
 	});
-	*/
 });

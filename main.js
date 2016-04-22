@@ -5,7 +5,8 @@ http://dev.glicer.com
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation; version 2 of the License.
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,47 +18,37 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+/* global window, $, glRefreshWebComponentSize */
+
 'use strict';
 
-console.log(`Electron Version : ${process.versions.electron}`);
+require('app-module-path').addPath(__dirname);
 
-class mainProcessClass {
-	constructor() {
-		this._modElectron = require('electron');
-		this._modYaml = require('js-yaml');
-		this._modFs = require('fs');
-		this._modPath = require('path');
-		this._modBlock = require('./component/block/block.js');
-		this._app = this._modElectron.app;
+const customizeClass = require('libs/customize/customize.js');
+const customize = new customizeClass('./libs/customize');
 
-		this._encoding = 'utf8';
-		this._indexHtmlFile = 'index.html';
+const autologinClass = require('libs/autologin/autologin.js');
+const autologin = new autologinClass('./userdata/autologin.yml', './libs/autologin');
 
-		this.init();
+const favoriteClass = require('libs/favorite/favorite.js');
+const favoriteDb = new favoriteClass('./userdata/favorites.json');
+
+window.$ = window.jQuery = require('jquery');
+require('bootstrap');
+
+global.glRefreshWebComponentSize = function() {
+	let header = $('.tab-pane.active .gl-header');
+	let webview = $('.tab-pane.active .gl-webview');
+	if (header.length && webview.length) {
+		let webviewsize = $(window).height() - header.offset().top - header.height();
+		webview.height(webviewsize);
 	}
+};
 
+window.onresize = function () {
+	glRefreshWebComponentSize();
+};
 
-	init() {
-		this._app.on('window-all-closed', () => {
-			if (process.platform !== 'darwin') {
-				this._app.quit();
-			}
-		});
-
-		this._app.on('ready', () => {
-			this._mainWindow = new this._modElectron.BrowserWindow({
-				width: 800,
-				height: 600
-			});
-			this._mainWindow.loadURL(this._modPath.join('file://', __dirname, this._indexHtmlFile));
-
-			this._modBlock.block(this._mainWindow);
-
-			this._mainWindow.on('closed', () => {
-				this._mainWindow = null;
-			});
-		});
-	}
-}
-
-let mainProcess = new mainProcessClass();
+window.onload = function () {
+	glRefreshWebComponentSize();
+};

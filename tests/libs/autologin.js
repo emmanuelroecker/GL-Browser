@@ -21,23 +21,26 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const autologinClass = require('../../component/autologin/autologin.js');
 const assert = require('assert');
-const crypt = new(require('../../component/crypt/crypt.js'));
+const autologinClass = require('libs/autologin/autologin.js');
+const crypt = new(require('libs/crypt/crypt.js'));
 
 describe('autologinClass', function () {
+	let autologinDataCfgFile = './tests/data/autologin/autologin.yml';
+	let autologinDataDir = './tests/data/autologin';
+
 	it('init bad cfg filename', function () {
 		assert.throws(function () {
-			new autologinClass('./test/data/autologin/bad.yml', './test/data/customize');
+			new autologinClass('./test/data/autologin/bad.yml', autologinDataDir);
 		}, Error);
 	});
 	it('init bad directory', function () {
 		assert.throws(function () {
-			new autologinClass('./test/data/autologin/autologin.yml', './bad/bad');
+			new autologinClass(autologinDataCfgFile, './bad/bad');
 		}, Error);
 	});
 	it('compile patterns', function () {
-		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
+		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
 		let patterns = ['*://*.twitter.com/*', '*://*.github.com/*'];
 		let expected = [/^(http|https):\/\/[^\/]*?twitter\.com(\/.*)?$/,
 			/^(http|https):\/\/[^\/]*?github\.com(\/.*)?$/
@@ -45,23 +48,23 @@ describe('autologinClass', function () {
 		assert.deepEqual(expected, autologin.compilePatterns(patterns));
 	});
 	it('get js', function () {
-		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
+		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
 		assert.equal('p7MRebtDkSERaZeqedWd0t7wiaIyRilQfNXitilIkmI=', crypt.hash(autologin.getJS('github')));
 	});
 	it('init', function () {
-		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
+		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
 		assert.equal('D6SF2aBF9uO+kd6D3UD+XuKGVaO/E38Ojxwy8dPS5oE=', crypt.hash(JSON.stringify(autologin._autologin)));
 	});
 	it('masterpassword bad', function() {
-		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
+		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
 		assert.equal(false,autologin.setMasterPassword('test'));
 	});
 	it('masterpassword ok', function() {
-		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
+		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
 		assert.equal(true,autologin.setMasterPassword('masterpassword'));
 	});
 	it('get to inject', function () {
-		let autologin = new autologinClass('./test/data/autologin/autologin.yml', './test/data/autologin');
+		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
 		autologin.setMasterPassword('masterpassword');
 		let elem = autologin.getToInject('https://github.com/emmanuelroecker');
 		assert.equal('p7MRebtDkSERaZeqedWd0t7wiaIyRilQfNXitilIkmI=', crypt.hash(elem.js));

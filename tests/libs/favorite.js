@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-const favoriteClass = require('../../component/favorite/favorite.js');
+const favoriteClass = require('libs/favorite/favorite.js');
 const assert = require('assert');
 const fs = require('fs');
 
@@ -55,7 +55,7 @@ describe('favoriteClass', function () {
 
 		it('load from file', function () {
 			let favorite = new favoriteClass();
-			favorite.load('./test/data/favorite/favorites.json');
+			favorite.load('./tests/data/favorite/favorites.json');
 			assert.equal(9, favorite._favorites.length);
 		});
 
@@ -80,8 +80,8 @@ describe('favoriteClass', function () {
 					'n': 'emmanuel roecker & rym bouchagour - blog de developpement web'
 				}
 			}];
-			favorite.save('./test/data/favorite/favorites.tmp.json');
-			assert.equal(447, fs.statSync('./test/data/favorite/favorites.tmp.json')['size']);
+			favorite.save('./tests/data/favorite/favorites.tmp.json');
+			assert.equal(447, fs.statSync('./tests/data/favorite/favorites.tmp.json')['size']);
 		});
 
 		it('add favorites', function () {
@@ -131,7 +131,7 @@ describe('favoriteClass', function () {
 		});
 
 		it('search', function () {
-			let favorite = new favoriteClass('./test/data/favorite/favorites.json');
+			let favorite = new favoriteClass('./tests/data/favorite/favorites.json');
 			let result = favorite.search('dev navi');
 			assert.equal('http://<b>dev</b>.glicer.com/section/probleme-solution/creer-<b>navi</b>gateur-personnalise.html', result[0].url.highlight);
 			assert.equal('Créer un <b>navi</b>gateur personnalisé - Blog de <b>dév</b>eloppement web', result[0].title.highlight);
