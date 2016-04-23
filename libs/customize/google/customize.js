@@ -17,11 +17,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-let cnso = document.getElementById("cnso");
+let cnso = document.getElementById('cnso');
 if (cnso) {
-  cnso.remove();
+	cnso.remove();
 }
-let cnsh = document.getElementById("cnsh");
+let cnsh = document.getElementById('cnsh');
 if (cnsh) {
-  cnsh.remove();
+	cnsh.remove();
 }

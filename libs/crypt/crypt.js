@@ -29,19 +29,19 @@ class cryptClass {
 		this._hashEncoding = 'base64';
 	}
 
-	hash(password) {
-		return this._crypto.createHash(this._hashAlgorithm).update(password).digest(this._hashEncoding);
+	hash(data) {
+		return this._crypto.createHash(this._hashAlgorithm).update(data,this._encoding).digest(this._hashEncoding);
 	}
 
-	encrypt(text, password) {
-		let cipher = this._crypto.createCipher(this._cryptAlgorithm, password);
+	encrypt(text, data) {
+		let cipher = this._crypto.createCipher(this._cryptAlgorithm, data);
 		let crypted = cipher.update(text, this._encoding, this._cryptEncoding);
 		crypted += cipher.final(this._cryptEncoding);
 		return crypted;
 	}
 
-	decrypt(text, password) {
-		let decipher = this._crypto.createDecipher(this._cryptAlgorithm, password);
+	decrypt(text, data) {
+		let decipher = this._crypto.createDecipher(this._cryptAlgorithm, data);
 		let decrypted = decipher.update(text, this._cryptEncoding, this._encoding);
 		decrypted += decipher.final(this._encoding);
 		return decrypted;

@@ -27,6 +27,7 @@ const crypt = new(require('libs/crypt/crypt.js'));
 
 describe('customizeClass', function () {
 	let customizeDataDir = './tests/data/customize';
+
 	it('init bad directory', function () {
 		assert.throws(function () {
 			new customizeClass('./test/data/bad');
@@ -43,20 +44,20 @@ describe('customizeClass', function () {
 	});
 	it('get css', function () {
 		let customize = new customizeClass(customizeDataDir);
-		assert.equal('aAjwEAc3mD1Efc79B0gmtcRF7XaVDTJ2TsqCb5l6iMo=', crypt.hash(customize.getCSS('google')));
+		assert.equal('7fZH9pzfmQh3yQk1UXP7pWgUoYRXHjbbBuHKIltsyXY=', crypt.hash(customize.getCSS('google')));
 	});
 	it('get js', function () {
 		let customize = new customizeClass(customizeDataDir);
-		assert.equal('5GCn8nXPelnOMQzr6LI1/t0iNyOvVnlPj56DOWyVdI4=', crypt.hash(customize.getJS('google')));
+		assert.equal('GeJNPTtTdklc0TjRR6puyHSDskgM1A9xmNy0L8OcCqY=', crypt.hash(customize.getJS('google')));
 	});
 	it('init', function () {
 		let customize = new customizeClass(customizeDataDir);
-		assert.equal('l7KvHCv0TwWHEdxH73C0ZGEfGnd6e0FaqdM4SNSNYR8=', crypt.hash(JSON.stringify(customize._customize)));
+		assert.equal('u+BfAEVY9F8rVhKZyNBPO/0B+9mvAkyGjsoVqt56t0w=', crypt.hash(JSON.stringify(customize._customize)));
 	});
 	it('get to inject', function () {
 		let customize = new customizeClass(customizeDataDir);
 		let elem = customize.getToInject('http://www.google.com');
-		assert.equal('aAjwEAc3mD1Efc79B0gmtcRF7XaVDTJ2TsqCb5l6iMo=', crypt.hash(elem.css));
-		assert.equal('5GCn8nXPelnOMQzr6LI1/t0iNyOvVnlPj56DOWyVdI4=', crypt.hash(elem.js));
+		assert.equal('7fZH9pzfmQh3yQk1UXP7pWgUoYRXHjbbBuHKIltsyXY=', crypt.hash(elem.css));
+		assert.equal('GeJNPTtTdklc0TjRR6puyHSDskgM1A9xmNy0L8OcCqY=', crypt.hash(elem.js));
 	});
 });

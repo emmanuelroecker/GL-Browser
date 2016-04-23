@@ -49,11 +49,11 @@ describe('autologinClass', function () {
 	});
 	it('get js', function () {
 		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
-		assert.equal('p7MRebtDkSERaZeqedWd0t7wiaIyRilQfNXitilIkmI=', crypt.hash(autologin.getJS('github')));
+		assert.equal('7dJsu6ROoW+RPCob+vQvf31EpySitL7x6XQK5WsmlIA=', crypt.hash(autologin.getJS('github')));
 	});
 	it('init', function () {
 		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
-		assert.equal('D6SF2aBF9uO+kd6D3UD+XuKGVaO/E38Ojxwy8dPS5oE=', crypt.hash(JSON.stringify(autologin._autologin)));
+		assert.equal('cNEbJHgm5oeConY7Lm0QhJ3cMQG1nEldDU2zOS4Z21s=', crypt.hash(JSON.stringify(autologin._autologin)));
 	});
 	it('masterpassword bad', function() {
 		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
@@ -67,7 +67,7 @@ describe('autologinClass', function () {
 		let autologin = new autologinClass(autologinDataCfgFile, autologinDataDir);
 		autologin.setMasterPassword('masterpassword');
 		let elem = autologin.getToInject('https://github.com/emmanuelroecker');
-		assert.equal('p7MRebtDkSERaZeqedWd0t7wiaIyRilQfNXitilIkmI=', crypt.hash(elem.js));
+		assert.equal('7dJsu6ROoW+RPCob+vQvf31EpySitL7x6XQK5WsmlIA=', crypt.hash(elem.js));
 		assert.equal('username2',elem.user.login);
 		assert.equal('password2',elem.user.password);
 	});

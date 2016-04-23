@@ -23,11 +23,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 const cryptClass = require('libs/crypt/crypt.js');
 const assert = require('assert');
+const fs = require('fs');
 
 describe('cryptClass', function () {
-	it('hash', function () {
+	it('hash string', function () {
 		let crypt = new cryptClass();
 		assert.equal('A6eLJscKw4eCn7o5CHaKTO/9lox5z+H+t78wjUnT8n4=', crypt.hash('masterpassword'));
+	});
+	it('hash file utf8', function () {
+		let crypt = new cryptClass();
+		let data = fs.readFileSync('./tests/data/customize/google/customize.css', 'utf8');
+		assert.equal('7fZH9pzfmQh3yQk1UXP7pWgUoYRXHjbbBuHKIltsyXY=', crypt.hash(data));
 	});
 	it('encrypt', function () {
 		let crypt = new cryptClass();
