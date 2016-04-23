@@ -48,16 +48,16 @@ describe('customizeClass', function () {
 	});
 	it('get js', function () {
 		let customize = new customizeClass(customizeDataDir);
-		assert.equal('GeJNPTtTdklc0TjRR6puyHSDskgM1A9xmNy0L8OcCqY=', crypt.hash(customize.getJS('google')));
+		assert.equal('FAQ3+AGuuilrAWQhWoXt9i44kMeSofnI9AKF0/2uTIE=', crypt.hash(customize.getJS('google')));
 	});
 	it('init', function () {
 		let customize = new customizeClass(customizeDataDir);
-		assert.equal('u+BfAEVY9F8rVhKZyNBPO/0B+9mvAkyGjsoVqt56t0w=', crypt.hash(JSON.stringify(customize._customize)));
+		assert.equal('0Tt8hivajIZXXYuQKXKdjwih0kgf2FXd3PYfYqSZ/y0=', crypt.hash(JSON.stringify(customize._customize)));
 	});
 	it('get to inject', function () {
 		let customize = new customizeClass(customizeDataDir);
 		let elem = customize.getToInject('http://www.google.com');
 		assert.equal('7fZH9pzfmQh3yQk1UXP7pWgUoYRXHjbbBuHKIltsyXY=', crypt.hash(elem.css));
-		assert.equal('GeJNPTtTdklc0TjRR6puyHSDskgM1A9xmNy0L8OcCqY=', crypt.hash(elem.js));
+		assert.equal('FAQ3+AGuuilrAWQhWoXt9i44kMeSofnI9AKF0/2uTIE=', crypt.hash(elem.js));
 	});
 });

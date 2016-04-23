@@ -32,7 +32,7 @@ class autologinClass {
 		this._autologinJsFile = 'autologin.js';
 		this._autologinTemplate = '%autologinjs%';
 		this._loginMessage = 'login';
-		this._injectJsFile = 'inject.js';
+		this._injectJsFile = 'inject.js.template';
 		this._masterPasswordEnable = false;
 		this._masterPasswordHash = '';
 		this._masterPassword = '';

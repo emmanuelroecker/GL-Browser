@@ -31,7 +31,7 @@ class customizeClass {
 		this._customizeJsFile = 'customize.js';
 		this._customizeCssFile = 'customize.css';
 		this._customizeTemplate = '%customizejs%';
-		this._injectJsFile = 'inject.js';
+		this._injectJsFile = 'inject.js.template';
 		this.init();
 	}
 

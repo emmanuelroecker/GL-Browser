@@ -25,13 +25,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 require('app-module-path').addPath(__dirname);
 
 const customizeClass = require('libs/customize/customize.js');
-const customize = new customizeClass('./libs/customize');
+global.customize = new customizeClass('./libs/customize');
 
 const autologinClass = require('libs/autologin/autologin.js');
-const autologin = new autologinClass('./userdata/autologin.yml', './libs/autologin');
+global.autologin = new autologinClass('./userdata/autologin.yml', './libs/autologin');
 
 const favoriteClass = require('libs/favorite/favorite.js');
-const favoriteDb = new favoriteClass('./userdata/favorites.json');
+global.favoriteDb = new favoriteClass('./userdata/favorites.json');
 
 window.$ = window.jQuery = require('jquery');
 require('bootstrap');

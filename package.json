@@ -8,8 +8,10 @@
     "npm": "^3.6.0"
   },
   "scripts": {
-    "test": "electron-mocha --renderer --recursive ./tests/libs ./tests/tags --require ./tests/setup.js ",
-    "start": "electron app.js"
+    "test": "npm run lint && npm run mocha",
+    "start": "electron app.js",
+    "lint": "eslint .",
+    "mocha": "electron-mocha --renderer --recursive ./tests/libs ./tests/tags --require ./tests/setup.js "
   },
   "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
   "license": "GPL-2.0",
@@ -30,6 +32,7 @@
     "riot": "^2.3.0"
   },
   "devDependencies": {
-    "electron-mocha": "^1.2.1"
+    "electron-mocha": "^1.2.1",
+    "eslint": "^2.8.0"
   }
 }

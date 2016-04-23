@@ -61,4 +61,4 @@ class mainProcessClass {
 	}
 }
 
-let mainProcess = new mainProcessClass();
+global.mainProcess = new mainProcessClass();
