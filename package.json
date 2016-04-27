@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "electron-mocha": "^1.2.1",
-    "eslint": "^2.8.0"
+    "eslint": "^2.8.0",
+    "nyc": "^6.4.0"
   }
 }
