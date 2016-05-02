@@ -16,7 +16,7 @@
     "mocha-cov": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup-cov.js --reporter tests/coverage",
     "mocha": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup.js",
     "cover": "rm -rf js-cov/* && istanbul instrument -o js-cov js",
-    "report-cov": "istanbul report"
+    "report-cov": "istanbul report lcovonly"
   },
   "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
   "license": "GPL-2.0",
