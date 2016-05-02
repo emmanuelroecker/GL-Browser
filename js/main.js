@@ -23,13 +23,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 'use strict';
 
 const customizeClass = require('customize/customize.js');
-global.customize = new customizeClass('./data/customize.yml','./inject/customize/customize.js.template','./inject/customize');
+global.customize = new customizeClass();
 
 const autologinClass = require('autologin/autologin.js');
-global.autologin = new autologinClass('./userdata/autologin.yml', './inject/autologin/autologin.js.template','./inject/autologin');
+global.autologin = new autologinClass('./userdata/autologin.yml');
 
 const favoriteClass = require('favorite/favorite.js');
-global.favoriteDb = new favoriteClass('../userdata/favorites.json');
+global.favoriteDb = new favoriteClass('./userdata/favorites.json');
 
 window.$ = window.jQuery = require('jquery');
 require('bootstrap');

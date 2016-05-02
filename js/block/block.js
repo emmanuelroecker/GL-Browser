@@ -30,7 +30,7 @@ class blockClass {
 		try {
 			this._modFs.statSync(blockCfgFile);
 		} catch (e) {
-			console.log('Block file does not exist : ' + blockCfgFile);
+			console.error('Block file does not exist : ' + blockCfgFile);
 			return;
 		}
 		let filter = this._modYaml.safeLoad(this._modFs.readFileSync(blockCfgFile, this._encoding));

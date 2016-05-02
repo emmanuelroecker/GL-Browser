@@ -69,6 +69,7 @@ class favoriteClass {
 		try {
 			this._favorites = JSON.parse(this._modFs.readFileSync(filename, this._encoding));
 		} catch (e) {
+			console.error('Favorite file does not exist : ' + filename);
 			this._favorites = [];
 		}
 	}
