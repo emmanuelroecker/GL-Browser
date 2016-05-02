@@ -9,13 +9,14 @@
   },
   "scripts": {
     "test": "npm run lint && npm run mocha",
-    "test-cov": "npm run lint && npm run cover && npm run mocha-cov",
+    "test-cov": "npm run lint && npm run cover && npm run mocha-cov && npm run report-cov",
     "start": "electron app.js",
     "lint": "eslint .",
     "compile": "riot -m ./riot ./js/riot",
-    "mocha-cov": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup-cov.js ",
-    "mocha": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup.js ",
-    "cover": "rm -rf js-cov/* && istanbul instrument -o js-cov js"
+    "mocha-cov": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup-cov.js --reporter tests/coverage",
+    "mocha": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup.js",
+    "cover": "rm -rf js-cov/* && istanbul instrument -o js-cov js",
+    "report-cov": "istanbul report"
   },
   "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
   "license": "GPL-2.0",
