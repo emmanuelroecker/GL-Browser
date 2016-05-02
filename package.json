@@ -9,9 +9,13 @@
   },
   "scripts": {
     "test": "npm run lint && npm run mocha",
+    "test-cov": "npm run lint && npm run cover && npm run mocha-cov",
     "start": "electron app.js",
     "lint": "eslint .",
-    "mocha": "electron-mocha --renderer --recursive ./tests/libs ./tests/tags --require ./tests/setup.js "
+    "compile": "riot -m ./riot ./js/riot",
+    "mocha-cov": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup-cov.js ",
+    "mocha": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup.js ",
+    "cover": "rm -rf js-cov/* && istanbul instrument -o js-cov js"
   },
   "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
   "license": "GPL-2.0",
@@ -32,8 +36,9 @@
     "riot": "^2.3.0"
   },
   "devDependencies": {
+    "coveralls": "^2.11.9",
     "electron-mocha": "^1.2.1",
     "eslint": "^2.8.0",
-    "nyc": "^6.4.0"
+    "istanbul": "^0.4.3"
   }
 }

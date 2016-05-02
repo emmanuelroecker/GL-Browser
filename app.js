@@ -18,21 +18,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 'use strict';
-
 console.log(`Electron Version : ${process.versions.electron}`);
-require('app-module-path').addPath(__dirname);
+require('app-module-path').addPath(__dirname + '/js');
 
+
+const blockClass = require('block/block.js');
 class mainProcessClass {
 	constructor() {
 		this._modElectron = require('electron');
 		this._modYaml = require('js-yaml');
 		this._modFs = require('fs');
 		this._modPath = require('path');
-		this._modBlock = require('libs/block/block.js');
+		this._modBlock = new blockClass();
 		this._app = this._modElectron.app;
 
 		this._encoding = 'utf8';
-		this._mainHtmlFile = 'main.html';
+		this._mainHtmlFile = 'html/main.html';
 
 		this.init();
 	}
@@ -50,9 +51,9 @@ class mainProcessClass {
 				width: 800,
 				height: 600
 			});
-			this._mainWindow.loadURL(this._modPath.join('file://', __dirname, this._mainHtmlFile));
+			this._mainWindow.loadURL(this._modPath.join(__dirname, this._mainHtmlFile));
 
-			this._modBlock.block(this._mainWindow);
+			this._modBlock.block(this._mainWindow,'./block/block.yml');
 
 			this._mainWindow.on('closed', () => {
 				this._mainWindow = null;

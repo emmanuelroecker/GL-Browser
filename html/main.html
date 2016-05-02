@@ -1,0 +1,57 @@
+<!--
+Copyright (C) 2016
+Emmanuel ROECKER and Rym BOUCHAGOUR
+http://dev.glicer.com
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; version 2 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>GL-Browser</title>
+    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <autologin></autologin>
+        <tabs>
+        </tabs>
+    </div>
+</body>
+
+<script>
+    require('app-module-path').addPath(__dirname + '/../js');
+    require('main.js');
+    const riot = require('riot');
+    require('riot/autologin.js');
+    require('riot/raw.js');
+    require('riot/page.js');
+    require('riot/tabs.js');
+    riot.mount('*');
+</script>
+
+</html>
