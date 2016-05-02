@@ -3,4 +3,7 @@ node_js:
   - "5"
 before_script:
   - export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start
-after_failure: "cat /home/travis/build/emmanuelroecker/GL-Browser/npm-debug.log"
+script:
+  - npm run test-cov
+after_script:
+  - cat ./coverage/lcov.info | coveralls;
