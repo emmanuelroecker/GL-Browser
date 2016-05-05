@@ -1,45 +1,48 @@
 {
-  "name": "GL-Browser",
-  "version": "0.0.1",
-  "description": "A custom browser",
-  "main": "main.js",
-  "engines": {
-    "node": "^5.7.0",
-    "npm": "^3.6.0"
-  },
-  "scripts": {
-    "test": "npm run lint && npm run mocha",
-    "test-cov": "npm run lint && npm run cover && npm run mocha-cov && npm run report-cov",
-    "start": "electron app.js",
-    "lint": "eslint .",
-    "compile": "riot -m ./riot ./js/riot",
-    "mocha-cov": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup-cov.js --reporter tests/coverage",
-    "mocha": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup.js",
-    "cover": "rm -rf js-cov/* && istanbul instrument -o js-cov js",
-    "report-cov": "istanbul report lcovonly"
-  },
-  "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
-  "license": "GPL-2.0",
-  "eslintConfig": {
-    "env": {
-      "browser": true,
-      "node": true
+    "name": "GL-Browser",
+    "version": "0.0.1",
+    "description": "A custom browser",
+    "engines": {
+        "node": "^5.7.0",
+        "npm": "^3.6.0"
+    },
+    "scripts": {
+        "test": "npm run lint && npm run mocha",
+        "test-cov": "npm run lint && npm run cover && npm run mocha-cov && npm run report-cov",
+        "start": "electron app.js",
+        "lint": "eslint .",
+        "compile": "riot -m ./riot ./js/riot",
+        "mocha-cov": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup-cov.js --reporter tests/coverage",
+        "mocha": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup.js",
+        "cover": "rm -rf js-cov/* && istanbul instrument -o js-cov js",
+        "report-cov": "istanbul report lcovonly"
+    },
+    "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
+    "license": "GPL-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/emmanuelroecker/GL-Browser.git"
+    },
+    "eslintConfig": {
+        "env": {
+            "browser": true,
+            "node": true
+        }
+    },
+    "dependencies": {
+        "app-module-path": "^1.0.6",
+        "bootstrap": "^3.3.0",
+        "commander": "^2.9.0",
+        "electron-prebuilt": "^0.37.0",
+        "jquery": "^1.9.1",
+        "js-yaml": "^3.5.0",
+        "match-pattern": "^0.0.1",
+        "riot": "^2.3.0"
+    },
+    "devDependencies": {
+        "coveralls": "^2.11.9",
+        "electron-mocha": "^1.2.1",
+        "eslint": "^2.8.0",
+        "istanbul": "^0.4.3"
     }
-  },
-  "dependencies": {
-    "app-module-path": "^1.0.6",
-    "bootstrap": "^3.3.0",
-    "commander": "^2.9.0",
-    "electron-prebuilt": "^0.37.0",
-    "jquery": "^1.9.1",
-    "js-yaml": "^3.5.0",
-    "match-pattern": "^0.0.1",
-    "riot": "^2.3.0"
-  },
-  "devDependencies": {
-    "coveralls": "^2.11.9",
-    "electron-mocha": "^1.2.1",
-    "eslint": "^2.8.0",
-    "istanbul": "^0.4.3"
-  }
 }
