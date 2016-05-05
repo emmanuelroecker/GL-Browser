@@ -21,10 +21,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 
-class eventClass {
+class triggerClass {
 	constructor() {}
 
-	triggerKeyboardEvent(element, type, keyCode) {
+	keyboardEvent(element, type, keyCode) {
 		let eventObj = document.createEventObject ? document.createEventObject() : document.createEvent('Events');
 
 		if (eventObj.initEvent) {
@@ -38,4 +38,4 @@ class eventClass {
 	}
 }
 
-module.exports = eventClass;
+module.exports = triggerClass;

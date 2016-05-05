@@ -19,10 +19,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 'use strict';
 console.log(`Electron Version : ${process.versions.electron}`);
-require('app-module-path').addPath(__dirname + '/js');
 
-
-const blockClass = require('block/block.js');
+const blockClass = require('./js/block/block.js');
 class mainProcessClass {
 	constructor() {
 		this._modElectron = require('electron');
@@ -33,7 +31,7 @@ class mainProcessClass {
 		this._app = this._modElectron.app;
 
 		this._encoding = 'utf8';
-		this._mainHtmlFile = 'html/main.html';
+		this._mainHtmlFile = 'html/index.html';
 
 		this.init();
 	}

@@ -18,20 +18,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-/* global describe, it, document, before, beforeEach */
+/* global describe, it, document, beforeEach riot, trigger */
 
 'use strict';
 
 const assert = require('assert');
-const riot = require('riot');
-const event = new(require('test/event.js'));
-const autologinClass = require('autologin/autologin.js');
 
 describe('autologin riot', function () {
-	before(function() {
-		global.autologin = new autologinClass('./tests/userdata/autologin.yml', './inject/autologin/autologin.js.template','./inject/autologin');
-		require('riot/autologin.js');
-	});
 	beforeEach(function () {
 		document.body.innerHTML = '';
 	});
@@ -48,10 +41,12 @@ describe('autologin riot', function () {
 		let passwordinput = document.querySelector('#password');
 		passwordinput.focus();
 		passwordinput.value = 'bas';
+		let icon = document.querySelector('#dropdownicon');
 		let message = document.querySelector('#message');
 		assert.equal('', message.textContent);
 		setTimeout(function () {
 			assert.equal('Bad password', message.textContent);
+			assert.equal(true, icon.classList.contains('text-danger'));
 			done();
 		}, 500);
 		let button = document.querySelector('button');
@@ -66,7 +61,7 @@ describe('autologin riot', function () {
 		passwordinput.value = 'masterpassword';
 		let icon = document.querySelector('#dropdownicon');
 		assert.equal(true, icon.classList.contains('text-danger'));
-		setTimeout(function () {
+		setTimeout(() => {
 			assert.equal('', passwordinput.value);
 			assert.equal(false, icon.classList.contains('text-danger'));
 			done();
@@ -88,7 +83,7 @@ describe('autologin riot', function () {
 			assert.equal(false, icon.classList.contains('text-danger'));
 			done();
 		}, 500);
-		event.triggerKeyboardEvent(passwordinput, 'keydown', 13);
+		trigger.keyboardEvent(passwordinput, 'keydown', 13);
 	});
 	it('autologin bad touch enter', function (done) {
 		let html = document.createElement('autologin');
@@ -103,6 +98,6 @@ describe('autologin riot', function () {
 			assert.equal('Bad password', message.textContent);
 			done();
 		}, 500);
-		event.triggerKeyboardEvent(passwordinput, 'keydown', 13);
+		trigger.keyboardEvent(passwordinput, 'keydown', 13);
 	});
 });

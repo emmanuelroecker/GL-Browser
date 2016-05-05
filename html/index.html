@@ -38,20 +38,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 <body>
     <div>
         <autologin></autologin>
-        <tabs>
-        </tabs>
+        <tabs></tabs>
     </div>
 </body>
 
 <script>
-    require('app-module-path').addPath(__dirname + '/../js');
-    require('main.js');
-    const riot = require('riot');
-    require('riot/autologin.js');
-    require('riot/raw.js');
-    require('riot/page.js');
-    require('riot/tabs.js');
-    riot.mount('*');
+  require('app-module-path').addPath(__dirname + '/../js');
+  new(require('index/index.js'))(__dirname + '/../userdata');
+  riot.mount('*');
 </script>
-
 </html>

@@ -17,17 +17,13 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-/* global describe, it, document, before, beforeEach */
+/* global describe, it, document, beforeEach, riot */
 
 'use strict';
 
 const assert = require('assert');
-const riot = require('riot');
 
 describe('raw riot', function () {
-	before(function() {
-		require('riot/raw.js');
-	});
 	beforeEach(function () {
 		document.body.innerHTML = '';
 	});
