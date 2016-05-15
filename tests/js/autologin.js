@@ -26,6 +26,7 @@ const autologinClass = require('autologin/autologin.js');
 const crypt = new(require('crypt/crypt.js'));
 
 describe('autologinClass', function () {
+	let cfgdirectory = './app/cfg';
 	let autologinCfgFile = './tests/userdata/autologin.yml';
 
 	it('init bad cfg filename', function () {
@@ -34,7 +35,7 @@ describe('autologinClass', function () {
 		}, Error);
 	});
 	it('compile patterns', function () {
-		let autologin = new autologinClass(autologinCfgFile);
+		let autologin = new autologinClass(cfgdirectory, autologinCfgFile);
 		let patterns = ['*://*.twitter.com/*', '*://*.github.com/*'];
 		let expected = [/^(http|https):\/\/[^\/]*?twitter\.com(\/.*)?$/,
 			/^(http|https):\/\/[^\/]*?github\.com(\/.*)?$/
@@ -42,23 +43,23 @@ describe('autologinClass', function () {
 		assert.deepEqual(expected, autologin.compilePatterns(patterns));
 	});
 	it('get js', function () {
-		let autologin = new autologinClass(autologinCfgFile);
+		let autologin = new autologinClass(cfgdirectory, autologinCfgFile);
 		assert.equal('t5hvd2hZAmnR+PV3vp8FVzUn1YgaHuD6Ujbm2PZ6JxE=', crypt.hash(autologin.getJS('github')));
 	});
 	it('init', function () {
-		let autologin = new autologinClass(autologinCfgFile);
+		let autologin = new autologinClass(cfgdirectory, autologinCfgFile);
 		assert.equal('MuFkHAYxRJyfYplgJhj7Ag6y0NA/GdRq7FbLdSqDm+8=', crypt.hash(JSON.stringify(autologin._autologin)));
 	});
 	it('masterpassword bad', function () {
-		let autologin = new autologinClass(autologinCfgFile);
+		let autologin = new autologinClass(cfgdirectory, autologinCfgFile);
 		assert.equal(false, autologin.setMasterPassword('test'));
 	});
 	it('masterpassword ok', function () {
-		let autologin = new autologinClass(autologinCfgFile);
+		let autologin = new autologinClass(cfgdirectory, autologinCfgFile);
 		assert.equal(true, autologin.setMasterPassword('masterpassword'));
 	});
 	it('get to inject', function () {
-		let autologin = new autologinClass(autologinCfgFile);
+		let autologin = new autologinClass(cfgdirectory, autologinCfgFile);
 		autologin.setMasterPassword('masterpassword');
 		let elem = autologin.getToInject('https://github.com/emmanuelroecker');
 		assert.equal('t5hvd2hZAmnR+PV3vp8FVzUn1YgaHuD6Ujbm2PZ6JxE=', crypt.hash(elem.js));

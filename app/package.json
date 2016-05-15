@@ -5,12 +5,11 @@
     "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
     "license": "GPL-2.0",
     "private": true,
-    "main": "./app.js",    
+    "main": "./app.js",
     "dependencies": {
         "app-module-path": "^1.0.6",
         "bootstrap": "^3.3.0",
         "commander": "^2.9.0",
-        "electron-prebuilt": "^0.37.0",
         "jquery": "^1.9.1",
         "js-yaml": "^3.5.0",
         "match-pattern": "^0.0.1",

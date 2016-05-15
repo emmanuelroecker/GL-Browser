@@ -23,7 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 <head>
     <meta charset="UTF-8">
     <title>GL-Browser</title>
-    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
     <style>
         html,
         body {
@@ -43,8 +43,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 </body>
 
 <script>
-  require('app-module-path').addPath(__dirname + '/../js');
-  new(require('index/index.js'))(__dirname + '/../userdata');
-  riot.mount('*');
+    require('app-module-path').addPath(__dirname + '/js');
+    new(require('index/index.js'))(__dirname + '/cfg', __dirname + '/../userdata');
+    riot.mount('*');
 </script>
+
 </html>

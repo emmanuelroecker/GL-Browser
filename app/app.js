@@ -31,7 +31,7 @@ class mainProcessClass {
 		this._app = this._modElectron.app;
 
 		this._encoding = 'utf8';
-		this._mainHtmlFile = 'html/index.html';
+		this._mainHtmlFile = 'index.html';
 
 		this.init();
 	}
@@ -51,7 +51,7 @@ class mainProcessClass {
 			});
 			this._mainWindow.loadURL(this._modPath.join(__dirname, this._mainHtmlFile));
 
-			this._modBlock.block(this._mainWindow,'./block/block.yml');
+			this._modBlock.block(this._mainWindow, __dirname + '/block/block.yml');
 
 			this._mainWindow.on('closed', () => {
 				this._mainWindow = null;

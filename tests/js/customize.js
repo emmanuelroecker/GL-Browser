@@ -26,8 +26,9 @@ const customizeClass = require('customize/customize.js');
 const crypt = new(require('crypt/crypt.js'));
 
 describe('customizeClass', function () {
+	let cfgdirectory = './app/cfg';
 	it('compile patterns', function () {
-		let customize = new customizeClass();
+		let customize = new customizeClass(cfgdirectory);
 		let patterns = ['*://*.pinterest.com/*', '*://*.twitter.com/*', '*://www.google.fr/*'];
 		let expected = [/^(http|https):\/\/[^\/]*?pinterest\.com(\/.*)?$/,
 			/^(http|https):\/\/[^\/]*?twitter\.com(\/.*)?$/,
@@ -36,19 +37,19 @@ describe('customizeClass', function () {
 		assert.deepEqual(expected, customize.compilePatterns(patterns));
 	});
 	it('get css', function () {
-		let customize = new customizeClass();
+		let customize = new customizeClass(cfgdirectory);
 		assert.equal('7fZH9pzfmQh3yQk1UXP7pWgUoYRXHjbbBuHKIltsyXY=', crypt.hash(customize.getCSS('google')));
 	});
 	it('get js', function () {
-		let customize = new customizeClass();
+		let customize = new customizeClass(cfgdirectory);
 		assert.equal('kPE+uaK3rjPu+gi3dNST7OgPRlXe1PrBCdq9qPiPBlI=', crypt.hash(customize.getJS('google')));
 	});
 	it('init', function () {
-		let customize = new customizeClass();
+		let customize = new customizeClass(cfgdirectory);
 		assert.equal('pOj6JM4aVQyD+Uj6Rhs7UATwZPB11cJEcHAZHDcZANo=', crypt.hash(JSON.stringify(customize._customize)));
 	});
 	it('get to inject', function () {
-		let customize = new customizeClass();
+		let customize = new customizeClass(cfgdirectory);
 		let elem = customize.getToInject('http://www.google.com');
 		assert.equal('7fZH9pzfmQh3yQk1UXP7pWgUoYRXHjbbBuHKIltsyXY=', crypt.hash(elem.css));
 		assert.equal('kPE+uaK3rjPu+gi3dNST7OgPRlXe1PrBCdq9qPiPBlI=', crypt.hash(elem.js));

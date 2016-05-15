@@ -32,7 +32,7 @@ describe('cryptClass', function () {
 	});
 	it('hash file utf8', function () {
 		let crypt = new cryptClass();
-		let data = fs.readFileSync('./inject/customize/google/customize.css', 'utf8');
+		let data = fs.readFileSync('./app/cfg/inject/customize/google/customize.css', 'utf8');
 		assert.equal('7fZH9pzfmQh3yQk1UXP7pWgUoYRXHjbbBuHKIltsyXY=', crypt.hash(data));
 	});
 	it('encrypt', function () {

@@ -23,17 +23,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 'use strict';
 
 class indexClass {
-	constructor(userdirectory) {
+	constructor(cfgdirectory, userdirectory) {
 		this._modPath = require('path');
 
 		const customizeClass = require('customize/customize.js');
-		global.customize = new customizeClass();
+		global.customize = new customizeClass(cfgdirectory);
 
 		const autologinClass = require('autologin/autologin.js');
-		global.autologin = new autologinClass(this._modPath.join(userdirectory,'autologin.yml'));
+		global.autologin = new autologinClass(cfgdirectory, this._modPath.join(userdirectory, 'autologin.yml'));
 
 		const favoriteClass = require('favorite/favorite.js');
-		global.favoriteDb = new favoriteClass(this._modPath.join(userdirectory,'favorites.json'));
+		global.favoriteDb = new favoriteClass(this._modPath.join(userdirectory, 'favorites.json'));
 
 		window.$ = window.jQuery = require('jquery');
 		require('bootstrap');

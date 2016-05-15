@@ -19,28 +19,33 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 'use strict';
 
-class customizeClass {
-	constructor() {
+class autologinClass {
+	constructor(cfgdirectory, autologinCfgFile) {
 		this._modFs = require('fs');
+		this._modPath = require('path');
+		this._modCrypt = new(require('crypt/crypt.js'));
 		this._modYaml = require('js-yaml');
 		this._modMatchPattern = require('match-pattern');
-		this._modPath = require('path');
 		this._encoding = 'utf8';
-		this._jsTemplate = './inject/customize/customize.js.template';
-		this._directoryJsCustomize = './inject/customize';
-		this._customizeCfgFile = './inject/customize/customize.yml';
-		this._customizeJsFile = 'customize.js';
-		this._customizeCssFile = 'customize.css';
-		this._customizeTemplate = '%customizejs%';
+		this._jsTemplate = this._modPath.join(cfgdirectory, '/inject/autologin/autologin.js.template');
+		this._directoryJsAutologin = this._modPath.join(cfgdirectory, '/inject/autologin');
+		this._autologinCfgFile = autologinCfgFile;
+		this._autologinJsFile = 'autologin.js';
+		this._autologinTemplate = '%autologinjs%';
+		this._loginMessage = 'login';
+		this._masterPasswordEnable = false;
+		this._masterPasswordHash = '';
+		this._masterPassword = '';
 		this.init();
 	}
 
 	init() {
 		this._injectJS = this._modFs.readFileSync(this._jsTemplate, this._encoding);
-		this._customize = this._modYaml.safeLoad(this._modFs.readFileSync(this._customizeCfgFile, this._encoding));
+		this._autologin = this._modYaml.safeLoad(this._modFs.readFileSync(this._autologinCfgFile, this._encoding));
 
-		this._customize = this._customize.map(elem => {
-			elem.css = this.getCSS(elem.name);
+		this._masterPasswordHash = this._autologin.shift().hash;
+
+		this._autologin = this._autologin.map(elem => {
 			elem.js = this.getJS(elem.name);
 			elem.patterns = this.compilePatterns(elem.patterns);
 			return elem;
@@ -48,11 +53,14 @@ class customizeClass {
 	}
 
 	getToInject(url) {
-		for (let elem of this._customize) {
+		for (let elem of this._autologin) {
 			let patterns = elem.patterns;
 			for (let pattern of patterns) {
 				if (pattern.test(url)) {
 					let cloneElem = Object.assign({}, elem);
+					cloneElem.user = {};
+					cloneElem.user.login = this._modCrypt.decrypt(elem.login, this._masterPassword);
+					cloneElem.user.password = this._modCrypt.decrypt(elem.password, this._masterPassword);
 					return cloneElem;
 				}
 			}
@@ -61,15 +69,9 @@ class customizeClass {
 
 	getJS(name) {
 		let js = '';
-		let customizejs = this._modFs.readFileSync(this._modPath.join(this._directoryJsCustomize, name, this._customizeJsFile), this._encoding);
-		js = this._injectJS.replace(this._customizeTemplate, customizejs);
+		let customizejs = this._modFs.readFileSync(this._modPath.join(this._directoryJsAutologin, name, this._autologinJsFile), this._encoding);
+		js = this._injectJS.replace(this._autologinTemplate, customizejs);
 		return js;
-	}
-
-	getCSS(name) {
-		let css = '';
-		css = this._modFs.readFileSync(this._modPath.join(this._directoryJsCustomize, name, this._customizeCssFile), this._encoding);
-		return css;
 	}
 
 	compilePatterns(patterns) {
@@ -83,12 +85,23 @@ class customizeClass {
 	}
 
 	inject(webview) {
+		if (!this._masterPasswordEnable)
+			return;
 		let inject = this.getToInject(webview.src);
 		if (inject) {
-			webview.insertCSS(inject.css);
 			webview.executeJavaScript(inject.js);
+			webview.send(this._loginMessage, inject.user);
 		}
+	}
+
+	setMasterPassword(masterPassword) {
+		if (this._modCrypt.hash(masterPassword) != this._masterPasswordHash) {
+			return false;
+		}
+		this._masterPassword = masterPassword;
+		this._masterPasswordEnable = true;
+		return true;
 	}
 }
 
-module.exports = customizeClass;
+module.exports = autologinClass;

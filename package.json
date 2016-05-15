@@ -9,13 +9,16 @@
   "scripts": {
     "test": "npm run lint && npm run mocha",
     "test-cov": "npm run lint && npm run cover && npm run mocha-cov && npm run report-cov",
-    "start": "electron app.js",
-    "lint": "eslint .",
-    "compile": "riot -m ./riot ./js/riot",
+    "start": "electron app/app.js",
+    "lint": "eslint app/js",
+    "compile": "riot -m ./riot ./app/js/riot",
     "mocha-cov": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup-cov.js --reporter tests/coverage",
     "mocha": "electron-mocha --renderer --recursive ./tests/js ./tests/riot --require ./tests/setup.js",
-    "cover": "rm -rf js-cov/* && istanbul instrument -o js-cov js",
-    "report-cov": "istanbul report lcovonly"
+    "cover": "rimraf app/js-cov && istanbul instrument -o app/js-cov app/js",
+    "report-cov": "istanbul report lcovonly",
+    "postinstall": "install-app-deps",
+    "pack": "build",
+    "dist": "build"
   },
   "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
   "license": "GPL-2.0",
@@ -33,21 +36,14 @@
     "favorite",
     "block"
   ],
-  "dependencies": {
-    "app-module-path": "^1.0.6",
-    "bootstrap": "^3.3.0",
-    "commander": "^2.9.0",
-    "electron-prebuilt": "^0.37.0",
-    "jquery": "^1.9.1",
-    "js-yaml": "^3.5.0",
-    "match-pattern": "^0.0.1",
-    "riot": "^2.3.0"
-  },
   "devDependencies": {
+    "app-module-path": "^1.0.6",
     "coveralls": "^2.11.9",
+    "electron-prebuilt": "^0.37.0",
     "electron-builder": "^3.20.0",
     "electron-mocha": "^1.2.1",
     "eslint": "^2.8.0",
-    "istanbul": "^0.4.3"
+    "istanbul": "^0.4.3",
+    "rimraf": "^2.5.2"
   }
 }
