@@ -43,8 +43,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 </body>
 
 <script>
+    const {app} = require('electron').remote;
     require('app-module-path').addPath(__dirname + '/js');
-    new(require('index/index.js'))(__dirname + '/cfg', __dirname + '/../userdata');
+    new(require('index/index.js'))(__dirname + '/cfg', app.getPath('userData'));
     riot.mount('*');
 </script>
 

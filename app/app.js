@@ -31,7 +31,7 @@ class mainProcessClass {
 		this._app = this._modElectron.app;
 
 		this._encoding = 'utf8';
-		this._mainHtmlFile = 'index.html';
+		this._mainHtmlFile = './index.html';
 
 		this.init();
 	}
@@ -49,9 +49,10 @@ class mainProcessClass {
 				width: 800,
 				height: 600
 			});
-			this._mainWindow.loadURL(this._modPath.join(__dirname, this._mainHtmlFile));
-
-			this._modBlock.block(this._mainWindow, __dirname + '/block/block.yml');
+			let mainHtml = this._modPath.join(__dirname, this._mainHtmlFile);
+			this._mainWindow.loadURL(mainHtml);
+			this._mainWindow.webContents.openDevTools();
+			this._modBlock.block(this._mainWindow, __dirname + '/cfg/block/block.yml');
 
 			this._mainWindow.on('closed', () => {
 				this._mainWindow = null;

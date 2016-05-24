@@ -1,4 +1,5 @@
-coverage
-js-cov
+coverage/**
+dist/**
+app/js-cov/**
 node_modules
 .~*

@@ -66,10 +66,15 @@ class favoriteClass {
 	}
 
 	load(filename) {
+		if (typeof filename !== 'string') {
+			this._favorites = [];
+			return;
+		}
+
 		try {
 			this._favorites = JSON.parse(this._modFs.readFileSync(filename, this._encoding));
-		} catch (e) {
-			console.error('Favorite file does not exist : ' + filename);
+		} catch (err) {
+			if (err.code !== 'ENOENT') throw err;
 			this._favorites = [];
 		}
 	}

@@ -40,10 +40,16 @@ class autologinClass {
 	}
 
 	init() {
-		this._injectJS = this._modFs.readFileSync(this._jsTemplate, this._encoding);
-		this._autologin = this._modYaml.safeLoad(this._modFs.readFileSync(this._autologinCfgFile, this._encoding));
+		try {
+			this._autologin = this._modYaml.safeLoad(this._modFs.readFileSync(this._autologinCfgFile, this._encoding));
+			this._masterPasswordHash = this._autologin.shift().hash;
+		} catch (err) {
+			if (err.code !== 'ENOENT') throw err;
+			this._masterPasswordHash = '';
+			this._autologin = [];
+		}
 
-		this._masterPasswordHash = this._autologin.shift().hash;
+		this._injectJS = this._modFs.readFileSync(this._jsTemplate, this._encoding);
 
 		this._autologin = this._autologin.map(elem => {
 			elem.js = this.getJS(elem.name);
