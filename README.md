@@ -1,6 +1,7 @@
 # GLICER Browser
 
 [![Build Status](https://travis-ci.org/emmanuelroecker/GL-Browser.svg?branch=master)](https://travis-ci.org/emmanuelroecker/GL-Browser)
+[![Build status](https://ci.appveyor.com/api/projects/status/pi6uyjyf5dptrnwr/branch/master?svg=true)](https://ci.appveyor.com/project/emmanuelroecker/gl-browser/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/emmanuelroecker/GL-Browser/badge.svg?branch=master)](https://coveralls.io/github/emmanuelroecker/GL-Browser?branch=master)
 
 ## Features
