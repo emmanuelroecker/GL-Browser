@@ -1,7 +1,5 @@
 {
-  "name": "GL-Browser",
-  "version": "0.0.1",
-  "description": "A custom browser",
+  "private": true,
   "engines": {
     "node": "^5.7.0",
     "npm": "^3.6.0"
@@ -24,10 +22,9 @@
     "app-bundle-id": "com.glicer.browser",
     "app-category-type": "public.app-category.productivity",
     "win": {
-      "iconUrl": "icon.ico"
+      "iconUrl": "file://icon.ico"
     }
   },
-  "author": "Emmanuel ROECKER & Rym BOUCHAGOUR",
   "repository": {
     "type": "git",
     "url": "https://github.com/emmanuelroecker/GL-Browser.git"
