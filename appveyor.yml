@@ -26,12 +26,10 @@ build_script:
 test: off
 
 deploy:
-  release: GLBrowser-win-v$(appveyor_build_version)
-  description: 'Release description'
   provider: GitHub
   auth_token:
     secure: Iw1LOHpMR1UmPK3xaxVMow6d9FTgIIhkSEC4zqmh4kw423OYj1yyvYFwPG1N39sI
-  artifact: dist\win\*.exe
+  artifact: /.*\.nupkg/
   draft: false
   prerelease: false
   on:
