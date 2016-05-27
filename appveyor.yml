@@ -25,13 +25,17 @@ build_script:
 
 test: off
 
+artifacts:
+  - path: dist\win\*.exe
+    name: GLBrowser-win-x64
+
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
   description: 'GLBrowser binaries'
   provider: GitHub
   auth_token:
     secure: Iw1LOHpMR1UmPK3xaxVMow6d9FTgIIhkSEC4zqmh4kw423OYj1yyvYFwPG1N39sI
-  artifact: /.*\.nupkg/
+  artifact: /.*\.exe/
   draft: false
   prerelease: false
   on:
