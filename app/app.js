@@ -18,8 +18,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 'use strict';
-console.log(`Electron Version : ${process.versions.electron}`);
-
 const blockClass = require('./js/block/block.js');
 class mainProcessClass {
 	constructor() {
@@ -27,17 +25,40 @@ class mainProcessClass {
 		this._modYaml = require('js-yaml');
 		this._modFs = require('fs');
 		this._modPath = require('path');
+		this._yargs = require('yargs');
 		this._modBlock = new blockClass();
-		this._app = this._modElectron.app;
 
 		this._encoding = 'utf8';
 		this._mainHtmlFile = './index.html';
 
+		this.parseCommandLine();
 		this.init();
 	}
 
+	parseCommandLine() {
+		let options = this._yargs(process.argv).wrap(100);
+		options.usage('Electron command line');
+		options.alias('d', 'debug').boolean('1').describe('1', 'Autostart dev tools');
+		options.alias('u', 'userdata').string('u').describe('u', 'set userdata directory');
+		options.alias('v', 'version').boolean('v').describe('v', 'Print the version.');
+		options.alias('h', 'help').boolean('h').describe('h', 'Print this usage message.');
+
+		this._args = options.argv;
+
+		if (this._args.help) {
+			process.stdout.write(options.help());
+			process.exit(0);
+		}
+
+		if (this._args.version) {
+			process.stdout.write(`Electron Version : ${process.versions.electron}\n`);
+			process.stdout.write('GLBrowser Version : 0.0.1\n');
+			process.exit(0);
+		}
+	}
 
 	init() {
+		this._app = this._modElectron.app;
 		this._app.on('window-all-closed', () => {
 			if (process.platform !== 'darwin') {
 				this._app.quit();
@@ -51,7 +72,9 @@ class mainProcessClass {
 			});
 			let mainHtml = this._modPath.join(__dirname, this._mainHtmlFile);
 			this._mainWindow.loadURL(mainHtml);
-			this._mainWindow.webContents.openDevTools();
+			if (this._args.debug) {
+				this._mainWindow.webContents.openDevTools();
+			}
 			this._modBlock.block(this._mainWindow, __dirname + '/cfg/block/block.yml');
 
 			this._mainWindow.on('closed', () => {

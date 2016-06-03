@@ -37,6 +37,12 @@ Block all requests which match with URL patterns in component/block/block.yml.
 npm install
 npm start
 ```
+Mode debug (autostart devtools and using ./userdata like userdata directory) :
+
+```console
+npm run start-debug
+```
+
 ## License GPL-2.0
 
 GNU General Public License v2.0  
