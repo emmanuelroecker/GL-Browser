@@ -26,13 +26,6 @@
       "iconUrl": "file://icon.ico"
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/emmanuelroecker/GL-Browser.git"
-  },
-  "bugs": {
-    "url": "https://github.com/emmanuelroecker/GL-Browser/issues"
-  },
   "keywords": [
     "browser",
     "customize",
