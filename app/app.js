@@ -71,7 +71,7 @@ class mainProcessClass {
 				height: 600
 			});
 			let mainHtml = this._modPath.join(__dirname, this._mainHtmlFile);
-			this._mainWindow.loadURL(mainHtml);
+			this._mainWindow.loadURL('file://' + mainHtml);
 			if (this._args.debug) {
 				this._mainWindow.webContents.openDevTools();
 			}
