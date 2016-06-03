@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "A custom browser",
   "author": "Emmanuel ROECKER - Rym BOUCHAGOUR",
+  "email": "glbrowser@glicer.com",
   "license": "GPL-2.0",
   "homepage": "http://dev.glicer.com",
   "private": true,
