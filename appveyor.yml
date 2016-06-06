@@ -27,7 +27,7 @@ test: off
 
 artifacts:
   - path: dist\win\*.exe
-    name: GLBrowser-win-x64
+    name: Releases
 
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
