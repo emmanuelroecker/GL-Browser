@@ -12,7 +12,9 @@ script:
   - npm run test-cov
 after_script:
   - cat ./coverage/lcov.info | coveralls;
-before_deploy: "npm run dist"
+before_deploy:
+  - sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
+  - npm run dist
 deploy:
   provider: releases
   api_key:
