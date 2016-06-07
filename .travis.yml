@@ -19,7 +19,7 @@ deploy:
   provider: releases
   api_key:
     - secure : "HbbJ2EWwkdLslojZ2sz4gB4p2TdMknh6LNoUWrGm1TJJrAsrFVPTBcgw0TIL4ce72r7kYrooWb2hratuWzp0+V3rS6zDftEqGmBO6vpvWg+tYztTSROp8kJZHrP0jRbrr+4f/xRYNnQErlorZagg/gcnfnyV/NUbbGV2KeC3cvOsHeStzSaQbsKft49Rv81HHtPewCL5RDycRIFfew/nYsj4tQi0J03In7gMPmUF0MtdQhBSGqeevfForjvVmPRxxlV6KMozUqeyURE4rTi0JCb9acU9eQyNu8HnNkivAYAh0Ls7tERja8MEE25nLfJ188DWqps0tAczkCP4MFWsYhj2vBz2J06GTURn8BVEGFA+2L4tffRke8I8XJbYtH64CgOhjwRISDvu1sLnmwc5gc1P55yfMBBpG4VARj2EesQxT1kwWpf4d7CAvi/osOclc08AIXhZXufEMaIumNSSH4hhV2q/CRACnzZvHi3Fk9uYUyQnIbujy4KxUtmFjquS0Ek0uVFrcUsk2rOFDK0FqxcqVOtC7kDXv1dvHbsSRGoKPM8Jqr+r6+qaz8Yf7+CF5XdyJFkkTqB51Hjdql0J0h+wkFX9Tgsiw07HZmt3mGiLWgArGcqLRwTXyzfjO5ctXHQqd1tY8zHC4KGETOTO9FZEB53G8HqoG1u8PKGF7MY="
-  file: "dist/linux/GL-Browser"
+  file: "dist/linux/GL-Browser-0.0.1.deb"
   skip_cleanup: true
   on:
     tags: true
