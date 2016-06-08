@@ -17,13 +17,29 @@
     "report-cov": "istanbul report lcovonly",
     "postinstall": "install-app-deps",
     "pack": "rimraf app/js-cov && build",
-    "dist": "rimraf app/js-cov && build"
+    "dist": "rimraf app/js-cov && build",
+    "release": "rimraf app/js-cov && build"
   },
   "build": {
     "app-bundle-id": "com.glicer.browser",
     "app-category-type": "public.app-category.productivity",
+    "osx": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
     "win": {
-      "iconUrl": "file://icon.ico"
+      "remoteReleases": "https://github.com/emmanuelroecker/GL-Browser"
     }
   },
   "keywords": [

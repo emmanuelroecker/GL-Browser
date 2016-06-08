@@ -1,30 +1,48 @@
 osx_image: xcode7.3
+
 sudo: required
 dist: trusty
+
+language: c
+
 matrix:
   include:
     - os: osx
     - os: linux
-language: node_js
-node_js:
-  - "5"
+      env: CC=clang CXX=clang++ npm_config_clang=1
+      compiler: clang
+
+cache:
+  directories:
+  - node_modules
+  - app/node_modules
+  - $HOME/.electron
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.8
+    packages:
+      - libgnome-keyring-dev
+      - icnsutils
+      - clang-3.8
+
+before_install:
+  - mkdir -p /tmp/git-lfs && curl -L https://github.com/github/git-lfs/releases/download/v1.2.0/git-lfs-$([ "$TRAVIS_OS_NAME" == "linux" ] && echo "linux" || echo "darwin")-amd64-1.2.0.tar.gz | tar -xz -C /tmp/git-lfs --strip-components 1 && /tmp/git-lfs/git-lfs pull
+
 install:
-  - npm install
+- nvm install 5
+- npm install
+- npm prune
+
 before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0          ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start  ; fi
+
 script:
-  - npm run test-cov
-after_script:
-  - cat ./coverage/lcov.info | coveralls;
-before_deploy:
-  - sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run test-cov ; fi
   - npm run dist
-deploy:
-  provider: releases
-  api_key:
-    - secure : "HbbJ2EWwkdLslojZ2sz4gB4p2TdMknh6LNoUWrGm1TJJrAsrFVPTBcgw0TIL4ce72r7kYrooWb2hratuWzp0+V3rS6zDftEqGmBO6vpvWg+tYztTSROp8kJZHrP0jRbrr+4f/xRYNnQErlorZagg/gcnfnyV/NUbbGV2KeC3cvOsHeStzSaQbsKft49Rv81HHtPewCL5RDycRIFfew/nYsj4tQi0J03In7gMPmUF0MtdQhBSGqeevfForjvVmPRxxlV6KMozUqeyURE4rTi0JCb9acU9eQyNu8HnNkivAYAh0Ls7tERja8MEE25nLfJ188DWqps0tAczkCP4MFWsYhj2vBz2J06GTURn8BVEGFA+2L4tffRke8I8XJbYtH64CgOhjwRISDvu1sLnmwc5gc1P55yfMBBpG4VARj2EesQxT1kwWpf4d7CAvi/osOclc08AIXhZXufEMaIumNSSH4hhV2q/CRACnzZvHi3Fk9uYUyQnIbujy4KxUtmFjquS0Ek0uVFrcUsk2rOFDK0FqxcqVOtC7kDXv1dvHbsSRGoKPM8Jqr+r6+qaz8Yf7+CF5XdyJFkkTqB51Hjdql0J0h+wkFX9Tgsiw07HZmt3mGiLWgArGcqLRwTXyzfjO5ctXHQqd1tY8zHC4KGETOTO9FZEB53G8HqoG1u8PKGF7MY="
-  file: "dist/GL-Browser-0.0.1.deb"
-  skip_cleanup: true
-  on:
-    tags: true
+
+after_script:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cat ./coverage/lcov.info | coveralls; fi
