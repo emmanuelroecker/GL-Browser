@@ -19,9 +19,6 @@ cache:
 
 addons:
   apt:
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.8
     packages:
       - libgnome-keyring-dev
       - icnsutils
@@ -29,7 +26,7 @@ addons:
 
 env:
   global:
-    - LLVM_VERSION=3.7.0
+    - LLVM_VERSION=3.8.0
     - LLVM_ARCHIVE_PATH=$HOME/clang+llvm.tar.xz
 
 before_install:
@@ -38,7 +35,7 @@ before_install:
   - tar xf $LLVM_ARCHIVE_PATH -C $HOME/clang+llvm --strip-components 1
   - export PATH=$HOME/clang+llvm/bin:$PATH
   - mkdir -p /tmp/git-lfs && curl -L https://github.com/github/git-lfs/releases/download/v1.2.0/git-lfs-$([ "$TRAVIS_OS_NAME" == "linux" ] && echo "linux" || echo "darwin")-amd64-1.2.0.tar.gz | tar -xz -C /tmp/git-lfs --strip-components 1 && /tmp/git-lfs/git-lfs pull
-  
+
 install:
   - nvm install 5
   - npm install
