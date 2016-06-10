@@ -22,7 +22,6 @@ addons:
     packages:
       - libgnome-keyring-dev
       - icnsutils
-      - clang-3.8
 
 env:
   global:
