@@ -37,9 +37,6 @@
           "type": "file"
         }
       ]
-    },
-    "win": {
-      "remoteReleases": "https://github.com/emmanuelroecker/GL-Browser"
     }
   },
   "keywords": [
