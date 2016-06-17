@@ -27,7 +27,13 @@ Block all requests which match with URL patterns in component/block/block.yml.
 
 ## Architecture
 
+### Workflow
+
 ![Architecture](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article8/doc/scheme_en.png)
+
+### Continuous Integration
+
+![Continuous Integration](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article8/doc/scheme_en.png)
 
 ## Install & Start Browser
 
