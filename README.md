@@ -33,7 +33,7 @@ Block all requests which match with URL patterns in component/block/block.yml.
 
 ### Continuous Integration
 
-![Continuous Integration](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/scheme_en.png)
+![Continuous Integration](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/CI-schema.jpg)
 
 ## Install & Start Browser
 
