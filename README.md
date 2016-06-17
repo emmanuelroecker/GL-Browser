@@ -8,14 +8,14 @@
 
 ### Password Manager & Autologin
 
-![Autologin](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article8/doc/autologin.gif)
+![Autologin](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/autologin.gif)
 
 ### Customize the way a web page displays or behaves
 
 Inject files component/customize/{name}/customize.css and component/customize/{name}/customize.js
 in URL which matches with patterns configured in file component/customize/customize.yml.
 
-![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article8/doc/tabs.gif)
+![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/tabs.gif)
 
 ### Requests blocker
 
@@ -23,17 +23,17 @@ Block all requests which match with URL patterns in component/block/block.yml.
 
 ### Favorites
 
-![Favorites](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article8/doc/favorites.gif)
+![Favorites](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/favorites.gif)
 
 ## Architecture
 
 ### Workflow
 
-![Architecture](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article8/doc/scheme_en.png)
+![Architecture](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/scheme_en.png)
 
 ### Continuous Integration
 
-![Continuous Integration](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/article8/doc/scheme_en.png)
+![Continuous Integration](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/scheme_en.png)
 
 ## Install & Start Browser
 
