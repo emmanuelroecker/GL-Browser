@@ -10,7 +10,7 @@
 })(function(riot, require, exports, module) {
 
 
-riot.tag2('page', '<div class="gl-header input-group"> <div class="input-group-btn"> <a onclick="{goback}" class="btn btn-default" role="button"> <span class="glyphicon glyphicon-arrow-left"></span> </a> </div> <div id="favoritesList" class="dropdown"> <input id="urltext" class="form-control" onkeyup="{keyup}" type="text" placeholder="URL"> <ul id="favoritesDropDown" class="dropdown-menu" role="menu"> <li each="{favorite in favorites}"> <a href="#" onclick="{parent.favoriteClick}" role="button"> <raw content="{favorite.url.highlight}"></raw> | <raw content="{favorite.title.highlight}"></raw> </a> </li> </ul> </div> <span id="indicator" class="input-group-addon"></span> <div class="input-group-btn"> <a id="favoriteButton" onclick="{favoriteAdd}" class="btn btn-default disabled" role="button"> <span class="glyphicon glyphicon-star-empty"></span> </a> <a id="refreshButton" onclick="{refresh}" class="btn btn-default disabled" role="button"> <span class="glyphicon glyphicon-repeat"></span> </a> <a id="autologinButton" onclick="{autologin}" class="btn btn-default disabled" role="button"> <span class="glyphicon glyphicon-log-in"></span> </a> <a id="devButton" onclick="{dev}" class="btn btn-default disabled" role="button"> <span class="glyphicon glyphicon-wrench"></span> </a> </div> </div> <webview id="webview" class="gl-webview" preload="../app/js/preloadWebview.js"></webview>', 'page #favoritesDropDown,[riot-tag="page"] #favoritesDropDown,[data-is="page"] #favoritesDropDown{ top: 30px; } page #indicator,[riot-tag="page"] #indicator,[data-is="page"] #indicator{ top: 0; width: 40px; }', '', function(opts) {
+riot.tag2('page', '<div class="gl-header input-group"> <div class="input-group-btn"> <a onclick="{goback}" class="btn btn-default" role="button"> <span class="glyphicon glyphicon-arrow-left"></span> </a> </div> <div id="favoritesList" class="dropdown"> <input id="urltext" class="form-control" onkeyup="{keyup}" type="text" placeholder="URL"> <ul id="favoritesDropDown" class="dropdown-menu" role="menu"> <li each="{favorite in favorites}"> <a href="#" onclick="{parent.favoriteClick}" role="button"> <raw content="{favorite.url.highlight}"></raw> | <raw content="{favorite.title.highlight}"></raw> </a> </li> </ul> </div> <span id="indicator" class="input-group-addon"></span> <div class="input-group-btn"> <a id="favoriteButton" onclick="{favoriteAdd}" class="btn btn-default disabled" role="button"> <span class="glyphicon glyphicon-star-empty"></span> </a> <a id="refreshButton" onclick="{refresh}" class="btn btn-default disabled" role="button"> <span class="glyphicon glyphicon-repeat"></span> </a> <a id="autologinButton" onclick="{autologin}" class="btn btn-default disabled" role="button"> <span class="glyphicon glyphicon-log-in"></span> </a> <a id="customizeButton" onclick="{customize}" class="btn btn-default disabled" role="button"> <span class="glyphicon glyphicon-eye-open"></span> </a> <a id="devButton" onclick="{dev}" class="btn btn-default disabled" role="button"> <span class="glyphicon glyphicon-wrench"></span> </a> </div> </div> <webview id="webview" class="gl-webview" preload="../app/js/preloadWebview.js"></webview>', 'page #favoritesDropDown,[riot-tag="page"] #favoritesDropDown,[data-is="page"] #favoritesDropDown{ top: 30px; } page #indicator,[riot-tag="page"] #indicator,[data-is="page"] #indicator{ top: 0; width: 40px; }', '', function(opts) {
     'use strict';
 
     this.favorites = [];
@@ -60,6 +60,10 @@ riot.tag2('page', '<div class="gl-header input-group"> <div class="input-group-b
       this.webview.reload();
     }.bind(this)
 
+    this.customize = function(e) {
+      customize.inject(this.webview);
+    }.bind(this)
+
     this.autologin = function(e) {
       autologin.inject(this.webview);
       this.webview.addEventListener('did-finish-load', () => {
@@ -83,7 +87,7 @@ riot.tag2('page', '<div class="gl-header input-group"> <div class="input-group-b
         this.devButton.classList.remove('disabled');
         this.autologinButton.classList.remove('disabled');
         this.favoriteButton.classList.remove('disabled');
-        customize.inject(this.webview);
+        this.customizeButton.classList.remove('disabled');
       });
 
       this.webview.addEventListener('did-navigate', (e) => {

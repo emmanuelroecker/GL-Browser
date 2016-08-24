@@ -8,3 +8,7 @@
   patterns:
            - "*://www.google.fr/*"
            - "*://www.google.com/*"
+- name: github
+  patterns:
+           - "*://*.github.com/*"
+          

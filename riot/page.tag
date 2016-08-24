@@ -47,6 +47,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       <a id="autologinButton" onclick={autologin} class="btn btn-default disabled" role="button">
         <span class="glyphicon glyphicon-log-in"></span>
       </a>
+      <a id="customizeButton" onclick={customize} class="btn btn-default disabled" role="button">
+        <span class="glyphicon glyphicon-eye-open"></span>
+      </a>
       <a id="devButton" onclick={dev} class="btn btn-default disabled" role="button">
         <span class="glyphicon glyphicon-wrench"></span>
       </a>
@@ -116,6 +119,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       this.webview.reload();
     }
 
+    customize(e) {
+      customize.inject(this.webview);
+    }
+
     autologin(e) {
       autologin.inject(this.webview);
       this.webview.addEventListener('did-finish-load', () => {
@@ -139,7 +146,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
         this.devButton.classList.remove('disabled');
         this.autologinButton.classList.remove('disabled');
         this.favoriteButton.classList.remove('disabled');
-        customize.inject(this.webview);
+        this.customizeButton.classList.remove('disabled');
       });
 
       this.webview.addEventListener('did-navigate', (e) => {

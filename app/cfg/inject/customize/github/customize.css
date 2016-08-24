@@ -1,0 +1,12 @@
+body {
+    background-color: black !important;
+}
+
+.site-header-nav .nav-item {
+    color: #2a69a9 !important;
+}
+
+.tabnav-tab.selected {
+    color: #e22020 !important;
+    background-color: #fff !important;
+}
