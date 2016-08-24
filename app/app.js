@@ -36,8 +36,9 @@ class mainProcessClass {
 	}
 
 	parseCommandLine() {
-		let options = this._yargs(process.argv).wrap(100);
+		let options = this._yargs(process.argv).default('windowsize','800x600').wrap(100);
 		options.usage('Electron command line');
+		options.alias('ws', 'windowsize').string('ws').describe('ws','set window size (Ex: 800x600)');
 		options.alias('d', 'debug').boolean('1').describe('1', 'Autostart dev tools');
 		options.alias('u', 'userdata').string('u').describe('u', 'set userdata directory');
 		options.alias('v', 'version').boolean('v').describe('v', 'Print the version.');
@@ -66,9 +67,12 @@ class mainProcessClass {
 		});
 
 		this._app.on('ready', () => {
+
+			let windowsize = this._args.windowsize.split('x');
+
 			this._mainWindow = new this._modElectron.BrowserWindow({
-				width: 800,
-				height: 600
+				width: parseInt(windowsize[0]),
+				height: parseInt(windowsize[1])
 			});
 			let mainHtml = this._modPath.join(__dirname, this._mainHtmlFile);
 			this._mainWindow.loadURL('file://' + mainHtml);
