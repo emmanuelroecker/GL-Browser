@@ -55,6 +55,7 @@
     "electron-prebuilt": "^1.0.0",
     "eslint": "^2.8.0",
     "istanbul": "^0.4.3",
-    "rimraf": "^2.5.2"
+    "rimraf": "^2.5.2",
+    "riot": "^2.3.0"
   }
 }
