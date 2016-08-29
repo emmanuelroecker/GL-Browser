@@ -46,7 +46,7 @@ describe('customizeClass', function () {
 	});
 	it('init', function () {
 		let customize = new customizeClass(cfgdirectory);
-		assert.equal('pOj6JM4aVQyD+Uj6Rhs7UATwZPB11cJEcHAZHDcZANo=', crypt.hash(JSON.stringify(customize._customize)));
+		assert.equal('mg41wg4H8m/EcEBEidD1efi3LCvwK1EICR6mlru0vJg=', crypt.hash(JSON.stringify(customize._customize)));
 	});
 	it('get to inject', function () {
 		let customize = new customizeClass(cfgdirectory);

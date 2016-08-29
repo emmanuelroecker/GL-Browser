@@ -53,11 +53,13 @@ npm run start-debug
 
 ## Release new version
 
-Electron-builder autopush on github releases
+* [Draft a new release](https://help.github.com/articles/creating-releases/) , Save draft (not publish release). 
+* Set the "Tag version" to the value of version in your application package.json, and prefix it with v.
+  "Release title" can be anything you want.
+  For example, if your application package.json version is 1.0, your draft's "Tag version" would be v1.0.
+* Push some commits. Every CI build will update the artifacts attached to this draft.
+* Once you are done, publish the release. GitHub will tag the latest commit for you.
 
-* change <version> field in app/package.json
-* git tag -a <version>
-* git push origin --tags
 
 
 ## License GPL-2.0
