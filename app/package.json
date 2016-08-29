@@ -1,7 +1,7 @@
 {
     "name": "GL-Browser",
     "url": "http://dev.glicer.com",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "A custom browser",
     "author": {
         "name": "Emmanuel ROECKER - Rym BOUCHAGOUR",
