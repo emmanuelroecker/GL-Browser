@@ -51,6 +51,15 @@ Mode debug (autostart devtools and using ./userdata like userdata directory) :
 npm run start-debug
 ```
 
+## Release new version
+
+Electron-builder autopush on github releases
+
+* change <version> field in app/package.json
+* git tag -a <version>
+* git push origin --tags
+
+
 ## License GPL-2.0
 
 GNU General Public License v2.0  
