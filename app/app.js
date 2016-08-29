@@ -18,6 +18,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 'use strict';
+
+if (require('electron-squirrel-startup'))
+	return;
+
 const blockClass = require('./js/block/block.js');
 class mainProcessClass {
 	constructor() {

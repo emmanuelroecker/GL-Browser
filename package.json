@@ -24,7 +24,10 @@
   "build": {
     "app-bundle-id": "com.glicer.browser",
     "app-category-type": "public.app-category.productivity",
-    "osx": {
+    "linux": {
+      "fpm": ["--depends", "libappindicator1"]
+    },
+    "mac": {
       "contents": [
         {
           "x": 410,
@@ -51,7 +54,7 @@
     "app-module-path": "^1.0.6",
     "coveralls": "^2.11.9",
     "devtron": "^1.1.2",
-    "electron-builder": "^5.0.2",
+    "electron-builder": "^6.0.0",
     "electron-mocha": "^1.2.1",
     "electron-prebuilt": "^1.0.0",
     "eslint": "^2.8.0",
