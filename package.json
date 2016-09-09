@@ -22,8 +22,8 @@
     "release": "rimraf app/js-cov && build"
   },
   "build": {
-    "app-bundle-id": "com.glicer.browser",
-    "app-category-type": "public.app-category.productivity",
+    "appId": "com.glicer.browser",
+    "category": "public.app-category.productivity",
     "linux": {
       "fpm": ["--depends", "libappindicator1"]
     },

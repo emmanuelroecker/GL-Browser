@@ -17,15 +17,17 @@
 Inject files component/customize/{name}/customize.css and component/customize/{name}/customize.js
 in URL which matches with patterns configured in file component/customize/customize.yml.
 
-![Tabs](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/tabs.gif)
+![Customize](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/customize.gif)
 
 ### Requests blocker
 
 Block all requests which match with URL patterns in component/block/block.yml.
 
+![Customize](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/block.gif)
+
 ### Favorites
 
-![Favorites](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/favorites.gif)
+![Favorites](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/autocomplete.gif)
 
 ## Architecture
 
@@ -53,7 +55,7 @@ npm run start-debug
 
 ## Release new version
 
-* [Draft a new release](https://help.github.com/articles/creating-releases/) , Save draft (not publish release). 
+* [Draft a new release](https://help.github.com/articles/creating-releases/) , Save draft (not publish release).
 * Set the "Tag version" to the value of version in your application package.json, and prefix it with v.
   "Release title" can be anything you want.
   For example, if your application package.json version is 1.0, your draft's "Tag version" would be v1.0.
