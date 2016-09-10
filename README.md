@@ -8,26 +8,28 @@
 
 ## Features
 
-### Password Manager & Autologin
+| Password Manager & Autologin |
+|:----------------------------:|
+|![Autologin](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/autologin.gif)|
 
-![Autologin](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/autologin.gif)
-
-### Customize the way a web page displays or behaves
+| Customize the way a web page displays or behaves |
+|:------------------------------------------------:|
+|![Customize](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/customize.gif)|
 
 Inject files component/customize/{name}/customize.css and component/customize/{name}/customize.js
 in URL which matches with patterns configured in file component/customize/customize.yml.
 
-![Customize](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/customize.gif)
 
-### Requests blocker
+| Requests blocker |
+|:----------------:|
+|![Customize](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/block.gif)|
 
 Block all requests which match with URL patterns in component/block/block.yml.
 
-![Customize](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/block.gif)
 
-### Favorites
-
-![Favorites](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/autocomplete.gif)
+| Favorites |
+|:---------:|
+|![Favorites](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/autocomplete.gif)|
 
 ## Architecture
 
@@ -37,7 +39,7 @@ Block all requests which match with URL patterns in component/block/block.yml.
 
 ### Continuous Integration
 
-![Continuous Integration](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/CI-schema.jpg)
+![Continuous Integration](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/ci-schema_en.png)
 
 ## Install & Start Browser
 
