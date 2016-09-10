@@ -12,6 +12,8 @@
 |:----------------------------:|
 |![Autologin](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/autologin.gif)|
 
+---
+
 | Customize the way a web page displays or behaves |
 |:------------------------------------------------:|
 |![Customize](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/customize.gif)|
@@ -19,6 +21,7 @@
 Inject files component/customize/{name}/customize.css and component/customize/{name}/customize.js
 in URL which matches with patterns configured in file component/customize/customize.yml.
 
+---
 
 | Requests blocker |
 |:----------------:|
@@ -26,6 +29,7 @@ in URL which matches with patterns configured in file component/customize/custom
 
 Block all requests which match with URL patterns in component/block/block.yml.
 
+---
 
 | Favorites |
 |:---------:|
@@ -36,6 +40,8 @@ Block all requests which match with URL patterns in component/block/block.yml.
 ### Workflow
 
 ![Architecture](https://raw.githubusercontent.com/emmanuelroecker/GL-Browser/master/doc/scheme_en.png)
+
+---
 
 ### Continuous Integration
 
